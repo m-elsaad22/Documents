@@ -233,7 +233,7 @@ class DocumentService
 
         if ($withToolbar) {
             $publicUrl = url($doc['public_slug']);
-            $html = TemplateEngine::injectToolbar($html, $doc, $publicUrl);
+            $html = TemplateEngine::injectToolbar($html, $doc, $publicUrl, $company['whatsapp'] ?? null);
         }
 
         return $html;

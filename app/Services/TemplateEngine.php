@@ -28,11 +28,11 @@ class TemplateEngine
     /**
      * Inject action toolbar (PDF / Print / Share / Copy) into rendered HTML
      */
-    public static function injectToolbar(string $html, array $doc, string $publicUrl): string
+    public static function injectToolbar(string $html, array $doc, string $publicUrl, ?string $whatsapp = null): string
     {
         $isAr = ($doc['language'] ?? 'ar') === 'ar';
         $waText = urlencode(($doc['title'] ?? '') . ' — ' . $publicUrl);
-        $waPhone = '';
+        $waPhone = preg_replace('/\D+/', '', (string) $whatsapp);
 
         $toolbar = '
 <div class="kdms-toolbar no-print" style="max-width:820px;margin:0 auto 14px;display:flex;flex-wrap:wrap;gap:8px;justify-content:center;font-family:Cairo,sans-serif;">
