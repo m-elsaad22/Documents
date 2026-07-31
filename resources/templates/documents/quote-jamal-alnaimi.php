@@ -1,36 +1,54 @@
 <?php
 /**
- * KDMS Dynamic Document Template
- * Design preserved 100% from official HTML.
- * Available vars: $doc, $company, $customer, $items, $media
+ * KDMS Dynamic Template — design preserved 100% from official HTML.
+ * Vars: $doc, $company, $customer, $items, $media
  */
 $lang = $doc['language'] ?? 'ar';
-$dir = $lang === 'ar' ? 'rtl' : 'ltr';
-$companyName = $lang === 'ar' ? ($company['name_ar'] ?? '') : ($company['name_en'] ?? $company['name_ar'] ?? '');
-$companyNameAlt = $lang === 'ar' ? ($company['name_en'] ?? '') : ($company['name_ar'] ?? '');
-$customerName = $lang === 'ar'
-    ? ($customer['name_ar'] ?? $doc['customer_name_ar'] ?? '')
-    : ($customer['name_en'] ?? $customer['name_ar'] ?? $doc['customer_name_en'] ?? '');
-$customerAddress = $lang === 'ar'
-    ? ($customer['address_ar'] ?? $doc['project_address'] ?? '')
-    : ($customer['address_en'] ?? $customer['address_ar'] ?? $doc['project_address'] ?? '');
+$dir = ($lang === 'ar') ? 'rtl' : 'ltr';
+$companyName = ($lang === 'ar')
+    ? ($company['name_ar'] ?? '')
+    : ($company['name_en'] ?? $company['name_ar'] ?? '');
+$companyNameAlt = ($lang === 'ar')
+    ? ($company['name_en'] ?? '')
+    : ($company['name_ar'] ?? '');
+$customerName = ($lang === 'ar')
+    ? ($customer['name_ar'] ?? '')
+    : ($customer['name_en'] ?? $customer['name_ar'] ?? '');
+$customerAddress = ($lang === 'ar')
+    ? ($customer['address_ar'] ?? '')
+    : ($customer['address_en'] ?? $customer['address_ar'] ?? '');
 $projectAddress = $doc['project_address'] ?: $customerAddress;
 $issueDate = format_date($doc['issue_date'] ?? null, $lang);
 $logo = !empty($company['logo']) ? upload_url($company['logo']) : '';
 $seal = !empty($company['seal']) ? upload_url($company['seal']) : '';
 $signature = !empty($company['signature']) ? upload_url($company['signature']) : '';
 $currency = $doc['currency'] ?? ($company['currency'] ?? 'AED');
-$currencyLabel = $lang === 'ar' ? ($company['currency_label_ar'] ?? $currency) : ($company['currency_label_en'] ?? $currency);
-$amountWords = $lang === 'ar' ? ($doc['amount_words_ar'] ?? '') : ($doc['amount_words_en'] ?? $doc['amount_words_ar'] ?? '');
+$currencyLabel = ($lang === 'ar')
+    ? ($company['currency_label_ar'] ?? $currency)
+    : ($company['currency_label_en'] ?? $currency);
+$amountWords = ($lang === 'ar')
+    ? ($doc['amount_words_ar'] ?? '')
+    : ($doc['amount_words_en'] ?? $doc['amount_words_ar'] ?? '');
 $cityCountry = trim(($company['city'] ?? '') . ' — ' . ($company['country'] ?? ''), ' —');
 $offices = [];
 if (!empty($company['offices_json'])) {
-    $offices = json_decode($company['offices_json'], true) ?: [];
+    $decoded = json_decode($company['offices_json'], true);
+    if (is_array($decoded)) { $offices = $decoded; }
 }
 $custom = [];
 if (!empty($doc['custom_fields'])) {
-    $custom = is_array($doc['custom_fields']) ? $doc['custom_fields'] : (json_decode($doc['custom_fields'], true) ?: []);
+    $custom = is_array($doc['custom_fields'])
+        ? $doc['custom_fields']
+        : (json_decode($doc['custom_fields'], true) ?: []);
 }
+$mediaUrls = [];
+foreach (($media ?? []) as $m) {
+    if (!empty($m['file_path'])) {
+        $mediaUrls[] = upload_url($m['file_path']);
+    }
+}
+$totalFmt = number_format((float)($doc['total'] ?? 0), 2);
+$totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
 ?>
 <!DOCTYPE html>
 <html lang="<?= e($lang) ?>" dir="<?= e($dir) ?>">
@@ -356,6 +374,76 @@ if (!empty($doc['custom_fields'])) {
     color: var(--blue-dark);
   }
 
+  /* ===== DISCOUNT PROMO BANNER ===== */
+  .promo-banner {
+    background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 100%);
+    border-radius: 20px;
+    padding: 24px 28px;
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    flex-wrap: wrap;
+    box-shadow: 0 8px 30px rgba(212,160,23,0.35);
+    position: relative;
+    overflow: hidden;
+    animation: fadeInUp 0.5s ease both;
+  }
+
+  .promo-banner::before {
+    content: '\f02a';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    position: absolute;
+    left: -10px;
+    bottom: -20px;
+    font-size: 110px;
+    color: rgba(255,255,255,0.15);
+    line-height: 1;
+  }
+
+  .promo-icon {
+    width: 58px;
+    height: 58px;
+    background: var(--blue-dark);
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: var(--gold-light);
+    flex-shrink: 0;
+    position: relative;
+    z-index: 2;
+  }
+
+  .promo-text { position: relative; z-index: 2; flex: 1; min-width: 220px; }
+
+  .promo-text h3 {
+    font-size: 19px;
+    font-weight: 900;
+    color: var(--blue-dark);
+    margin-bottom: 4px;
+  }
+
+  .promo-text p {
+    font-size: 13px;
+    color: #5A4308;
+    font-weight: 600;
+  }
+
+  .promo-badge-pct {
+    position: relative;
+    z-index: 2;
+    background: var(--blue-dark);
+    color: var(--gold-light);
+    font-size: 22px;
+    font-weight: 900;
+    padding: 12px 22px;
+    border-radius: 14px;
+    flex-shrink: 0;
+  }
+
   /* ===== PRODUCT SPECS ===== */
   .product-card {
     background: linear-gradient(135deg, var(--blue-dark) 0%, #0F3060 100%);
@@ -602,13 +690,12 @@ if (!empty($doc['custom_fields'])) {
   }
 
   .price-table thead th {
-    padding: 12px 16px;
+    padding: 14px 20px;
     text-align: right;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     color: var(--blue-dark);
     border-bottom: 2px solid rgba(11,37,69,0.1);
-    white-space: nowrap;
   }
 
   .price-table tbody tr {
@@ -619,8 +706,8 @@ if (!empty($doc['custom_fields'])) {
   .price-table tbody tr:hover { background: rgba(26,109,175,0.04); }
 
   .price-table tbody td {
-    padding: 13px 16px;
-    font-size: 13px;
+    padding: 16px 20px;
+    font-size: 14px;
     color: var(--text-body);
     vertical-align: middle;
   }
@@ -986,74 +1073,19 @@ if (!empty($doc['custom_fields'])) {
   }
 
   .quote-meta-item i { color: var(--gold-light); font-size: 12px; }
-
-  /* Full-width tables — no padding, table fills card */
-  .price-card { padding: 0 !important; overflow: hidden; }
-  .price-header { padding: 20px 22px !important; }
-  .price-table-wrap {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .price-table {
-    width: 100% !important;
-    min-width: 520px;
-  }
-
-  /* Container for the whole section — no side padding so price-card bleeds */
-  .section .container { padding-left: 0; padding-right: 0; }
-  .section .client-card,
-  .section .product-card,
-  .section .warranty-card,
-  .section .cta-section,
-  .section .benefits-grid,
-  .section .method-steps,
-  .section .specs-grid,
-  .section .base-card {
-    margin-left: 16px;
-    margin-right: 16px;
-  }
-  .section .price-card {
-    margin-left: 0;
-    margin-right: 0;
-    border-radius: 0;
-  }
-  /* Re-add border-radius only for medium+ screens */
-  @media (min-width: 641px) {
-    .section .container { padding-left: 16px; padding-right: 16px; }
-    .section .price-card { margin-left: 0; margin-right: 0; border-radius: 20px; }
-    .section .client-card,
-    .section .product-card,
-    .section .warranty-card,
-    .section .cta-section,
-    .section .benefits-grid,
-    .section .method-steps,
-    .section .specs-grid,
-    .section .base-card {
-      margin-left: 0;
-      margin-right: 0;
-    }
-    .price-table { min-width: 0; }
-  }
-
-  /* Smaller font in responsive overrides too */
-  @media (max-width: 640px) {
-    .price-table thead th { font-size: 11px !important; padding: 10px 10px !important; }
-    .price-table tbody td { font-size: 11px !important; padding: 10px 10px !important; }
-    .price-table .service-desc { font-size: 10px !important; }
-  }
-
-  /* Sections containing price tables: remove side padding for full bleed */
-  .section.has-table { padding-left: 0; padding-right: 0; }
-  .section.has-table .section-header { padding-left: 20px; padding-right: 20px; }
 </style>
 
-<?php if (empty($doc['show_seal'])): ?>
-<style>.seal, img.seal, .stamp-wrap, .stamp-box img{display:none!important;}</style>
-<?php endif; ?>
-<?php if (empty($doc['show_signature'])): ?>
-<style>img.sign, .sign{display:none!important;}</style>
-<?php endif; ?>
+<?php if (empty($doc['show_seal'])): ?><style>.seal, img.seal, .stamp-wrap img, .stamp-box img{display:none!important;}</style><?php endif; ?>
+<?php if (empty($doc['show_signature'])): ?><style>img.sign, .sign{display:none!important;}</style><?php endif; ?>
+<style>
+@media print{
+  .kdms-toolbar,.no-print,.print-bar{display:none!important;}
+  @page{size:A4 portrait;margin:10mm;}
+  thead{display:table-header-group;}
+  tr,img,.sig-row,.sig-box,.stamp-box,.info-grid,.amount-hero{break-inside:avoid;page-break-inside:avoid;}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+}
+</style>
 </head>
 <body>
 
@@ -1072,8 +1104,8 @@ if (!empty($doc['custom_fields'])) {
     <div class="logo-area">
       <div class="logo-icon"><i class="fas fa-building-shield"></i></div>
       <div class="logo-text">
-        <h1>ركن التطور للعوازل وكشف التسربات ذ.م.م</h1>
-        <span>RUKN ELTATAWER · Insulation &amp; Leak Detection L.L.C</span>
+        <h1>ركن التطور</h1>
+        <span>RUKN ELTATAWER ·  </span>
       </div>
     </div>
     <div class="hero-badge">
@@ -1089,8 +1121,8 @@ if (!empty($doc['custom_fields'])) {
     </div>
 
     <h1 class="hero-title">
-      احمِ فيلتك من حرارة أبوظبي<br>
-      بنظام <span class="highlight">الفيبر مرن ( المطاطي ) المعتمد</span>
+      احمِ سطح منزلك من حرارة الشمس<br>
+      بنظام <span class="highlight">Cool Roof المعتمد</span>
     </h1>
 
     <p class="hero-subtitle">
@@ -1099,8 +1131,8 @@ if (!empty($doc['custom_fields'])) {
     </p>
 
     <div class="quote-meta">
-      <div class="quote-meta-item"><i class="fas fa-hashtag"></i> <?= e($doc['document_number']) ?></div>
-      <div class="quote-meta-item"><i class="fas fa-calendar"></i> تاريخ الفحص: الأربعاء 1 يوليو 2026</div>
+      <div class="quote-meta-item"><i class="fas fa-hashtag"></i> RET-AJM-2026-0719</div>
+      <div class="quote-meta-item"><i class="fas fa-calendar"></i> تاريخ الإصدار: 19 يوليو 2026</div>
       <div class="quote-meta-item"><i class="fas fa-clock"></i> صالح لمدة 30 يوماً</div>
     </div>
 
@@ -1110,11 +1142,11 @@ if (!empty($doc['custom_fields'])) {
         <div class="stat-label">انعكاس الأشعة الشمسية</div>
       </div>
       <div class="stat-item">
-        <div class="stat-num">10 : 20</div>
+        <div class="stat-num">10</div>
         <div class="stat-label">سنوات ضمان شامل</div>
       </div>
       <div class="stat-item">
-        <div class="stat-num">720</div>
+        <div class="stat-num">55</div>
         <div class="stat-label">متر مربع — مساحة المشروع</div>
       </div>
       <div class="stat-item">
@@ -1146,46 +1178,56 @@ if (!empty($doc['custom_fields'])) {
         <div class="info-item">
           <i class="fas fa-user"></i>
           <div>
-            <div class="label">صاحب الفيلا</div>
-            <div class="value">محمد سالم الخميسي</div>
+            <div class="label">اسم العميل</div>
+            <div class="value">جمال النعيمي</div>
           </div>
         </div>
         <div class="info-item">
           <i class="fas fa-location-dot"></i>
           <div>
             <div class="label">موقع المشروع</div>
-            <div class="value">فيلا 313 - شارع حسن بن هميلة المزروعي - حوض 17 - مدينة محمد بن زايد - أبوظبي</div>
+            <div class="value">بيت 19 - شارع بلال بن رباح - الراشدية 2 - عجمان</div>
           </div>
         </div>
         <div class="info-item">
           <i class="fas fa-ruler-combined"></i>
           <div>
             <div class="label">مساحة السطح</div>
-            <div class="value">720 متر مربع</div>
+            <div class="value">55 متر مربع</div>
           </div>
         </div>
         <div class="info-item">
           <i class="fas fa-home"></i>
           <div>
             <div class="label">نوع المنشأة</div>
-            <div class="value">فيلا سكنية — سطح مستوٍ</div>
+            <div class="value">سطح جراج سيارات</div>
           </div>
         </div>
         <div class="info-item">
           <i class="fas fa-screwdriver-wrench"></i>
           <div>
             <div class="label">نوع الخدمة</div>
-            <div class="value">عزل مائي وحراري Cool Roof / Roof Protection</div>
+            <div class="value">عزل حراري Cool Roof — طبقتين</div>
           </div>
         </div>
         <div class="info-item">
           <i class="fas fa-calendar-check"></i>
           <div>
             <div class="label">مدة التنفيذ المتوقعة</div>
-            <div class="value">4 - 5 أيام عمل</div>
+            <div class="value">يوم عمل واحد</div>
           </div>
         </div>
       </div>
+    </div>
+
+    <!-- Discount Promo -->
+    <div class="promo-banner fade-in">
+      <div class="promo-icon"><i class="fas fa-tags"></i></div>
+      <div class="promo-text">
+        <h3>عرض خصم خاص — 10٪ على قيمة العزل</h3>
+        <p>العرض ساري من 20 يونيو حتى 20 يوليو 2026 — آخر يوم للاستفادة منه غداً!</p>
+      </div>
+      <div class="promo-badge-pct">10%</div>
     </div>
 
     <!-- Product Specs -->
@@ -1193,7 +1235,7 @@ if (!empty($doc['custom_fields'])) {
       <div class="product-header">
         <div class="product-logo"><i class="fas fa-sun"></i></div>
         <div>
-          <h2>Cool Roof & Roof Protection</h2>
+          <h2>Cool Roof</h2>
           <p>نظام العزل الأكريليكي المطاطي العاكس للحرارة بنسبة 100%</p>
           <span class="certified-badge"><i class="fas fa-certificate"></i> منتج معتمد ومختبر دولياً</span>
         </div>
@@ -1283,13 +1325,12 @@ if (!empty($doc['custom_fields'])) {
       </div>
     </div>
 
-    <!-- Pricing Tables -->
+    <!-- Pricing Table -->
 
-    <!-- TABLE 1: Cool Roof -->
     <div class="price-card fade-in">
       <div class="price-header">
-        <h2><i class="fas fa-sun"></i> خيارات نظام Cool Roof</h2>
-        <div class="validity-badge"><i class="fas fa-ruler-combined"></i> المساحة: 720 م²</div>
+        <h2><i class="fas fa-sun"></i> عرض سعر نظام Cool Roof</h2>
+        <div class="validity-badge"><i class="fas fa-ruler-combined"></i> المساحة: 55 م²</div>
       </div>
 
       <div class="price-table-wrap"><table class="price-table">
@@ -1298,103 +1339,21 @@ if (!empty($doc['custom_fields'])) {
             <th>عدد الطبقات</th>
             <th>نسبة العزل الحراري</th>
             <th>سعر المتر</th>
-            <th>الإجمالي (720 م²)</th>
+            <th>الإجمالي (55 م²)</th>
           </tr>
         </thead>
         <tbody>
-<?php $n=1; foreach ($items as $item): ?>
+<?php $n = 1; foreach ($items as $item): ?>
         <tr>
-          <td class="num"><?= $n++ ?></td>
-          <td>
-            <strong style="color:#004EA8;font-size:12.5px;"><?= e($item['title']) ?></strong>
-            <?php if (!empty($item['description'])): ?><br>
-            <span style="font-size:10.5px;color:var(--muted);line-height:1.65;"><?= nl2br(e($item['description'])) ?></span>
-            <?php endif; ?>
+          <td style="text-align:center;"><?= $n++ ?></td>
+          <td colspan="2">
+            <strong><?= e($item['title']) ?></strong>
+            <?php if (!empty($item['description'])): ?><div style="font-size:11px;opacity:.8;"><?= nl2br(e($item['description'])) ?></div><?php endif; ?>
           </td>
-          <td class="center"><?= e(rtrim(rtrim(number_format((float)$item['quantity'], 2), '0'), '.')) ?><?= !empty($item['unit']) ? ' '.e($item['unit']) : '' ?></td>
-          <td class="center"><?= e(number_format((float)$item['unit_price'], 2)) ?> <?= e($currency) ?></td>
-          <td class="center"><strong style="color:#004EA8;font-size:13.5px;"><?= e(number_format((float)$item['total'], 2)) ?> <?= e($currency) ?></strong></td>
+          <td style="text-align:center;"><strong><?= e(number_format((float)$item['total'], 2)) ?> <?= e($currency) ?></strong></td>
         </tr>
 <?php endforeach; ?>
 </tbody>
-      </table>
-
-      <div class="price-note">
-        <i class="fas fa-circle-info"></i>
-        <span>جميع الأسعار بالدرهم الإماراتي · بدون ضريبة · تشمل: المواد + العمالة + تجهيز السطح + تنظيف الموقع بعد الانتهاء.</span>
-      </div>
-    </div>
-
-    <!-- TABLE 2: Roof Protection -->
-    <div class="price-card fade-in">
-      <div class="price-header" style="background:linear-gradient(135deg,#1B4F72,#2E86C1);">
-        <h2><i class="fas fa-shield-halved"></i> خيارات نظام Roof Protection</h2>
-        <div class="validity-badge"><i class="fas fa-ruler-combined"></i> المساحة: 720 م²</div>
-      </div>
-
-      <div class="price-table-wrap"><table class="price-table">
-        <thead>
-          <tr>
-            <th>عدد الطبقات</th>
-            <th>نسبة العزل الحراري</th>
-            <th>سعر المتر</th>
-            <th>الإجمالي (720 م²)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <div class="service-name">1 طبقة</div>
-              <div class="service-desc">حماية أساسية من الشمس والعوامل الجوية</div>
-            </td>
-            <td>
-              <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(56,161,105,0.1);color:#276749;padding:4px 12px;border-radius:50px;font-weight:700;font-size:13px;">
-                <i class="fas fa-shield"></i> 20%
-              </span>
-            </td>
-            <td class="price-range">25 د.إ / م²</td>
-            <td><strong style="color:var(--blue-dark);font-size:16px;">18,000 درهم</strong></td>
-          </tr>
-          <tr>
-            <td>
-              <div class="service-name">2 طبقة</div>
-              <div class="service-desc">حماية محسّنة لفترة أطول</div>
-            </td>
-            <td>
-              <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(56,161,105,0.1);color:#276749;padding:4px 12px;border-radius:50px;font-weight:700;font-size:13px;">
-                <i class="fas fa-shield"></i> 30%
-              </span>
-            </td>
-            <td class="price-range">45 د.إ / م²</td>
-            <td><strong style="color:var(--blue-dark);font-size:16px;">32,400 درهم</strong></td>
-          </tr>
-          <tr>
-            <td>
-              <div class="service-name" style="color:var(--gold);">3 طبقات ⭐ الموصى به</div>
-              <div class="service-desc">التوازن المثالي بين التكلفة والأداء</div>
-            </td>
-            <td>
-              <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(212,160,23,0.15);color:#7B5E0A;padding:4px 12px;border-radius:50px;font-weight:700;font-size:13px;">
-                <i class="fas fa-shield"></i> 40%
-              </span>
-            </td>
-            <td class="price-range" style="color:var(--gold);">65 د.إ / م²</td>
-            <td><strong style="color:var(--gold);font-size:16px;">46,800 درهم</strong></td>
-          </tr>
-          <tr>
-            <td>
-              <div class="service-name" style="color:var(--blue-accent);">4 طبقات — حماية متكاملة</div>
-              <div class="service-desc">أقصى درجات الحماية لنظام Roof Protection</div>
-            </td>
-            <td>
-              <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(26,109,175,0.12);color:#0B4F8A;padding:4px 12px;border-radius:50px;font-weight:700;font-size:13px;">
-                <i class="fas fa-shield"></i> 50%
-              </span>
-            </td>
-            <td class="price-range" style="color:var(--blue-accent);">80 د.إ / م²</td>
-            <td><strong style="color:var(--blue-accent);font-size:16px;">57,600 درهم</strong></td>
-          </tr>
-        </tbody>
       </table>
 
       <div class="price-note">
@@ -1454,7 +1413,7 @@ if (!empty($doc['custom_fields'])) {
       <p>لا تدع حرارة الصيف تسرق راحتك وتضاعف فاتورتك — فريقنا جاهز للمعاينة المجانية خلال 24 ساعة</p>
 
       <div class="cta-buttons">
-        <a href="https://wa.me/971586634710?text=السلام عليكم، أنا محمد سالم الخميسي، اطلعت على عرض السعر الخاص بعزل سطح فيلا 16 شارع السماح مدينة خليفة أبوظبي، وأريد اعتماد العرض والمضي قدماً. أرجو التواصل." class="btn btn-primary" target="_blank">
+        <a href="https://wa.me/971586634710?text=السلام عليكم، أنا جمال النعيمي، اطلعت على عرض السعر الخاص بعزل سطح جراج السيارات - بيت 19 شارع بلال بن رباح الراشدية 2 عجمان، وأريد اعتماد العرض والمضي قدماً." class="btn btn-primary" target="_blank">
           <i class="fab fa-whatsapp" style="font-size:20px;"></i>
           اعتمد العرض الآن عبر واتساب
         </a>
@@ -1474,33 +1433,6 @@ if (!empty($doc['custom_fields'])) {
 
   </div>
 </section>
-
-<!-- FOOTER مع الخريطة مدمجة -->
-<footer class="footer">
-  <!-- الخريطة داخل الفوتر -->
-  <div class="footer-map-wrap">
-    <iframe width="100%" height="200" style="border:0; filter: brightness(0.85) contrast(1.05); display: block;" loading="lazy" allowfullscreen src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=24.372480,54.538188&zoom=16&maptype=roadmap&language=ar"></iframe>
-  </div>
-
-  <!-- معلومات المكتب -->
-  <div style="margin-bottom: 16px; padding: 14px 20px; background: rgba(255,255,255,0.05); border-radius: 16px; margin: 0 16px 16px;">
-    <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;">
-      <i class="fas fa-location-dot" style="color: #E9C77B;"></i>
-      <span style="font-size: 13px;">مكتب 306، برج A3، مدينة محمد بن زايد، أبوظبي</span>
-      <a href="https://maps.google.com/?q=24.37248,54.538188" target="_blank" style="color: #E9C77B; text-decoration: none; font-size: 12px;">
-        <i class="fas fa-external-link-alt"></i> فتح الخريطة
-      </a>
-    </div>
-  </div>
-
-  <!-- النص الأصلي للفوتر -->
-  <div class="footer-office-bar">
-    <p>
-      <strong>ركن التطور للعوازل وكشف التسربات ذ.م.م</strong> · أبوظبي، الإمارات العربية المتحدة<br>
-      <span style="margin-top:6px;display:inline-block;">هذا العرض سري ومُعد حصرياً لصاحبه · رقم العرض: RET-LEAK-2026-0714 · تاريخ الفحص: الأربعاء 1 يوليو 2026</span>
-    </p>
-  </div>
-</footer>
 
 <script>
   // Scroll animations

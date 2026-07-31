@@ -334,47 +334,68 @@ class Installer
             $customerIds[] = (int) $pdo->lastInsertId();
         }
 
-        // Templates registry
-        $templates = [
-            ['فاتورة عربية', 'invoice-ar', 'invoice', 'ar', 'resources/templates/documents/invoice-ar.php', 1],
-            ['سند قبض عربي', 'receipt-ar', 'receipt', 'ar', 'resources/templates/documents/receipt-ar.php', 1],
-            ['سند قبض تنسيق حدائق', 'receipt-landscaping-ar', 'receipt', 'ar', 'resources/templates/documents/receipt-landscaping-ar.php', 0],
-            ['عرض سعر عربي', 'quotation-ar', 'quotation', 'ar', 'resources/templates/documents/quotation-ar.php', 1],
-            ['عرض سعر Cool Roof', 'quotation-coolroof-ar', 'quotation', 'ar', 'resources/templates/documents/quotation-coolroof-ar.php', 0],
-            ['عرض سعر Roof Protection', 'quotation-roof-ar', 'quotation', 'ar', 'resources/templates/documents/quotation-roof-ar.php', 0],
-            ['عرض سعر ري', 'quotation-irrigation-ar', 'quotation', 'ar', 'resources/templates/documents/quotation-irrigation-ar.php', 0],
-            ['عقد عربي', 'contract-ar', 'contract', 'ar', 'resources/templates/documents/contract-ar.php', 1],
-            ['عقد غطاء مسبح', 'contract-pool-cover-ar', 'contract', 'ar', 'resources/templates/documents/contract-pool-cover-ar.php', 0],
-            ['عقد صيانة مسبح', 'contract-pool-maintenance-ar', 'contract', 'ar', 'resources/templates/documents/contract-pool-maintenance-ar.php', 0],
-            ['تقرير تسربات عربي', 'report-leak-ar', 'report', 'ar', 'resources/templates/documents/report-leak-ar.php', 1],
-            ['تقرير تسربات إنجليزي', 'report-leak-en', 'report', 'en', 'resources/templates/documents/report-leak-en.php', 1],
-            ['تقرير فحص عربي', 'report-inspection-ar', 'report', 'ar', 'resources/templates/documents/report-inspection-ar.php', 0],
-            ['تقرير فحص إنجليزي', 'report-inspection-en', 'report', 'en', 'resources/templates/documents/report-inspection-en.php', 0],
-            ['شهادة ضمان عربي', 'warranty-ar', 'warranty', 'ar', 'resources/templates/documents/warranty-ar.php', 1],
-            ['شهادة ضمان إنجليزي', 'warranty-en', 'warranty', 'en', 'resources/templates/documents/warranty-en.php', 1],
-            ['فاتورة إنجليزي', 'invoice-en', 'invoice', 'en', 'resources/templates/documents/invoice-en.php', 1],
-            ['سند قبض إنجليزي', 'receipt-en', 'receipt', 'en', 'resources/templates/documents/receipt-en.php', 1],
-            ['عرض سعر إنجليزي', 'quotation-en', 'quotation', 'en', 'resources/templates/documents/quotation-en.php', 1],
-            ['عقد إنجليزي', 'contract-en', 'contract', 'en', 'resources/templates/documents/contract-en.php', 1],
-        ];
+        // Templates registry (from official ZIP analysis)
+        $registryFile = dirname(__DIR__) . '/designs/TEMPLATE_REGISTRY.json';
+        $templateRows = [];
+        if (is_file($registryFile)) {
+            $templateRows = json_decode(file_get_contents($registryFile), true) ?: [];
+        }
+        if (!$templateRows) {
+            $templateRows = [
+                ['name'=>'فاتورة عربية','slug'=>'ret-lnd-inv-0619','document_type'=>'invoice','language'=>'ar','file_path'=>'resources/templates/documents/ret-lnd-inv-0619.php','is_default'=>1,'source_file'=>'ret-lnd-inv-0619.html'],
+                ['name'=>'سند قبض عربي','slug'=>'rec7822','document_type'=>'receipt','language'=>'ar','file_path'=>'resources/templates/documents/rec7822.php','is_default'=>1,'source_file'=>'rec7822.html'],
+                ['name'=>'عرض سعر عربي','slug'=>'qu-2026-0714','document_type'=>'quotation','language'=>'ar','file_path'=>'resources/templates/documents/qu-2026-0714.php','is_default'=>1,'source_file'=>'qu-2026-0714.html'],
+                ['name'=>'عقد عربي','slug'=>'contract-jamal-alnaimi','document_type'=>'contract','language'=>'ar','file_path'=>'resources/templates/documents/contract-jamal-alnaimi.php','is_default'=>1,'source_file'=>'contract-jamal-alnaimi.html'],
+                ['name'=>'تقرير تسربات عربي','slug'=>'ret-leak-2026-0714','document_type'=>'report','language'=>'ar','file_path'=>'resources/templates/documents/ret-leak-2026-0714.php','is_default'=>1,'source_file'=>'ret-leak-2026-0714.html'],
+                ['name'=>'تقرير تسربات إنجليزي','slug'=>'ret-leak-2026-0714-en','document_type'=>'report','language'=>'en','file_path'=>'resources/templates/documents/RET-LEAK-2026-0714-EN.php','is_default'=>1,'source_file'=>'RET-LEAK-2026-0714-EN.html'],
+                ['name'=>'شهادة ضمان عربي','slug'=>'warranty-ar','document_type'=>'warranty','language'=>'ar','file_path'=>'resources/templates/documents/warranty-ar.php','is_default'=>1,'source_file'=>'generated'],
+                ['name'=>'شهادة ضمان إنجليزي','slug'=>'warranty-en','document_type'=>'warranty','language'=>'en','file_path'=>'resources/templates/documents/warranty-en.php','is_default'=>1,'source_file'=>'generated'],
+            ];
+        }
 
-        foreach ($templates as $t) {
+        foreach ($templateRows as $t) {
+            $type = $t['document_type'] ?? 'quotation';
+            if (!in_array($type, ['invoice','quotation','contract','receipt','report','warranty'], true)) {
+                $type = 'quotation';
+            }
             $pdo->prepare('INSERT INTO templates
-                (company_id,name,slug,document_type,language,file_path,is_active,is_default,created_at,updated_at)
-                VALUES (NULL,:name,:slug,:type,:lang,:path,1,:def,:c,:u)')
+                (company_id,name,slug,document_type,language,file_path,is_active,is_default,description,created_at,updated_at)
+                VALUES (NULL,:name,:slug,:type,:lang,:path,1,:def,:desc,:c,:u)')
                 ->execute([
-                    'name' => $t[0],
-                    'slug' => $t[1],
-                    'type' => $t[2],
-                    'lang' => $t[3],
-                    'path' => $t[4],
-                    'def' => $t[5],
+                    'name' => $t['name'],
+                    'slug' => $t['slug'],
+                    'type' => $type,
+                    'lang' => $t['language'] ?? 'ar',
+                    'path' => $t['file_path'],
+                    'def' => (int)($t['is_default'] ?? 0),
+                    'desc' => 'Official design: ' . ($t['source_file'] ?? ''),
                     'c' => $now,
                     'u' => $now,
                 ]);
         }
 
-        // Get default invoice template id
+        // Attach downloaded brand assets to first company when available
+        $brandSeal = dirname(__DIR__) . '/storage/uploads/brand/khtm.webp';
+        $brandSign = dirname(__DIR__) . '/storage/uploads/brand/sign.webp';
+        if (is_file($brandSeal) && !empty($companyIds[0])) {
+            @mkdir(dirname(__DIR__) . '/storage/uploads/seals', 0755, true);
+            @mkdir(dirname(__DIR__) . '/storage/uploads/signatures', 0755, true);
+            @copy($brandSeal, dirname(__DIR__) . '/storage/uploads/seals/khtm.webp');
+            $signRel = null;
+            if (is_file($brandSign)) {
+                @copy($brandSign, dirname(__DIR__) . '/storage/uploads/signatures/sign.webp');
+                $signRel = 'signatures/sign.webp';
+            }
+            $pdo->prepare('UPDATE companies SET seal = :seal, signature = :sign, updated_at = :u WHERE id = :id')
+                ->execute([
+                    'seal' => 'seals/khtm.webp',
+                    'sign' => $signRel,
+                    'u' => $now,
+                    'id' => $companyIds[0],
+                ]);
+        }
+
+                // Get default invoice template id
         $tplId = (int) $pdo->query("SELECT id FROM templates WHERE slug='invoice-ar' LIMIT 1")->fetchColumn();
         $year = (int) date('Y');
 

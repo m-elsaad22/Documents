@@ -3,6 +3,8 @@ storage/kdms.sqlite
 storage/installed.lock
 storage/uploads/**
 !storage/uploads/.gitkeep
+!storage/uploads/brand/
+!storage/uploads/brand/**
 storage/pdfs/**
 !storage/pdfs/.gitkeep
 storage/logs/**

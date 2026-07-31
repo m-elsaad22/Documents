@@ -1,43 +1,9 @@
-<?php
-/**
- * KDMS Dynamic Document Template
- * Design preserved 100% from official HTML.
- * Available vars: $doc, $company, $customer, $items, $media
- */
-$lang = $doc['language'] ?? 'ar';
-$dir = $lang === 'ar' ? 'rtl' : 'ltr';
-$companyName = $lang === 'ar' ? ($company['name_ar'] ?? '') : ($company['name_en'] ?? $company['name_ar'] ?? '');
-$companyNameAlt = $lang === 'ar' ? ($company['name_en'] ?? '') : ($company['name_ar'] ?? '');
-$customerName = $lang === 'ar'
-    ? ($customer['name_ar'] ?? $doc['customer_name_ar'] ?? '')
-    : ($customer['name_en'] ?? $customer['name_ar'] ?? $doc['customer_name_en'] ?? '');
-$customerAddress = $lang === 'ar'
-    ? ($customer['address_ar'] ?? $doc['project_address'] ?? '')
-    : ($customer['address_en'] ?? $customer['address_ar'] ?? $doc['project_address'] ?? '');
-$projectAddress = $doc['project_address'] ?: $customerAddress;
-$issueDate = format_date($doc['issue_date'] ?? null, $lang);
-$logo = !empty($company['logo']) ? upload_url($company['logo']) : '';
-$seal = !empty($company['seal']) ? upload_url($company['seal']) : '';
-$signature = !empty($company['signature']) ? upload_url($company['signature']) : '';
-$currency = $doc['currency'] ?? ($company['currency'] ?? 'AED');
-$currencyLabel = $lang === 'ar' ? ($company['currency_label_ar'] ?? $currency) : ($company['currency_label_en'] ?? $currency);
-$amountWords = $lang === 'ar' ? ($doc['amount_words_ar'] ?? '') : ($doc['amount_words_en'] ?? $doc['amount_words_ar'] ?? '');
-$cityCountry = trim(($company['city'] ?? '') . ' — ' . ($company['country'] ?? ''), ' —');
-$offices = [];
-if (!empty($company['offices_json'])) {
-    $offices = json_decode($company['offices_json'], true) ?: [];
-}
-$custom = [];
-if (!empty($doc['custom_fields'])) {
-    $custom = is_array($doc['custom_fields']) ? $doc['custom_fields'] : (json_decode($doc['custom_fields'], true) ?: []);
-}
-?>
 <!DOCTYPE html>
-<html lang="<?= e($lang) ?>" dir="<?= e($dir) ?>">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><?= e($doc['title'] ?? '') ?> | <?= e($companyName) ?></title>
+<title>عرض سعر - عزل سطح جراج Cool Roof | ركن التطور - عجمان</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -1056,13 +1022,6 @@ if (!empty($doc['custom_fields'])) {
 
   .quote-meta-item i { color: var(--gold-light); font-size: 12px; }
 </style>
-
-<?php if (empty($doc['show_seal'])): ?>
-<style>.seal, img.seal, .stamp-wrap, .stamp-box img{display:none!important;}</style>
-<?php endif; ?>
-<?php if (empty($doc['show_signature'])): ?>
-<style>img.sign, .sign{display:none!important;}</style>
-<?php endif; ?>
 </head>
 <body>
 
@@ -1108,7 +1067,7 @@ if (!empty($doc['custom_fields'])) {
     </p>
 
     <div class="quote-meta">
-      <div class="quote-meta-item"><i class="fas fa-hashtag"></i> <?= e($doc['document_number']) ?></div>
+      <div class="quote-meta-item"><i class="fas fa-hashtag"></i> RET-AJM-2026-0719</div>
       <div class="quote-meta-item"><i class="fas fa-calendar"></i> تاريخ الإصدار: 19 يوليو 2026</div>
       <div class="quote-meta-item"><i class="fas fa-clock"></i> صالح لمدة 30 يوماً</div>
     </div>
@@ -1320,21 +1279,32 @@ if (!empty($doc['custom_fields'])) {
           </tr>
         </thead>
         <tbody>
-<?php $n=1; foreach ($items as $item): ?>
-        <tr>
-          <td class="num"><?= $n++ ?></td>
-          <td>
-            <strong style="color:#004EA8;font-size:12.5px;"><?= e($item['title']) ?></strong>
-            <?php if (!empty($item['description'])): ?><br>
-            <span style="font-size:10.5px;color:var(--muted);line-height:1.65;"><?= nl2br(e($item['description'])) ?></span>
-            <?php endif; ?>
-          </td>
-          <td class="center"><?= e(rtrim(rtrim(number_format((float)$item['quantity'], 2), '0'), '.')) ?><?= !empty($item['unit']) ? ' '.e($item['unit']) : '' ?></td>
-          <td class="center"><?= e(number_format((float)$item['unit_price'], 2)) ?> <?= e($currency) ?></td>
-          <td class="center"><strong style="color:#004EA8;font-size:13.5px;"><?= e(number_format((float)$item['total'], 2)) ?> <?= e($currency) ?></strong></td>
-        </tr>
-<?php endforeach; ?>
-</tbody>
+          <tr>
+            <td>
+              <div class="service-name">2 طبقة — سطح جراج سيارات</div>
+              <div class="service-desc">نظام Cool Roof العاكس للحرارة — طبقتين نهائيتين</div>
+            </td>
+            <td>
+              <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(56,161,105,0.1);color:#276749;padding:4px 12px;border-radius:50px;font-weight:700;font-size:13px;">
+                <i class="fas fa-shield-halved"></i> 40%
+              </span>
+            </td>
+            <td class="price-range">60 د.إ / م²</td>
+            <td><strong style="color:var(--blue-dark);font-size:16px;">3,300 درهم</strong></td>
+          </tr>
+          <tr class="total-row">
+            <td colspan="3">الإجمالي قبل الخصم</td>
+            <td class="total-amount">3,300 درهم</td>
+          </tr>
+          <tr class="vat-row">
+            <td colspan="3"><i class="fas fa-tag" style="color:var(--gold);margin-left:6px;"></i> خصم العرض الخاص (10٪ — ساري حتى 20 يوليو)</td>
+            <td style="color:#C0392B;font-weight:700;">− 330 درهم</td>
+          </tr>
+          <tr class="grand-total-row">
+            <td colspan="3">الإجمالي النهائي المستحق</td>
+            <td class="grand-amount">2,970 درهم</td>
+          </tr>
+        </tbody>
       </table>
 
       <div class="price-note">

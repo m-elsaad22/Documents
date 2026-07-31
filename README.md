@@ -95,3 +95,23 @@ index.php       Front controller
 - Secure uploads (extension + image validation)
 - Activity logs
 - Session hardening
+
+## تحليل قوالب ZIP الرسمية
+
+تم فك ضغط `paper-html-design.zip` وتحليل **18 قالب HTML**:
+
+| النوع | العدد | ملاحظات |
+|------|------|---------|
+| Quotation | 6 | عربي |
+| Contract | 4 | عربي |
+| Report | 4 | عربي + إنجليزي |
+| Receipt | 2 | عربي |
+| Invoice | 1 | عربي |
+| Catalog | 1 | يُسجَّل كقالب عرض/مرجع |
+
+- ملف التحليل التفصيلي: `designs/ANALYSIS.md` و `designs/ANALYSIS.json`
+- القوالب الأصلية النظيفة: `designs/extracted/` و `designs/original/`
+- القوالب الديناميكية: `resources/templates/documents/` (24 قالب شامل نسخ EN/Warranty)
+- الشعارات/الأختام/الصور المستخرجة من روابط HTML حُفظت محلياً في `storage/uploads/brand/` و `public/assets/brand/`
+
+> ملاحظة: ملف ZIP يحتوي HTML فقط. ملفات الشعار والختم والتوقيع كانت روابط خارجية داخل التصاميم وتم تنزيلها وربطها بالمشروع.

@@ -1,0 +1,218 @@
+[
+  {
+    "name": "Water Leak Detection Report | Rukn Eltatawer Insulation & Leak Detection L.L.C",
+    "slug": "ret-leak-2026-0714-en",
+    "document_type": "report",
+    "language": "en",
+    "file_path": "resources/templates/documents/RET-LEAK-2026-0714-EN.php",
+    "is_default": 1,
+    "source_file": "RET-LEAK-2026-0714-EN.html"
+  },
+  {
+    "name": "عقد أعمال عزل سطح جراج سيارات — جمال النعيمي | ركن التطور",
+    "slug": "contract-jamal-alnaimi",
+    "document_type": "contract",
+    "language": "ar",
+    "file_path": "resources/templates/documents/contract-jamal-alnaimi.php",
+    "is_default": 1,
+    "source_file": "contract-jamal-alnaimi.html"
+  },
+  {
+    "name": "عقد توريد وتوصيل غطاء مسبح — أفنان حسن | ركن التطور",
+    "slug": "contract-pool-afnan-hassan",
+    "document_type": "contract",
+    "language": "ar",
+    "file_path": "resources/templates/documents/contract-pool-afnan-hassan.php",
+    "is_default": 0,
+    "source_file": "contract-pool-afnan-hassan.html"
+  },
+  {
+    "name": "عقد صيانة دورية للمسبح — ركن التطور لأحواض السباحة",
+    "slug": "contract-pool-hassan-hashmi",
+    "document_type": "contract",
+    "language": "ar",
+    "file_path": "resources/templates/documents/contract-pool-hassan-hashmi.php",
+    "is_default": 0,
+    "source_file": "contract-pool-hassan-hashmi.html"
+  },
+  {
+    "name": "عقد صيانة دورية للمسبح — ركن التطور لأحواض السباحة",
+    "slug": "contract-pool-khalil-hosni",
+    "document_type": "contract",
+    "language": "ar",
+    "file_path": "resources/templates/documents/contract-pool-khalil-hosni.php",
+    "is_default": 0,
+    "source_file": "contract-pool-khalil-hosni.html"
+  },
+  {
+    "name": "كتالوج كول رووف 2026 | ركن التطور",
+    "slug": "cool-roof-catalog-rukn",
+    "document_type": "quotation",
+    "language": "ar",
+    "file_path": "resources/templates/documents/cool-roof-catalog-rukn.php",
+    "is_default": 0,
+    "source_file": "cool-roof-catalog-rukn.html"
+  },
+  {
+    "name": "تقرير فحص مبنى قبل الشراء | ركن التطور للخدمات الهندسية المتكاملة",
+    "slug": "inspection-report-form",
+    "document_type": "report",
+    "language": "ar",
+    "file_path": "resources/templates/documents/inspection-report-form.php",
+    "is_default": 0,
+    "source_file": "inspection-report-form.html"
+  },
+  {
+    "name": "عرض سعر - عزل فيبر مرن ( المطاطي ) | ركن التطور للعوازل وكشف التسربات ذ.م.م",
+    "slug": "qu-2026-0714",
+    "document_type": "quotation",
+    "language": "ar",
+    "file_path": "resources/templates/documents/qu-2026-0714.php",
+    "is_default": 1,
+    "source_file": "qu-2026-0714.html"
+  },
+  {
+    "name": "عرض سعر - عزل Cool Roof | ركن التطور - أبوظبي",
+    "slug": "quotation-coolroof-auh-ar",
+    "document_type": "quotation",
+    "language": "ar",
+    "file_path": "resources/templates/documents/quotation-coolroof-auh-ar.php",
+    "is_default": 0,
+    "source_file": "quotation-coolroof-auh-ar.html"
+  },
+  {
+    "name": "عرض سعر - شبكة ري متكاملة | ركن التطور - العين",
+    "slug": "quotation-irrigation-ar",
+    "document_type": "quotation",
+    "language": "ar",
+    "file_path": "resources/templates/documents/quotation-irrigation-ar.php",
+    "is_default": 0,
+    "source_file": "quotation-irrigation-ar.html"
+  },
+  {
+    "name": "عرض سعر - عزل Cool Roof | ركن التطور - دبي",
+    "slug": "quote-06028-1",
+    "document_type": "quotation",
+    "language": "ar",
+    "file_path": "resources/templates/documents/quote-06028-1.php",
+    "is_default": 0,
+    "source_file": "quote-06028-1.html"
+  },
+  {
+    "name": "عرض سعر - عزل سطح جراج Cool Roof | ركن التطور - عجمان",
+    "slug": "quote-jamal-alnaimi",
+    "document_type": "quotation",
+    "language": "ar",
+    "file_path": "resources/templates/documents/quote-jamal-alnaimi.php",
+    "is_default": 0,
+    "source_file": "quote-jamal-alnaimi.html"
+  },
+  {
+    "name": "Technical Inspection Report — Rukn El-Tatawer | Pradeepkumar | Reem Island",
+    "slug": "re743",
+    "document_type": "report",
+    "language": "en",
+    "file_path": "resources/templates/documents/re743.php",
+    "is_default": 0,
+    "source_file": "re743.html"
+  },
+  {
+    "name": "سند قبض — الدفعة الأولى 75% | ركن التطور",
+    "slug": "rec7822",
+    "document_type": "receipt",
+    "language": "ar",
+    "file_path": "resources/templates/documents/rec7822.php",
+    "is_default": 1,
+    "source_file": "rec7822.html"
+  },
+  {
+    "name": "تقرير كشف تسربات المياه | ركن التطور للعوازل وكشف التسربات ذ.م.م",
+    "slug": "ret-leak-2026-0714",
+    "document_type": "report",
+    "language": "ar",
+    "file_path": "resources/templates/documents/ret-leak-2026-0714.php",
+    "is_default": 1,
+    "source_file": "ret-leak-2026-0714.html"
+  },
+  {
+    "name": "فاتورة — ركن التطور لتنسيق الحدائق | خادم الرميثي",
+    "slug": "ret-lnd-inv-0619",
+    "document_type": "invoice",
+    "language": "ar",
+    "file_path": "resources/templates/documents/ret-lnd-inv-0619.php",
+    "is_default": 1,
+    "source_file": "ret-lnd-inv-0619.html"
+  },
+  {
+    "name": "سند قبض — ركن التطور لتنسيق الحدائق | خادم الرميثي",
+    "slug": "ret-lnd-rcp-0827",
+    "document_type": "receipt",
+    "language": "ar",
+    "file_path": "resources/templates/documents/ret-lnd-rcp-0827.php",
+    "is_default": 0,
+    "source_file": "ret-lnd-rcp-0827.html"
+  },
+  {
+    "name": "عرض سعر - Roof Protection | ركن التطور - أبوظبي",
+    "slug": "rukn-coolroof-quote",
+    "document_type": "quotation",
+    "language": "ar",
+    "file_path": "resources/templates/documents/rukn-coolroof-quote.php",
+    "is_default": 0,
+    "source_file": "rukn-coolroof-quote.html"
+  },
+  {
+    "name": "شهادة ضمان",
+    "slug": "warranty-ar",
+    "document_type": "warranty",
+    "language": "ar",
+    "file_path": "resources/templates/documents/warranty-ar.php",
+    "is_default": 1,
+    "source_file": "generated"
+  },
+  {
+    "name": "Warranty Certificate",
+    "slug": "warranty-en",
+    "document_type": "warranty",
+    "language": "en",
+    "file_path": "resources/templates/documents/warranty-en.php",
+    "is_default": 1,
+    "source_file": "generated"
+  },
+  {
+    "name": "invoice EN",
+    "slug": "invoice-en",
+    "document_type": "invoice",
+    "language": "en",
+    "file_path": "resources/templates/documents/invoice-en.php",
+    "is_default": 1,
+    "source_file": "ret-lnd-inv-0619.html"
+  },
+  {
+    "name": "receipt EN",
+    "slug": "receipt-en",
+    "document_type": "receipt",
+    "language": "en",
+    "file_path": "resources/templates/documents/receipt-en.php",
+    "is_default": 1,
+    "source_file": "rec7822.html"
+  },
+  {
+    "name": "quotation EN",
+    "slug": "quotation-en",
+    "document_type": "quotation",
+    "language": "en",
+    "file_path": "resources/templates/documents/quotation-en.php",
+    "is_default": 1,
+    "source_file": "qu-2026-0714.html"
+  },
+  {
+    "name": "contract EN",
+    "slug": "contract-en",
+    "document_type": "contract",
+    "language": "en",
+    "file_path": "resources/templates/documents/contract-en.php",
+    "is_default": 1,
+    "source_file": "contract-jamal-alnaimi.html"
+  }
+]

@@ -1,36 +1,54 @@
 <?php
 /**
- * KDMS Dynamic Document Template
- * Design preserved 100% from official HTML.
- * Available vars: $doc, $company, $customer, $items, $media
+ * KDMS Dynamic Template — design preserved 100% from official HTML.
+ * Vars: $doc, $company, $customer, $items, $media
  */
 $lang = $doc['language'] ?? 'ar';
-$dir = $lang === 'ar' ? 'rtl' : 'ltr';
-$companyName = $lang === 'ar' ? ($company['name_ar'] ?? '') : ($company['name_en'] ?? $company['name_ar'] ?? '');
-$companyNameAlt = $lang === 'ar' ? ($company['name_en'] ?? '') : ($company['name_ar'] ?? '');
-$customerName = $lang === 'ar'
-    ? ($customer['name_ar'] ?? $doc['customer_name_ar'] ?? '')
-    : ($customer['name_en'] ?? $customer['name_ar'] ?? $doc['customer_name_en'] ?? '');
-$customerAddress = $lang === 'ar'
-    ? ($customer['address_ar'] ?? $doc['project_address'] ?? '')
-    : ($customer['address_en'] ?? $customer['address_ar'] ?? $doc['project_address'] ?? '');
+$dir = ($lang === 'ar') ? 'rtl' : 'ltr';
+$companyName = ($lang === 'ar')
+    ? ($company['name_ar'] ?? '')
+    : ($company['name_en'] ?? $company['name_ar'] ?? '');
+$companyNameAlt = ($lang === 'ar')
+    ? ($company['name_en'] ?? '')
+    : ($company['name_ar'] ?? '');
+$customerName = ($lang === 'ar')
+    ? ($customer['name_ar'] ?? '')
+    : ($customer['name_en'] ?? $customer['name_ar'] ?? '');
+$customerAddress = ($lang === 'ar')
+    ? ($customer['address_ar'] ?? '')
+    : ($customer['address_en'] ?? $customer['address_ar'] ?? '');
 $projectAddress = $doc['project_address'] ?: $customerAddress;
 $issueDate = format_date($doc['issue_date'] ?? null, $lang);
 $logo = !empty($company['logo']) ? upload_url($company['logo']) : '';
 $seal = !empty($company['seal']) ? upload_url($company['seal']) : '';
 $signature = !empty($company['signature']) ? upload_url($company['signature']) : '';
 $currency = $doc['currency'] ?? ($company['currency'] ?? 'AED');
-$currencyLabel = $lang === 'ar' ? ($company['currency_label_ar'] ?? $currency) : ($company['currency_label_en'] ?? $currency);
-$amountWords = $lang === 'ar' ? ($doc['amount_words_ar'] ?? '') : ($doc['amount_words_en'] ?? $doc['amount_words_ar'] ?? '');
+$currencyLabel = ($lang === 'ar')
+    ? ($company['currency_label_ar'] ?? $currency)
+    : ($company['currency_label_en'] ?? $currency);
+$amountWords = ($lang === 'ar')
+    ? ($doc['amount_words_ar'] ?? '')
+    : ($doc['amount_words_en'] ?? $doc['amount_words_ar'] ?? '');
 $cityCountry = trim(($company['city'] ?? '') . ' — ' . ($company['country'] ?? ''), ' —');
 $offices = [];
 if (!empty($company['offices_json'])) {
-    $offices = json_decode($company['offices_json'], true) ?: [];
+    $decoded = json_decode($company['offices_json'], true);
+    if (is_array($decoded)) { $offices = $decoded; }
 }
 $custom = [];
 if (!empty($doc['custom_fields'])) {
-    $custom = is_array($doc['custom_fields']) ? $doc['custom_fields'] : (json_decode($doc['custom_fields'], true) ?: []);
+    $custom = is_array($doc['custom_fields'])
+        ? $doc['custom_fields']
+        : (json_decode($doc['custom_fields'], true) ?: []);
 }
+$mediaUrls = [];
+foreach (($media ?? []) as $m) {
+    if (!empty($m['file_path'])) {
+        $mediaUrls[] = upload_url($m['file_path']);
+    }
+}
+$totalFmt = number_format((float)($doc['total'] ?? 0), 2);
+$totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
 ?>
 <!DOCTYPE html>
 <html lang="<?= e($lang) ?>" dir="<?= e($dir) ?>">
@@ -425,12 +443,17 @@ if (!empty($doc['custom_fields'])) {
   }
 </style>
 
-<?php if (empty($doc['show_seal'])): ?>
-<style>.seal, img.seal, .stamp-wrap, .stamp-box img{display:none!important;}</style>
-<?php endif; ?>
-<?php if (empty($doc['show_signature'])): ?>
-<style>img.sign, .sign{display:none!important;}</style>
-<?php endif; ?>
+<?php if (empty($doc['show_seal'])): ?><style>.seal, img.seal, .stamp-wrap img, .stamp-box img{display:none!important;}</style><?php endif; ?>
+<?php if (empty($doc['show_signature'])): ?><style>img.sign, .sign{display:none!important;}</style><?php endif; ?>
+<style>
+@media print{
+  .kdms-toolbar,.no-print,.print-bar{display:none!important;}
+  @page{size:A4 portrait;margin:10mm;}
+  thead{display:table-header-group;}
+  tr,img,.sig-row,.sig-box,.stamp-box,.info-grid,.amount-hero{break-inside:avoid;page-break-inside:avoid;}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+}
+</style>
 </head>
 <body>
 
@@ -472,7 +495,7 @@ if (!empty($doc['custom_fields'])) {
     </h1>
 
     <div class="quote-meta">
-      <div class="quote-meta-item"><i class="fas fa-hashtag"></i> <?= e($doc['document_number']) ?></div>
+      <div class="quote-meta-item"><i class="fas fa-hashtag"></i> RET-CON-AJM-2026-0719</div>
       <div class="quote-meta-item"><i class="fas fa-calendar"></i> تاريخ التحرير: 19 يوليو 2026</div>
     </div>
 
@@ -542,18 +565,14 @@ if (!empty($doc['custom_fields'])) {
               <tr><th style="width:36px;">#</th><th>البند</th><th style="width:120px;">المواصفة</th></tr>
             </thead>
             <tbody>
-<?php $n=1; foreach ($items as $item): ?>
+<?php $n = 1; foreach ($items as $item): ?>
         <tr>
-          <td class="num"><?= $n++ ?></td>
-          <td>
-            <strong style="color:#004EA8;font-size:12.5px;"><?= e($item['title']) ?></strong>
-            <?php if (!empty($item['description'])): ?><br>
-            <span style="font-size:10.5px;color:var(--muted);line-height:1.65;"><?= nl2br(e($item['description'])) ?></span>
-            <?php endif; ?>
+          <td style="text-align:center;"><?= $n++ ?></td>
+          <td colspan="1">
+            <strong><?= e($item['title']) ?></strong>
+            <?php if (!empty($item['description'])): ?><div style="font-size:11px;opacity:.8;"><?= nl2br(e($item['description'])) ?></div><?php endif; ?>
           </td>
-          <td class="center"><?= e(rtrim(rtrim(number_format((float)$item['quantity'], 2), '0'), '.')) ?><?= !empty($item['unit']) ? ' '.e($item['unit']) : '' ?></td>
-          <td class="center"><?= e(number_format((float)$item['unit_price'], 2)) ?> <?= e($currency) ?></td>
-          <td class="center"><strong style="color:#004EA8;font-size:13.5px;"><?= e(number_format((float)$item['total'], 2)) ?> <?= e($currency) ?></strong></td>
+          <td style="text-align:center;"><strong><?= e(number_format((float)$item['total'], 2)) ?> <?= e($currency) ?></strong></td>
         </tr>
 <?php endforeach; ?>
 </tbody>
@@ -687,7 +706,7 @@ if (!empty($doc['custom_fields'])) {
           <div class="sb-label">الطرف الأول — المقاول</div>
           <div class="sb-name">ركن التطور لأنظمة العزل الحديث ذ.م.م</div>
           <div class="sig-images">
-            <img class="combined" src="<?= e($seal) ?>" alt="ختم وتوقيع ركن التطور">
+            <img class="combined" src="<?= e($seal ?: asset('brand/khtm.webp')) ?>" alt="ختم وتوقيع ركن التطور">
           </div>
         </div>
         <div class="sig-box">
@@ -718,18 +737,5 @@ if (!empty($doc['custom_fields'])) {
   </div>
 </footer>
 
-
-<?php if (!empty($media)): ?>
-<div class="kdms-media" style="margin:16px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;">
-<?php foreach ($media as $m): if (($m['type'] ?? '') === 'image' && !empty($m['file_path'])): ?>
-  <figure style="margin:0;break-inside:avoid;page-break-inside:avoid;">
-    <img src="<?= e(upload_url($m['file_path'])) ?>" alt="<?= e($m['title'] ?? '') ?>" style="width:100%;max-height:260px;object-fit:cover;border-radius:8px;border:1px solid rgba(0,0,0,.08);">
-    <?php if (!empty($m['caption']) || !empty($m['title'])): ?>
-    <figcaption style="font-size:11px;color:#4A6A8A;margin-top:6px;text-align:center;"><?= e($m['caption'] ?: $m['title']) ?></figcaption>
-    <?php endif; ?>
-  </figure>
-<?php endif; endforeach; ?>
-</div>
-<?php endif; ?>
 </body>
 </html>

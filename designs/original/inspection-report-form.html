@@ -1,43 +1,9 @@
-<?php
-/**
- * KDMS Dynamic Document Template
- * Design preserved 100% from official HTML.
- * Available vars: $doc, $company, $customer, $items, $media
- */
-$lang = $doc['language'] ?? 'ar';
-$dir = $lang === 'ar' ? 'rtl' : 'ltr';
-$companyName = $lang === 'ar' ? ($company['name_ar'] ?? '') : ($company['name_en'] ?? $company['name_ar'] ?? '');
-$companyNameAlt = $lang === 'ar' ? ($company['name_en'] ?? '') : ($company['name_ar'] ?? '');
-$customerName = $lang === 'ar'
-    ? ($customer['name_ar'] ?? $doc['customer_name_ar'] ?? '')
-    : ($customer['name_en'] ?? $customer['name_ar'] ?? $doc['customer_name_en'] ?? '');
-$customerAddress = $lang === 'ar'
-    ? ($customer['address_ar'] ?? $doc['project_address'] ?? '')
-    : ($customer['address_en'] ?? $customer['address_ar'] ?? $doc['project_address'] ?? '');
-$projectAddress = $doc['project_address'] ?: $customerAddress;
-$issueDate = format_date($doc['issue_date'] ?? null, $lang);
-$logo = !empty($company['logo']) ? upload_url($company['logo']) : '';
-$seal = !empty($company['seal']) ? upload_url($company['seal']) : '';
-$signature = !empty($company['signature']) ? upload_url($company['signature']) : '';
-$currency = $doc['currency'] ?? ($company['currency'] ?? 'AED');
-$currencyLabel = $lang === 'ar' ? ($company['currency_label_ar'] ?? $currency) : ($company['currency_label_en'] ?? $currency);
-$amountWords = $lang === 'ar' ? ($doc['amount_words_ar'] ?? '') : ($doc['amount_words_en'] ?? $doc['amount_words_ar'] ?? '');
-$cityCountry = trim(($company['city'] ?? '') . ' — ' . ($company['country'] ?? ''), ' —');
-$offices = [];
-if (!empty($company['offices_json'])) {
-    $offices = json_decode($company['offices_json'], true) ?: [];
-}
-$custom = [];
-if (!empty($doc['custom_fields'])) {
-    $custom = is_array($doc['custom_fields']) ? $doc['custom_fields'] : (json_decode($doc['custom_fields'], true) ?: []);
-}
-?>
 <!DOCTYPE html>
-<html lang="<?= e($lang) ?>" dir="<?= e($dir) ?>">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><?= e($doc['title'] ?? '') ?> | <?= e($companyName) ?></title>
+<title>تقرير فحص مبنى قبل الشراء | ركن التطور للخدمات الهندسية المتكاملة</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -411,6 +377,56 @@ if (!empty($doc['custom_fields'])) {
     font-size: 14px;
     font-weight: 700;
     color: var(--blue-dark);
+  }
+
+  /* ===== SCOPE GRID ===== */
+  .scope-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+  }
+
+  .scope-item {
+    background: linear-gradient(135deg, rgba(11,37,69,0.04), rgba(26,109,175,0.03));
+    border: 1px solid rgba(11,37,69,0.08);
+    border-right: 4px solid var(--blue-accent);
+    border-radius: 12px 0 0 12px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .scope-item:hover {
+    background: linear-gradient(135deg, rgba(26,109,175,0.08), rgba(33,150,211,0.05));
+    transform: translateX(-3px);
+  }
+
+  .scope-item i {
+    width: 34px;
+    height: 34px;
+    background: linear-gradient(135deg, var(--blue-dark), var(--blue-accent));
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .scope-item .scope-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--blue-dark);
+    margin-bottom: 3px;
+  }
+
+  .scope-item .scope-desc {
+    font-size: 12px;
+    color: var(--gray-mid);
+    line-height: 1.5;
   }
 
   /* ===== DARK PRODUCT CARD ===== */
@@ -854,8 +870,9 @@ if (!empty($doc['custom_fields'])) {
     background: var(--blue-dark);
     color: rgba(255,255,255,0.6);
     text-align: center;
-    padding: 28px 20px;
-    font-size: 13px;
+    padding: 24px 20px;
+    font-size: 12px;
+    line-height: 1.8;
   }
 
   .footer strong { color: var(--gold-light); }
@@ -888,13 +905,6 @@ if (!empty($doc['custom_fields'])) {
     * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
   }
 </style>
-
-<?php if (empty($doc['show_seal'])): ?>
-<style>.seal, img.seal, .stamp-wrap, .stamp-box img{display:none!important;}</style>
-<?php endif; ?>
-<?php if (empty($doc['show_signature'])): ?>
-<style>img.sign, .sign{display:none!important;}</style>
-<?php endif; ?>
 </head>
 <body>
 
@@ -912,52 +922,52 @@ if (!empty($doc['custom_fields'])) {
 
   <div class="hero-top-bar">
     <div class="logo-area">
-      <div class="logo-icon"><i class="fas fa-droplet-slash"></i></div>
+      <div class="logo-icon"><i class="fas fa-building-shield"></i></div>
       <div class="logo-text">
-        <h1>ركن التطور للعوازل وكشف التسربات ذ.م.م</h1>
-        <span>RUKN ELTATAWER · Insulation &amp; Leak Detection L.L.C</span>
+        <h1>ركن التطور للخدمات الهندسية المتكاملة</h1>
+        <span>RUKN ELTATAWER · Integrated Engineering Services</span>
       </div>
     </div>
     <div class="hero-badge">
       <i class="fas fa-award"></i>
-      <span>معتمدون رسمياً · أبوظبي، الإمارات العربية المتحدة</span>
+      <span>معتمدون رسمياً · الإمارات العربية المتحدة</span>
     </div>
   </div>
 
   <div class="hero-content">
     <div class="report-label">
-      <i class="fas fa-magnifying-glass-location"></i>
-      تقرير كشف تسربات مياه رسمي
+      <i class="fas fa-clipboard-check"></i>
+      تقرير فحص فني رسمي · ما قبل الشراء
     </div>
 
     <h1 class="hero-title">
-      تقرير <span class="highlight">كشف تسربات المياه</span><br>
-      فيلا العميل محمد سالم الخميسي — مدينة محمد بن زايد
+      تقرير <span class="highlight">فحص مبنى شامل</span><br>
+      قبل اتخاذ قرار الشراء
     </h1>
 
     <p class="hero-subtitle">
-      فحص ميداني دقيق لمصادر تسرب المياه في العقار، يشمل عزل السطح، بايبات وحدات التكييف،
-      وجراوتن الحمامات — مع تحديد الأسباب والمخاطر والتوصيات الفنية اللازمة للمعالجة.
+      فحص هندسي دقيق ومتكامل للعقار يشمل الهيكل الإنشائي، السباكة، الكهرباء، التكييف،
+      العزل، والتشطيبات — مع تقرير مفصّل وتوصيات فنية واضحة.
     </p>
 
     <div class="report-meta">
-      <div class="meta-item"><i class="fas fa-hashtag"></i> <?= e($doc['document_number']) ?></div>
-      <div class="meta-item"><i class="fas fa-calendar-alt"></i> تاريخ الفحص: الأربعاء 1 يوليو 2026</div>
-      <div class="meta-item"><i class="fas fa-location-dot"></i> مدينة محمد بن زايد، أبوظبي</div>
+      <div class="meta-item"><i class="fas fa-hashtag"></i> RET-INS-2026-[رقم التقرير]</div>
+      <div class="meta-item"><i class="fas fa-calendar-alt"></i> تاريخ الفحص: [التاريخ]</div>
+      <div class="meta-item"><i class="fas fa-user-tie"></i> المفتش: [اسم المهندس]</div>
     </div>
 
     <div class="hero-stats">
       <div class="stat-item">
-        <div class="stat-num">3</div>
+        <div class="stat-num">9</div>
         <div class="stat-label">محاور فحص رئيسية</div>
       </div>
       <div class="stat-item">
-        <div class="stat-num">1</div>
-        <div class="stat-label">مصدر خطر عاجل</div>
+        <div class="stat-num">500+</div>
+        <div class="stat-label">تقرير فحص منجز</div>
       </div>
       <div class="stat-item">
         <div class="stat-num">100%</div>
-        <div class="stat-label">فحص ميداني مباشر</div>
+        <div class="stat-label">فحص بالأجهزة المتخصصة</div>
       </div>
       <div class="stat-item">
         <div class="stat-num">24h</div>
@@ -983,7 +993,7 @@ if (!empty($doc['custom_fields'])) {
       <div class="card-icon"><i class="fas fa-user-tie"></i></div>
       <div>
         <h2>بيانات العميل والعقار</h2>
-        <p>معلومات العميل والعقار محل الفحص</p>
+        <p>معلومات المشتري المحتمل والعقار المراد فحصه</p>
       </div>
       <div class="sec-num-badge" style="margin-right: auto;">1</div>
     </div>
@@ -992,42 +1002,56 @@ if (!empty($doc['custom_fields'])) {
         <i class="fas fa-user"></i>
         <div>
           <div class="label">اسم العميل</div>
-          <div class="value">محمد سالم الخميسي</div>
+          <div class="value">[اسم العميل]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-phone"></i>
+        <div>
+          <div class="label">رقم التواصل</div>
+          <div class="value">[رقم الهاتف]</div>
         </div>
       </div>
       <div class="info-item">
         <i class="fas fa-location-dot"></i>
         <div>
           <div class="label">موقع العقار</div>
-          <div class="value">فيلا 313، شارع حسن بن هميلة المزروعي — حوض 17 — مدينة محمد بن زايد، أبوظبي</div>
+          <div class="value">[عنوان العقار]</div>
         </div>
       </div>
       <div class="info-item">
         <i class="fas fa-home"></i>
         <div>
           <div class="label">نوع العقار</div>
-          <div class="value">فيلا سكنية</div>
+          <div class="value">[فيلا / شقة / مبنى تجاري]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-ruler-combined"></i>
+        <div>
+          <div class="label">المساحة الإجمالية</div>
+          <div class="value">[المساحة بالمتر المربع]</div>
         </div>
       </div>
       <div class="info-item">
         <i class="fas fa-calendar-check"></i>
         <div>
           <div class="label">تاريخ الفحص</div>
-          <div class="value">الأربعاء 1 يوليو 2026</div>
-        </div>
-      </div>
-      <div class="info-item">
-        <i class="fas fa-magnifying-glass"></i>
-        <div>
-          <div class="label">نوع الفحص</div>
-          <div class="value">كشف تسربات مياه — فحص ميداني</div>
+          <div class="value">[التاريخ]</div>
         </div>
       </div>
       <div class="info-item">
         <i class="fas fa-hard-hat"></i>
         <div>
-          <div class="label">الفريق المنفذ</div>
-          <div class="value">فريق ركن التطور الفني</div>
+          <div class="label">المهندس المنفذ</div>
+          <div class="value">[اسم المهندس المسؤول]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-building"></i>
+        <div>
+          <div class="label">عمر المبنى التقريبي</div>
+          <div class="value">[عدد السنوات]</div>
         </div>
       </div>
     </div>
@@ -1039,38 +1063,83 @@ if (!empty($doc['custom_fields'])) {
       <div class="dark-icon"><i class="fas fa-clipboard-list"></i></div>
       <div>
         <div class="dark-title">نطاق الفحص ومحاوره الرئيسية</div>
-        <div class="dark-sub">المحاور التي تم فحصها ميدانياً لتحديد مصادر تسرب المياه</div>
+        <div class="dark-sub">ما يشمله التقرير بالتفصيل — فحص شامل ودقيق لكل عنصر في المبنى</div>
       </div>
     </div>
 
     <div class="inspect-grid">
       <div class="inspect-box">
-        <i class="fas fa-layer-group"></i>
-        <div class="ib-title">عزل السطح وبايبات التكييف</div>
-        <div class="ib-sub">حالة العزل حول البايبات ومنافذ الشاش</div>
+        <i class="fas fa-building"></i>
+        <div class="ib-title">الهيكل والإنشاءات</div>
+        <div class="ib-sub">الجدران · الأسقف · الأعمدة · التشققات</div>
+      </div>
+      <div class="inspect-box">
+        <i class="fas fa-faucet-drip"></i>
+        <div class="ib-title">السباكة وكشف التسريبات</div>
+        <div class="ib-sub">المواسير · التصريف · التسربات الخفية</div>
+      </div>
+      <div class="inspect-box">
+        <i class="fas fa-bolt"></i>
+        <div class="ib-title">الكهرباء والتوصيلات</div>
+        <div class="ib-sub">الأحمال · التوصيلات · اللوحات الكهربائية</div>
       </div>
       <div class="inspect-box">
         <i class="fas fa-snowflake"></i>
-        <div class="ib-title">بايبات الضغط الرئيسية</div>
-        <div class="ib-sub">عزل خطوط التكييف الرئيسية على السطح</div>
+        <div class="ib-title">التكييف والتهوية</div>
+        <div class="ib-sub">الوحدات · المواسير · كفاءة التبريد</div>
       </div>
       <div class="inspect-box">
-        <i class="fas fa-bath"></i>
-        <div class="ib-title">جراوتن الحمامات</div>
-        <div class="ib-sub">فحص مادة الحشو بين السيراميك بالشوكة</div>
+        <i class="fas fa-layer-group"></i>
+        <div class="ib-title">العزل والأسطح</div>
+        <div class="ib-sub">العزل المائي والحراري · حالة السطح</div>
+      </div>
+      <div class="inspect-box">
+        <i class="fas fa-paint-roller"></i>
+        <div class="ib-title">التشطيبات وجودة المواد</div>
+        <div class="ib-sub">الدهانات · الأرضيات · البلاط · الجبس</div>
+      </div>
+      <div class="inspect-box">
+        <i class="fas fa-camera"></i>
+        <div class="ib-title">توثيق الملاحظات</div>
+        <div class="ib-sub">صور للمشكلات والعيوب المكتشفة</div>
+      </div>
+      <div class="inspect-box">
+        <i class="fas fa-star-half-stroke"></i>
+        <div class="ib-title">التقييم العام للعقار</div>
+        <div class="ib-sub">تقييم شامل لحالة كل عنصر</div>
+      </div>
+      <div class="inspect-box">
+        <i class="fas fa-lightbulb"></i>
+        <div class="ib-title">التوصيات الفنية</div>
+        <div class="ib-sub">هل العقار مناسب للشراء؟</div>
       </div>
     </div>
   </div>
 
-  <!-- 3. ROOF INSULATION — MAIN ISSUE -->
-  <div class="base-card accent-danger fade-in">
+  <!-- 3. STRUCTURAL & CIVIL -->
+  <div class="base-card fade-in">
     <div class="card-header">
-      <div class="card-icon danger"><i class="fas fa-house-flood-water"></i></div>
+      <div class="card-icon"><i class="fas fa-building"></i></div>
       <div>
-        <h2>أولاً: فحص عزل السطح — المشكلة الرئيسية</h2>
-        <p>تسرب مياه من السطح باتجاه لوحة الكهرباء أسفله</p>
+        <h2>أولاً: فحص الهيكل والإنشاءات</h2>
+        <p>الجدران — الأسقف — الأعمدة — التشققات والهبوط</p>
       </div>
       <div class="sec-num-badge" style="margin-right: auto;">2</div>
+    </div>
+
+    <div class="cond-grid" style="margin-bottom: 22px;">
+      <div class="cond-card cc-blue">
+        <div class="cc-head"><i class="fas fa-square"></i> الجدران الحاملة</div>
+        <div class="cc-body">[وصف الحالة: مثال — لا توجد تشققات هيكلية ظاهرة. الجدران متماسكة وبحالة جيدة عموماً مع وجود تشققات سطحية بسيطة في بعض المناطق.]</div>
+      </div>
+      <div class="cond-card cc-amber">
+        <div class="cc-head"><i class="fas fa-border-top-left"></i> الأسقف</div>
+        <div class="cc-body">[وصف الحالة: مثال — يوجد بعض التشققات في سقف الصالة الرئيسية بحاجة إلى معالجة. لا توجد دلائل على هبوط هيكلي.]</div>
+      </div>
+      <div class="cond-card cc-green">
+        <div class="cc-head"><i class="fas fa-house-crack"></i> الأعمدة والأساسات</div>
+        <div class="cc-body">[وصف الحالة: مثال — الأعمدة الظاهرة بحالة جيدة. لا توجد مؤشرات على هبوط في الأساسات.]</div>
+      </div>
     </div>
 
     <div class="section-label">الملاحظات التفصيلية</div>
@@ -1078,122 +1147,401 @@ if (!empty($doc['custom_fields'])) {
       <li class="fi">
         <div class="fi-num">1</div>
         <div>
-          <div class="fi-title">فتحات البايبات على السطح غير مغلقة</div>
-          <div class="fi-desc">منافذ خروج بايبات التكييف على السطح غير مغلقة بالكامل حول محيطها، ما يسمح بتسرب مياه الأمطار ومياه التكييف إلى الداخل عبر هذه الفتحات.</div>
-          <span class="fi-tag tag-high"><i class="fas fa-triangle-exclamation"></i> عالية الخطورة</span>
+          <div class="fi-title">تشققات سطحية في جدران الغرف</div>
+          <div class="fi-desc">رُصدت تشققات سطحية في طبقة البياض بغرفة النوم الرئيسية والممر — غير هيكلية ولا تؤثر على سلامة المبنى، وتُعالج بالبياض والدهان.</div>
+          <span class="fi-tag tag-ok"><i class="fas fa-circle-check"></i> منخفضة الخطورة</span>
         </div>
       </li>
       <li class="fi">
         <div class="fi-num">2</div>
         <div>
-          <div class="fi-title">الشاش المستخدم غير  مُحكم التغطية</div>
-          <div class="fi-desc">الشاش المُركب حول فتحات البايبات   لا يغطي الفتحة بشكل محكم، ما يترك مساحات مكشوفة تسمح بدخول المياه.</div>
-          <span class="fi-tag tag-high"><i class="fas fa-triangle-exclamation"></i> عالية الخطورة</span>
+          <div class="fi-title">[عنوان الملاحظة الثانية]</div>
+          <div class="fi-desc">[وصف تفصيلي للملاحظة وتأثيرها الهندسي]</div>
+          <span class="fi-tag tag-med"><i class="fas fa-circle-exclamation"></i> متوسطة الخطورة</span>
         </div>
       </li>
       <li class="fi">
         <div class="fi-num">3</div>
         <div>
-          <div class="fi-title">أجزاء من السطح مكشوفة وغير معزولة</div>
-          <div class="fi-desc">بالإضافه إلى الغرفتين اللتين تحويان فتحات البايبات، توجد أماكن أخرى مفتوحة على السطح وغير معزولة مائياً، ما يزيد من احتمالية تسرب المياه إلى الأسقف الداخلية.</div>
-          <span class="fi-tag tag-high"><i class="fas fa-triangle-exclamation"></i> عالية الخطورة</span>
-        </div>
-      </li>
-      <li class="fi">
-        <div class="fi-num">4</div>
-        <div>
-          <div class="fi-title">تسرب مياه مباشر إلى لوحة الكهرباء أسفل السطح</div>
-          <div class="fi-desc">النتيجة المباشرة لهذه المشكلات هي تسرب المياه عبر السطح إلى لوحة الكهرباء الموجودة أسفله مباشرة — وهو أخطر ملاحظة في هذا التقرير، حيث يشكل خطراً كهربائياً حقيقياً يستوجب تدخلاً فورياً قبل أي معالجة أخرى.</div>
-          <span class="fi-tag tag-high"><i class="fas fa-bolt"></i> خطر عاجل — أولوية قصوى</span>
+          <div class="fi-title">[عنوان الملاحظة الثالثة]</div>
+          <div class="fi-desc">[وصف تفصيلي للملاحظة]</div>
+          <span class="fi-tag tag-high"><i class="fas fa-circle-exclamation"></i> عالية الخطورة</span>
         </div>
       </li>
     </ul>
   </div>
 
-  <!-- 4. AC MAIN PRESSURE PIPES -->
-  <div class="base-card accent-amber fade-in">
+  <!-- 4. PLUMBING -->
+  <div class="base-card accent-gold fade-in">
     <div class="card-header">
-      <div class="card-icon amber"><i class="fas fa-temperature-high"></i></div>
+      <div class="card-icon gold"><i class="fas fa-faucet-drip"></i></div>
       <div>
-        <h2>ثانياً: عزل بايبات الضغط الرئيسية للتكييف</h2>
-        <p>خطوط التكييف الرئيسية على السطح — وحدة التكييف الرئيسية</p>
+        <h2>ثانياً: فحص السباكة وكشف التسريبات</h2>
+        <p>شبكة المياه — الصرف الصحي — التسريبات الخفية</p>
       </div>
       <div class="sec-num-badge" style="margin-right: auto;">3</div>
     </div>
 
-    <div class="section-label">الملاحظات التفصيلية</div>
+    <div class="cond-grid" style="margin-bottom: 22px;">
+      <div class="cond-card cc-green">
+        <div class="cc-head"><i class="fas fa-pipe-circle-check"></i> شبكة المياه الباردة</div>
+        <div class="cc-body">[وصف الحالة وضغط المياه ومواد التمديدات]</div>
+      </div>
+      <div class="cond-card cc-amber">
+        <div class="cc-head"><i class="fas fa-temperature-high"></i> شبكة المياه الساخنة</div>
+        <div class="cc-body">[وصف حالة مواسير المياه الساخنة والسخّانات]</div>
+      </div>
+      <div class="cond-card cc-blue">
+        <div class="cc-head"><i class="fas fa-toilet"></i> شبكة الصرف الصحي</div>
+        <div class="cc-body">[وصف حالة الصرف وفاعليته]</div>
+      </div>
+    </div>
+
+    <div class="section-label">نتائج كشف التسريبات بالأجهزة</div>
     <ul class="findings-list">
       <li class="fi">
         <div class="fi-num">1</div>
         <div>
-          <div class="fi-title">استخدام ممبرين أسود لاصق بدلاً من مادة العزل المخصصة</div>
-          <div class="fi-desc">بايبات الضغط الرئيسية الخاصة بوحدة التكييف الرئيسية على السطح معزولة حالياً بممبرين أسود لاصق (bituminous membrane)، وهي مادة غير مخصصة لعزل خطوط التكييف. هذه المادة تضعف كفاءة التبريد تدريجياً، وقد تؤدي في النهاية إلى تلف الوحدة بالكامل إن لم تُستبدل بمادة عازلة حرارياً مخصصة لبايبات التكييف (مثل عزل الأرمافلكس أو ما يعادله).</div>
-          <span class="fi-tag tag-med"><i class="fas fa-circle-exclamation"></i> متوسطة الخطورة — يُوصى بالمعالجة قريباً</span>
+          <div class="fi-title">تسرب في منطقة الحمام الرئيسي</div>
+          <div class="fi-desc">[وصف تفصيلي للتسرب — موقعه وسببه ومدى خطورته ومقترح العلاج]</div>
+          <span class="fi-tag tag-high"><i class="fas fa-droplet"></i> يستوجب معالجة فورية</span>
+        </div>
+      </li>
+      <li class="fi">
+        <div class="fi-num">2</div>
+        <div>
+          <div class="fi-title">رطوبة في جدار المطبخ الخلفي</div>
+          <div class="fi-desc">[وصف الرطوبة ومصدرها المحتمل]</div>
+          <span class="fi-tag tag-med"><i class="fas fa-droplets"></i> متوسطة الخطورة</span>
         </div>
       </li>
     </ul>
   </div>
 
-  <!-- 5. BATHROOM GROUT -->
-  <div class="base-card accent-gold fade-in">
+  <!-- 5. ELECTRICAL -->
+  <div class="base-card accent-danger fade-in">
     <div class="card-header">
-      <div class="card-icon gold"><i class="fas fa-bath"></i></div>
+      <div class="card-icon danger"><i class="fas fa-bolt"></i></div>
       <div>
-        <h2>ثالثاً: فحص جراوتن الحمامات</h2>
-        <p>مادة الحشو بين بلاط الحمامات — فحص مباشر بالشوكة</p>
+        <h2>ثالثاً: فحص الكهرباء والتوصيلات</h2>
+        <p>اللوحة الرئيسية — الأحمال — السلامة الكهربائية</p>
       </div>
       <div class="sec-num-badge" style="margin-right: auto;">4</div>
     </div>
 
-    <div class="section-label">الملاحظات التفصيلية</div>
+    <div class="info-grid" style="margin-bottom: 20px;">
+      <div class="info-item">
+        <i class="fas fa-table-cells"></i>
+        <div>
+          <div class="label">اللوحة الكهربائية الرئيسية</div>
+          <div class="value">[نوعها وحالتها]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-plug-circle-check"></i>
+        <div>
+          <div class="label">الحمل الكهربائي الكلي</div>
+          <div class="value">[بالأمبير / الكيلوواط]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-shield-halved"></i>
+        <div>
+          <div class="label">قواطع الحماية (MCB/RCCB)</div>
+          <div class="value">[موجودة / غير كاملة / بحاجة لتحديث]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-plug"></i>
+        <div>
+          <div class="label">حالة المقابس والمفاتيح</div>
+          <div class="value">[جيدة / تحتاج استبدال جزئي]</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">الملاحظات الكهربائية</div>
     <ul class="findings-list">
       <li class="fi">
         <div class="fi-num">1</div>
         <div>
-          <div class="fi-title">جراوتن الحمامات ضعيف جداً ويحتاج استبدالاً كاملاً</div>
-          <div class="fi-desc">عند فحص الجراوتن (مادة حشو الفواصل بين السيراميك) في الحمامات باستخدام الشوكة، تبيّن أنه ضعيف جداً لدرجة أنه كان يُنزع بسهولة باليد. نسبة الملوحة العالية في المياه تعمل على تفتيت هذه المادة تدريجياً، ما يسمح بتسرب المياه إلى طبقة الدفان أو الرمل أسفل السيراميك، ويؤدي مع الوقت إلى إتلاف البنية أسفل الأرضية.</div>
-          <span class="fi-tag tag-high"><i class="fas fa-triangle-exclamation"></i> عالية الخطورة — يستوجب الاستبدال</span>
+          <div class="fi-title">[ملاحظة كهربائية 1]</div>
+          <div class="fi-desc">[تفاصيل الملاحظة وتأثيرها على السلامة]</div>
+          <span class="fi-tag tag-high"><i class="fas fa-triangle-exclamation"></i> خطر — يستوجب المعالجة</span>
+        </div>
+      </li>
+      <li class="fi">
+        <div class="fi-num">2</div>
+        <div>
+          <div class="fi-title">[ملاحظة كهربائية 2]</div>
+          <div class="fi-desc">[تفاصيل الملاحظة]</div>
+          <span class="fi-tag tag-med"><i class="fas fa-circle-exclamation"></i> متوسطة الخطورة</span>
         </div>
       </li>
     </ul>
   </div>
 
-  <!-- 7. OVERALL RATING -->
+  <!-- 6. AC & VENTILATION -->
   <div class="base-card fade-in">
     <div class="card-header">
-      <div class="card-icon gold"><i class="fas fa-star-half-stroke"></i></div>
+      <div class="card-icon"><i class="fas fa-snowflake"></i></div>
       <div>
-        <h2>التقييم العام للمحاور المفحوصة</h2>
-        <p>نظرة شاملة على حالة كل محور من محاور الكشف</p>
+        <h2>رابعاً: فحص التكييف والتهوية</h2>
+        <p>وحدات التكييف — مواسير الصرف — الفلاتر — كفاءة التبريد</p>
       </div>
       <div class="sec-num-badge" style="margin-right: auto;">5</div>
     </div>
 
-    <div class="rating-grid">
-      <div class="rating-item bad">
-        <div class="rating-label">عزل السطح حول البايبات</div>
-        <div class="rating-stars">⭐☆☆☆☆</div>
-        <div class="rating-text">يستوجب تدخلاً عاجلاً</div>
+    <div class="info-grid" style="margin-bottom: 20px;">
+      <div class="info-item">
+        <i class="fas fa-wind"></i>
+        <div>
+          <div class="label">نوع نظام التكييف</div>
+          <div class="value">[سبليت / مركزي / دكت]</div>
+        </div>
       </div>
-      <div class="rating-item bad">
-        <div class="rating-label">السلامة الكهربائية (لوحة الكهرباء)</div>
-        <div class="rating-stars">⭐☆☆☆☆</div>
-        <div class="rating-text">خطر مباشر</div>
+      <div class="info-item">
+        <i class="fas fa-temperature-low"></i>
+        <div>
+          <div class="label">عدد الوحدات</div>
+          <div class="value">[عدد الوحدات وطاقتها]</div>
+        </div>
       </div>
-      <div class="rating-item medium">
-        <div class="rating-label">عزل بايبات الضغط الرئيسية</div>
-        <div class="rating-stars">⭐⭐☆☆☆</div>
-        <div class="rating-text">يحتاج معالجة</div>
+      <div class="info-item">
+        <i class="fas fa-calendar"></i>
+        <div>
+          <div class="label">عمر الوحدات</div>
+          <div class="value">[سنوات الاستخدام التقريبية]</div>
+        </div>
       </div>
-      <div class="rating-item bad">
-        <div class="rating-label">جراوتن الحمامات</div>
-        <div class="rating-stars">⭐☆☆☆☆</div>
-        <div class="rating-text">يحتاج استبدالاً كاملاً</div>
+      <div class="info-item">
+        <i class="fas fa-star"></i>
+        <div>
+          <div class="label">كفاءة التبريد العامة</div>
+          <div class="value">[ممتاز / جيد / يحتاج صيانة]</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">نتائج الفحص</div>
+    <ul class="findings-list">
+      <li class="fi">
+        <div class="fi-num">1</div>
+        <div>
+          <div class="fi-title">حالة وحدات التكييف</div>
+          <div class="fi-desc">[وصف حالة الوحدات ومدى احتياجها لصيانة أو استبدال]</div>
+          <span class="fi-tag tag-ok"><i class="fas fa-circle-check"></i> حالة جيدة</span>
+        </div>
+      </li>
+      <li class="fi">
+        <div class="fi-num">2</div>
+        <div>
+          <div class="fi-title">تسرب في مواسير تصريف التكييف</div>
+          <div class="fi-desc">[وصف موقع التسرب والضرر الناجم عنه]</div>
+          <span class="fi-tag tag-med"><i class="fas fa-circle-exclamation"></i> يحتاج معالجة</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 7. INSULATION & ROOF -->
+  <div class="base-card accent-amber fade-in">
+    <div class="card-header">
+      <div class="card-icon amber"><i class="fas fa-layer-group"></i></div>
+      <div>
+        <h2>خامساً: فحص العزل والأسطح</h2>
+        <p>العزل المائي والحراري — حالة السطح — بحوض السطح</p>
+      </div>
+      <div class="sec-num-badge" style="margin-right: auto;">6</div>
+    </div>
+
+    <div class="cond-grid" style="margin-bottom: 20px;">
+      <div class="cond-card cc-amber">
+        <div class="cc-head"><i class="fas fa-droplet-slash"></i> العزل المائي</div>
+        <div class="cc-body">[وصف حالة العزل المائي للسطح — هل يوجد تشققات أو بؤر تسرب]</div>
+      </div>
+      <div class="cond-card cc-blue">
+        <div class="cc-head"><i class="fas fa-sun"></i> العزل الحراري</div>
+        <div class="cc-body">[وصف حالة العزل الحراري ومدى كفاءته في خفض درجات الحرارة]</div>
+      </div>
+      <div class="cond-card cc-green">
+        <div class="cc-head"><i class="fas fa-house"></i> حالة السطح العام</div>
+        <div class="cc-body">[الحالة العامة للسطح وبحوض الصرف والطبقة التشطيبية]</div>
+      </div>
+    </div>
+
+    <div class="section-label">التفاصيل والملاحظات</div>
+    <ul class="findings-list">
+      <li class="fi">
+        <div class="fi-num">1</div>
+        <div>
+          <div class="fi-title">وجود تشققات في طبقة العزل القديمة</div>
+          <div class="fi-desc">[وصف التشققات وحجمها وتأثيرها المحتمل على المبنى والحل المقترح]</div>
+          <span class="fi-tag tag-med"><i class="fas fa-circle-exclamation"></i> يُوصى بالمعالجة قبل الصيف</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 8. FINISHES -->
+  <div class="base-card accent-green fade-in">
+    <div class="card-header">
+      <div class="card-icon green"><i class="fas fa-paint-roller"></i></div>
+      <div>
+        <h2>سادساً: فحص التشطيبات وجودة المواد</h2>
+        <p>الأرضيات — البلاط — الدهانات — الجبس — الألمونيوم</p>
+      </div>
+      <div class="sec-num-badge" style="margin-right: auto;">7</div>
+    </div>
+
+    <div class="info-grid" style="margin-bottom: 20px;">
+      <div class="info-item">
+        <i class="fas fa-border-all"></i>
+        <div>
+          <div class="label">نوع الأرضيات</div>
+          <div class="value">[رخام / بورسلان / باركيه — حالتها]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-paintbrush"></i>
+        <div>
+          <div class="label">حالة الدهانات</div>
+          <div class="value">[جيدة / تحتاج إعادة دهان / متشققة]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-window-maximize"></i>
+        <div>
+          <div class="label">الألمونيوم والزجاج</div>
+          <div class="value">[حالة النوافذ والأبواب الخارجية]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-door-closed"></i>
+        <div>
+          <div class="label">الأبواب الداخلية</div>
+          <div class="value">[نوعها وحالتها وجودة التركيب]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-kitchen-set"></i>
+        <div>
+          <div class="label">المطبخ (دواليب وطبليات)</div>
+          <div class="value">[جودة المواد وحالة التركيب]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-bath"></i>
+        <div>
+          <div class="label">الحمامات والمطابخ</div>
+          <div class="value">[حالة الأدوات الصحية والمواد]</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">الملاحظات التفصيلية</div>
+    <ul class="findings-list">
+      <li class="fi">
+        <div class="fi-num">1</div>
+        <div>
+          <div class="fi-title">[ملاحظة التشطيبات 1]</div>
+          <div class="fi-desc">[وصف تفصيلي]</div>
+          <span class="fi-tag tag-ok"><i class="fas fa-circle-check"></i> حالة مقبولة</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 9. PHOTOS -->
+  <div class="base-card fade-in">
+    <div class="card-header">
+      <div class="card-icon"><i class="fas fa-camera"></i></div>
+      <div>
+        <h2>توثيق الملاحظات بالصور</h2>
+        <p>صور للمشكلات والعيوب المرصودة خلال الفحص الميداني</p>
+      </div>
+      <div class="sec-num-badge" style="margin-right: auto;">8</div>
+    </div>
+
+    <div class="photos-note">
+      الصور أدناه توثيق فعلي للملاحظات والعيوب التي رصدها الفريق الهندسي خلال زيارة الفحص الميداني.
+      كل صورة مرفق معها وصف موجز للمشكلة وموقعها في العقار.
+    </div>
+
+    <div class="photos-placeholder">
+      <div class="photo-box">
+        <i class="fas fa-image"></i>
+        <span>صورة 1<br>[وصف المشكلة والموقع]</span>
+      </div>
+      <div class="photo-box">
+        <i class="fas fa-image"></i>
+        <span>صورة 2<br>[وصف المشكلة والموقع]</span>
+      </div>
+      <div class="photo-box">
+        <i class="fas fa-image"></i>
+        <span>صورة 3<br>[وصف المشكلة والموقع]</span>
+      </div>
+      <div class="photo-box">
+        <i class="fas fa-image"></i>
+        <span>صورة 4<br>[وصف المشكلة والموقع]</span>
+      </div>
+      <div class="photo-box">
+        <i class="fas fa-image"></i>
+        <span>صورة 5<br>[وصف المشكلة والموقع]</span>
+      </div>
+      <div class="photo-box">
+        <i class="fas fa-image"></i>
+        <span>صورة 6<br>[وصف المشكلة والموقع]</span>
       </div>
     </div>
   </div>
 
-  <!-- 8. RISKS -->
+  <!-- 10. OVERALL RATING -->
+  <div class="base-card fade-in">
+    <div class="card-header">
+      <div class="card-icon gold"><i class="fas fa-star-half-stroke"></i></div>
+      <div>
+        <h2>التقييم العام للعقار</h2>
+        <p>نظرة شاملة على حالة كل محور من محاور الفحص</p>
+      </div>
+      <div class="sec-num-badge" style="margin-right: auto;">9</div>
+    </div>
+
+    <div class="rating-grid">
+      <div class="rating-item good">
+        <div class="rating-label">الهيكل الإنشائي</div>
+        <div class="rating-stars">⭐⭐⭐⭐☆</div>
+        <div class="rating-text">جيد جداً</div>
+      </div>
+      <div class="rating-item medium">
+        <div class="rating-label">السباكة والتسريبات</div>
+        <div class="rating-stars">⭐⭐⭐☆☆</div>
+        <div class="rating-text">يحتاج معالجة</div>
+      </div>
+      <div class="rating-item medium">
+        <div class="rating-label">الكهرباء والتوصيلات</div>
+        <div class="rating-stars">⭐⭐⭐☆☆</div>
+        <div class="rating-text">مقبول مع ملاحظات</div>
+      </div>
+      <div class="rating-item good">
+        <div class="rating-label">التكييف والتهوية</div>
+        <div class="rating-stars">⭐⭐⭐⭐☆</div>
+        <div class="rating-text">جيد</div>
+      </div>
+      <div class="rating-item bad">
+        <div class="rating-label">العزل والأسطح</div>
+        <div class="rating-stars">⭐⭐☆☆☆</div>
+        <div class="rating-text">يحتاج تدخل</div>
+      </div>
+      <div class="rating-item good">
+        <div class="rating-label">التشطيبات والمواد</div>
+        <div class="rating-stars">⭐⭐⭐⭐☆</div>
+        <div class="rating-text">جيد جداً</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11. RISKS -->
   <div class="base-card accent-danger fade-in">
     <div class="card-header">
       <div class="card-icon danger"><i class="fas fa-shield-halved"></i></div>
@@ -1201,34 +1549,34 @@ if (!empty($doc['custom_fields'])) {
         <h2>المخاطر الحالية والمستقبلية</h2>
         <p>تقييم الأضرار القائمة وما قد ينتج عنها إذا تُركت دون معالجة</p>
       </div>
-      <div class="sec-num-badge" style="margin-right: auto;">6</div>
+      <div class="sec-num-badge" style="margin-right: auto;">10</div>
     </div>
 
     <div class="risk-grid">
       <div class="risk-card rc-present">
         <div class="rc-head"><i class="fas fa-eye"></i> الأضرار والمشكلات الحالية</div>
         <ul class="rc-body">
-          <li><i class="fas fa-diamond"></i> تسرب مياه فعلي من السطح إلى لوحة الكهرباء</li>
-          <li><i class="fas fa-diamond"></i> فتحات بايبات مكشوفة وغير مغلقة على السطح</li>
-          <li><i class="fas fa-diamond"></i> شاش غير مناسب لا يغطي منافذ التسرب</li>
-          <li><i class="fas fa-diamond"></i> عزل غير مناسب لبايبات الضغط الرئيسية للتكييف</li>
-          <li><i class="fas fa-diamond"></i> جراوتن ضعيف جداً في الحمامات يسرب المياه للدفان</li>
+          <li><i class="fas fa-diamond"></i> [مشكلة حالية 1]</li>
+          <li><i class="fas fa-diamond"></i> [مشكلة حالية 2]</li>
+          <li><i class="fas fa-diamond"></i> [مشكلة حالية 3]</li>
+          <li><i class="fas fa-diamond"></i> [مشكلة حالية 4]</li>
+          <li><i class="fas fa-diamond"></i> [مشكلة حالية 5]</li>
         </ul>
       </div>
       <div class="risk-card rc-future">
         <div class="rc-head"><i class="fas fa-triangle-exclamation"></i> المخاطر المستقبلية إن تُركت</div>
         <ul class="rc-body">
-          <li><i class="fas fa-diamond"></i> خطر كهربائي جسيم نتيجة وصول المياه إلى اللوحة الكهربائية</li>
-          <li><i class="fas fa-diamond"></i> ضعف تدريجي في كفاءة التكييف وصولاً إلى تلف الوحدة الرئيسية</li>
-          <li><i class="fas fa-diamond"></i> تلف الرمل والدفان أسفل سيراميك الحمامات وتدهور الأرضية</li>
-          <li><i class="fas fa-diamond"></i> تسرب المياه إلى الأسقف الداخلية وظهور رطوبة وعفن</li>
-          <li><i class="fas fa-diamond"></i> ارتفاع تكلفة الإصلاح كلما تأخرت المعالجة</li>
+          <li><i class="fas fa-diamond"></i> تدهور هيكلي تدريجي في حالة استمرار التسربات</li>
+          <li><i class="fas fa-diamond"></i> نمو العفن والفطريات مع مخاطر صحية على الساكنين</li>
+          <li><i class="fas fa-diamond"></i> ارتفاع تكاليف الإصلاح كلما تأخر التدخل</li>
+          <li><i class="fas fa-diamond"></i> انخفاض قيمة العقار السوقية</li>
+          <li><i class="fas fa-diamond"></i> [خطر مستقبلي إضافي مخصص للعقار]</li>
         </ul>
       </div>
     </div>
   </div>
 
-  <!-- 9. TECHNICAL RECOMMENDATIONS -->
+  <!-- 12. TECHNICAL RECOMMENDATIONS -->
   <div class="base-card fade-in">
     <div class="card-header">
       <div class="card-icon green"><i class="fas fa-lightbulb"></i></div>
@@ -1236,78 +1584,92 @@ if (!empty($doc['custom_fields'])) {
         <h2>التوصيات الفنية</h2>
         <p>إجراءات العلاج المقترحة مرتبة حسب الأولوية</p>
       </div>
-      <div class="sec-num-badge" style="margin-right: auto;">7</div>
+      <div class="sec-num-badge" style="margin-right: auto;">11</div>
     </div>
 
     <div class="rec-box">
       <div class="rec-title">
         <i class="fas fa-list-check"></i>
-        الإجراءات الموصى بها
+        الإجراءات الموصى بها قبل إتمام الشراء أو فور الاستلام
       </div>
       <ul class="rec-list">
         <li class="rec-item">
           <div class="rec-dot"></div>
-          <span><strong>أولوية قصوى:</strong> إغلاق فتحات البايبات على السطح بمادة عازلة مائية محكمة، ومعالجة موقع التسرب فوق لوحة الكهرباء فوراً لإزالة الخطر الكهربائي.</span>
+          <span><strong>أولوية قصوى:</strong> معالجة التسريبات في الحمام الرئيسي بعزل مائي متخصص قبل أي تشطيب.</span>
         </li>
         <li class="rec-item">
           <div class="rec-dot"></div>
-          <span><strong>أولوية قصوى:</strong> معالجة أخطاء الشاش وتغطيته بالعازل وجعله محكم التغطية حول جميع فتحات البايبات.</span>
+          <span><strong>مهم:</strong> مراجعة اللوحة الكهربائية وإضافة قواطع الحماية الناقصة بواسطة كهربائي معتمد.</span>
         </li>
         <li class="rec-item">
           <div class="rec-dot"></div>
-          <span><strong>مهم:</strong> إعادة عزل كامل مساحة السطح مائياً، بما يشمل الأجزاء المكشوفة خارج الغرفتين الحاليتين.</span>
+          <span><strong>مهم:</strong> إصلاح وإعادة عزل السطح حرارياً ومائياً قبل موسم الصيف.</span>
         </li>
         <li class="rec-item">
           <div class="rec-dot"></div>
-          <span><strong>مهم:</strong> استبدال الممبرين الأسود على بايبات الضغط الرئيسية بمادة عزل حراري مخصصة لخطوط التكييف.</span>
+          <span>[توصية فنية إضافية 4]</span>
         </li>
         <li class="rec-item">
           <div class="rec-dot"></div>
-          <span><strong>مهم:</strong> إزالة جراوتن الحمامات القديم بالكامل وإعادة الحشو بمادة جراوتن عالية الجودة مقاومة للملوحة.</span>
+          <span>[توصية فنية إضافية 5]</span>
         </li>
         <li class="rec-item">
           <div class="rec-dot"></div>
-          <span><strong>توصية:</strong> فحص لوحة الكهرباء من قِبل كهربائي معتمد للتأكد من عدم وجود ضرر ناتج عن التسرب السابق.</span>
+          <span><strong>توصية:</strong> صيانة وحدات التكييف وتنظيف الفلاتر والفحص الدوري السنوي.</span>
         </li>
       </ul>
     </div>
   </div>
 
-  <!-- 10. FINAL VERDICT -->
+  <!-- 13. FINAL VERDICT -->
   <div class="verdict-card fade-in">
+    <!-- Change class to: verdict-suitable / verdict-caution / verdict-unsuitable -->
     <div class="verdict-caution">
       <div class="verdict-header">
         <div class="verdict-icon"><i class="fas fa-circle-exclamation"></i></div>
         <div>
-          <div class="verdict-label">الرأي الفني النهائي</div>
-          <div class="verdict-text">يستوجب تدخلاً عاجلاً قبل موسم الأمطار</div>
+          <div class="verdict-label">الرأي الهندسي النهائي</div>
+          <!-- Options: مناسب للشراء / مناسب مع ملاحظات / غير مناسب للشراء حالياً -->
+          <div class="verdict-text">مناسب للشراء مع ملاحظات هامة</div>
         </div>
       </div>
       <div class="verdict-body">
         <p>
-          بناءً على الفحص الميداني الذي أجراه فريق <strong>ركن التطور للعوازل وكشف التسربات</strong>،
-          تم تحديد مصدر تسرب المياه بشكل واضح في عزل السطح حول فتحات بايبات التكييف، مع ملاحظات إضافية
-          في عزل بايبات الضغط الرئيسية وجراوتن الحمامات.
+          بناءً على الفحص الميداني الشامل الذي أجراه فريق <strong>ركن التطور للخدمات الهندسية المتكاملة</strong>،
+          وبعد تقييم جميع محاور العقار، يرى الفريق الهندسي أن العقار <strong>مناسب للشراء</strong> مع
+          ضرورة مراعاة الملاحظات المذكورة في هذا التقرير.
         </p>
         <br>
         <p>
-          الملاحظة الأخطر هي وصول المياه المتسربة من السطح إلى <strong>لوحة الكهرباء</strong> الموجودة
-          أسفله مباشرة، وهو ما يستوجب معالجة فورية قبل أي إجراء آخر نظراً لما يمثله من خطر مباشر على
-          سلامة السكان. باقي الملاحظات (بايبات الضغط وجراوتن الحمامات) قابلة للمعالجة ضمن خطة عزل شاملة
-          للسطح والحمامات.
+          تستوجب بعض المشكلات المرصودة — لا سيما [أبرز مشكلة] — معالجةً فورية قبل السكن أو
+          التفاوض على خفض السعر بما يغطي تكاليف الإصلاح المقدّرة. الهيكل الإنشائي للمبنى
+          سليم بشكل عام وغير مهدد، والمشكلات قابلة للحل بتكاليف معقولة.
         </p>
         <br>
         <p style="color: var(--gray-mid); font-size: 13px;">
-          يُنصح بالتواصل مع فريقنا للحصول على عرض أسعار لمعالجة جميع المشكلات المرصودة في هذا التقرير.
+          يُنصح بالتواصل مع فريقنا للحصول على عرض أسعار علاج المشكلات المرصودة قبل إتمام الشراء.
         </p>
+
+        <div class="sig-row">
+          <div class="sig-box">
+            <div class="sig-lbl">المهندس المنفذ</div>
+            <div class="sig-name">[اسم المهندس]</div>
+            <div class="sig-line">توقيع المهندس المسؤول</div>
+          </div>
+          <div class="sig-box">
+            <div class="sig-lbl">اعتماد الشركة</div>
+            <div class="sig-name">ركن التطور للخدمات الهندسية المتكاملة</div>
+            <div class="sig-line">الختم الرسمي للشركة</div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
 
-  <!-- 11. CTA -->
+  <!-- 14. CTA -->
   <div class="cta-section fade-in">
     <h2>تواصل معنا لمعالجة المشكلات المرصودة</h2>
-    <p>فريقنا الفني جاهز لتقديم عرض أسعار لحل جميع الملاحظات الواردة في التقرير</p>
+    <p>فريقنا الهندسي جاهز لتقديم عروض أسعار لحل جميع الملاحظات الواردة في التقرير</p>
 
     <div class="cta-buttons">
       <a href="https://wa.me/971XXXXXXXX" class="btn btn-wa">
@@ -1321,42 +1683,25 @@ if (!empty($doc['custom_fields'])) {
     </div>
 
     <div class="trust-row">
-      <div class="trust-item"><i class="fas fa-circle-check"></i> فريق فني معتمد</div>
-      <div class="trust-item"><i class="fas fa-circle-check"></i> أجهزة كشف تسربات متخصصة</div>
+      <div class="trust-item"><i class="fas fa-circle-check"></i> فريق هندسي معتمد</div>
+      <div class="trust-item"><i class="fas fa-circle-check"></i> أجهزة كشف متخصصة</div>
       <div class="trust-item"><i class="fas fa-circle-check"></i> تقرير خلال 24 ساعة</div>
-      <div class="trust-item"><i class="fas fa-circle-check"></i> ضمان على أعمال العزل</div>
+      <div class="trust-item"><i class="fas fa-circle-check"></i> 500+ تقرير منجز</div>
     </div>
   </div>
 
 </div>
 </section>
 
-<!-- FOOTER مع الخريطة مدمجة -->
+<!-- ===== FOOTER ===== -->
 <footer class="footer">
-  <!-- الخريطة داخل الفوتر -->
-  <div style="margin-bottom: 24px; border-radius: 24px; overflow: hidden;">
-    <iframe width="100%" height="200" style="border:0; filter: brightness(0.85) contrast(1.05); display: block;" loading="lazy" allowfullscreen src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=24.372480,54.538188&zoom=16&maptype=roadmap&language=ar"></iframe>
-  </div>
-
-  <!-- معلومات المكتب -->
-  <div style="margin-bottom: 20px; padding: 16px; background: rgba(255,255,255,0.05); border-radius: 20px;">
-    <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;">
-      <i class="fas fa-location-dot" style="color: #E9C77B;"></i>
-      <span style="font-size: 13px;">Office 306, Tower A3, MBZ City, AbuDhabi</span>
-      <a href="https://maps.google.com/?q=24.37248,54.538188" target="_blank" style="color: #E9C77B; text-decoration: none; font-size: 12px;">
-        <i class="fas fa-external-link-alt"></i> فتح الخريطة
-      </a>
-    </div>
-  </div>
-
-  <!-- النص الأصلي للفوتر -->
-  <p>
-    <strong>ركن التطور لأنظمة العزل الحديث ذ.م.م</strong><br>
-    <span style="margin-top:6px;display:inline-block;">هذا التقرير سري ومُعد حصرياً لصاحبه · رقم التقرير: RET-LEAK-2026-0714 · تاريخ الإصدار: الأربعاء 1 يوليو 2026</span>
-  </p>
+  <strong>ركن التطور للخدمات الهندسية المتكاملة</strong><br>
+  الإمارات العربية المتحدة · خدمات هندسية متكاملة · فحص مباني · كشف تسربات · عزل<br>
+  رقم التقرير: <strong>RET-INS-2026-[XXXX]</strong> · تاريخ الإصدار: [التاريخ]
 </footer>
 
 <script>
+  // Fade-in on scroll
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {

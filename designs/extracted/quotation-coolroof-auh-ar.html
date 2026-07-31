@@ -1,61 +1,9 @@
-<?php
-/**
- * KDMS Dynamic Template — design preserved 100% from official HTML.
- * Vars: $doc, $company, $customer, $items, $media
- */
-$lang = $doc['language'] ?? 'ar';
-$dir = ($lang === 'ar') ? 'rtl' : 'ltr';
-$companyName = ($lang === 'ar')
-    ? ($company['name_ar'] ?? '')
-    : ($company['name_en'] ?? $company['name_ar'] ?? '');
-$companyNameAlt = ($lang === 'ar')
-    ? ($company['name_en'] ?? '')
-    : ($company['name_ar'] ?? '');
-$customerName = ($lang === 'ar')
-    ? ($customer['name_ar'] ?? '')
-    : ($customer['name_en'] ?? $customer['name_ar'] ?? '');
-$customerAddress = ($lang === 'ar')
-    ? ($customer['address_ar'] ?? '')
-    : ($customer['address_en'] ?? $customer['address_ar'] ?? '');
-$projectAddress = $doc['project_address'] ?: $customerAddress;
-$issueDate = format_date($doc['issue_date'] ?? null, $lang);
-$logo = !empty($company['logo']) ? upload_url($company['logo']) : '';
-$seal = !empty($company['seal']) ? upload_url($company['seal']) : '';
-$signature = !empty($company['signature']) ? upload_url($company['signature']) : '';
-$currency = $doc['currency'] ?? ($company['currency'] ?? 'AED');
-$currencyLabel = ($lang === 'ar')
-    ? ($company['currency_label_ar'] ?? $currency)
-    : ($company['currency_label_en'] ?? $currency);
-$amountWords = ($lang === 'ar')
-    ? ($doc['amount_words_ar'] ?? '')
-    : ($doc['amount_words_en'] ?? $doc['amount_words_ar'] ?? '');
-$cityCountry = trim(($company['city'] ?? '') . ' — ' . ($company['country'] ?? ''), ' —');
-$offices = [];
-if (!empty($company['offices_json'])) {
-    $decoded = json_decode($company['offices_json'], true);
-    if (is_array($decoded)) { $offices = $decoded; }
-}
-$custom = [];
-if (!empty($doc['custom_fields'])) {
-    $custom = is_array($doc['custom_fields'])
-        ? $doc['custom_fields']
-        : (json_decode($doc['custom_fields'], true) ?: []);
-}
-$mediaUrls = [];
-foreach (($media ?? []) as $m) {
-    if (!empty($m['file_path'])) {
-        $mediaUrls[] = upload_url($m['file_path']);
-    }
-}
-$totalFmt = number_format((float)($doc['total'] ?? 0), 2);
-$totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
-?>
 <!DOCTYPE html>
-<html lang="<?= e($lang) ?>" dir="<?= e($dir) ?>">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><?= e($doc['title'] ?? '') ?> | <?= e($companyName) ?></title>
+<title>عرض سعر - عزل Cool Roof | ركن التطور - أبوظبي</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -83,26 +31,6 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
     color: var(--text-body);
     overflow-x: hidden;
   }
-
-
-  /* ===== PRINT / PDF BUTTON ===== */
-  .no-print {
-    max-width: 960px;
-    margin: 0 auto 18px;
-    padding: 14px 20px 0;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .btn-pdf {
-    display: inline-flex; align-items: center; gap: 9px;
-    padding: 11px 26px; border-radius: 9px; cursor: pointer; border: none;
-    font-family: 'Cairo', sans-serif; font-size: 14px; font-weight: 700;
-    background: linear-gradient(135deg, var(--gold), var(--gold-light));
-    color: var(--blue-dark); box-shadow: 0 4px 18px rgba(212,160,23,.35);
-    transition: all .25s;
-  }
-  .btn-pdf:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(212,160,23,.45); }
 
   /* ===== HERO ===== */
   .hero {
@@ -620,13 +548,12 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
   }
 
   .price-table thead th {
-    padding: 12px 16px;
+    padding: 14px 20px;
     text-align: right;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     color: var(--blue-dark);
     border-bottom: 2px solid rgba(11,37,69,0.1);
-    white-space: nowrap;
   }
 
   .price-table tbody tr {
@@ -637,8 +564,8 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
   .price-table tbody tr:hover { background: rgba(26,109,175,0.04); }
 
   .price-table tbody td {
-    padding: 13px 16px;
-    font-size: 13px;
+    padding: 16px 20px;
+    font-size: 14px;
     color: var(--text-body);
     vertical-align: middle;
   }
@@ -894,46 +821,16 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
 
   .trust-item i { color: var(--success); font-size: 14px; }
 
-
-  /* ===== MOBILE IMPROVEMENTS ===== */
-  /* Base font size boost for readability on phones */
-  .base-card, .client-card, .product-card, .price-card { font-size: 14px; }
-  .section-title { font-size: clamp(17px, 4vw, 22px) !important; }
-  .section-sub { font-size: clamp(13px, 3vw, 15px) !important; }
-
-  /* Hero top-bar wraps gracefully */
-  .hero-top-bar { flex-wrap: wrap; gap: 8px; }
-
-  /* Touch-friendly tap targets */
-  .btn { min-height: 48px; }
-
-  /* Price table horizontal scroll on small screens */
-  .price-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-
-  /* Spec items stack on very small */
-  @media (max-width: 360px) {
-    .specs-grid { grid-template-columns: 1fr !important; }
-    .hero-stats { flex-direction: column; align-items: center; }
-    .price-table thead th, .price-table tbody td { font-size: 12px !important; padding: 10px 8px !important; }
-  }
-
-  /* Footer map border radius */
-  .footer-map-wrap { border-radius: 20px; overflow: hidden; margin-bottom: 20px; }
-
-  /* ===== FOOTER WITH MAP ===== */
+  /* ===== FOOTER ===== */
   .footer {
     background: var(--blue-dark);
     color: rgba(255,255,255,0.6);
-    font-size: 13px;
-    padding: 0;
-  }
-  .footer-office-bar {
-    padding: 18px 24px;
     text-align: center;
+    padding: 28px 20px;
+    font-size: 13px;
   }
-  .footer-office-bar strong { color: var(--gold-light); }
 
-
+  .footer strong { color: var(--gold-light); }
 
   /* ===== RESPONSIVE ===== */
   @media (max-width: 640px) {
@@ -947,25 +844,15 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
     .hero-badge span { display: none; }
     .client-card, .product-card, .price-card, .cta-section, .warranty-card { padding: 22px 18px; }
     .price-header { padding: 18px; }
-    .price-table thead th, .price-table tbody td { padding: 12px 10px; font-size: 13px; }
-    .price-table-wrap { border-radius: 12px; }
-    .hero-title { font-size: clamp(20px, 5vw, 28px) !important; }
-    .hero-subtitle { font-size: 14px !important; }
+    .price-table thead th, .price-table tbody td { padding: 12px 12px; font-size: 13px; }
     .grand-amount { font-size: 18px !important; }
     .cta-section h2 { font-size: 20px; }
     .btn { padding: 14px 22px; font-size: 14px; }
     .section { padding: 40px 14px; }
   }
 
-
-  /* ===== PRINT ===== */
-  @media print {
-    body { background: #fff; }
-    .no-print { display: none; }
-    footer iframe { display: none; }
-    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  }
-
+  @media (max-width: 400px) {
+    .specs-grid { grid-template-columns: 1fr; }
     .hero-title { font-size: 22px; }
   }
 
@@ -1004,88 +891,9 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
   }
 
   .quote-meta-item i { color: var(--gold-light); font-size: 12px; }
-
-  /* Full-width tables — no padding, table fills card */
-  .price-card { padding: 0 !important; overflow: hidden; }
-  .price-header { padding: 20px 22px !important; }
-  .price-table-wrap {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .price-table {
-    width: 100% !important;
-    min-width: 520px;
-  }
-
-  /* Container for the whole section — no side padding so price-card bleeds */
-  .section .container { padding-left: 0; padding-right: 0; }
-  .section .client-card,
-  .section .product-card,
-  .section .warranty-card,
-  .section .cta-section,
-  .section .benefits-grid,
-  .section .method-steps,
-  .section .specs-grid,
-  .section .base-card {
-    margin-left: 16px;
-    margin-right: 16px;
-  }
-  .section .price-card {
-    margin-left: 0;
-    margin-right: 0;
-    border-radius: 0;
-  }
-  /* Re-add border-radius only for medium+ screens */
-  @media (min-width: 641px) {
-    .section .container { padding-left: 16px; padding-right: 16px; }
-    .section .price-card { margin-left: 0; margin-right: 0; border-radius: 20px; }
-    .section .client-card,
-    .section .product-card,
-    .section .warranty-card,
-    .section .cta-section,
-    .section .benefits-grid,
-    .section .method-steps,
-    .section .specs-grid,
-    .section .base-card {
-      margin-left: 0;
-      margin-right: 0;
-    }
-    .price-table { min-width: 0; }
-  }
-
-  /* Smaller font in responsive overrides too */
-  @media (max-width: 640px) {
-    .price-table thead th { font-size: 11px !important; padding: 10px 10px !important; }
-    .price-table tbody td { font-size: 11px !important; padding: 10px 10px !important; }
-    .price-table .service-desc { font-size: 10px !important; }
-  }
-
-  /* Sections containing price tables: remove side padding for full bleed */
-  .section.has-table { padding-left: 0; padding-right: 0; }
-  .section.has-table .section-header { padding-left: 20px; padding-right: 20px; }
-</style>
-
-<?php if (empty($doc['show_seal'])): ?><style>.seal, img.seal, .stamp-wrap img, .stamp-box img{display:none!important;}</style><?php endif; ?>
-<?php if (empty($doc['show_signature'])): ?><style>img.sign, .sign{display:none!important;}</style><?php endif; ?>
-<style>
-@media print{
-  .kdms-toolbar,.no-print,.print-bar{display:none!important;}
-  @page{size:A4 portrait;margin:10mm;}
-  thead{display:table-header-group;}
-  tr,img,.sig-row,.sig-box,.stamp-box,.info-grid,.amount-hero{break-inside:avoid;page-break-inside:avoid;}
-  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
-}
 </style>
 </head>
 <body>
-
-<!-- PRINT BUTTON -->
-<div class="no-print">
-  <button class="btn-pdf" onclick="window.print()">
-    <i class="fas fa-file-pdf"></i> طباعة / تحميل PDF
-  </button>
-</div>
 
 <!-- ===== HERO ===== -->
 <section class="hero">
@@ -1095,8 +903,8 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
     <div class="logo-area">
       <div class="logo-icon"><i class="fas fa-building-shield"></i></div>
       <div class="logo-text">
-        <h1>ركن التطور للعوازل وكشف التسربات ذ.م.م</h1>
-        <span>RUKN ELTATAWER · Insulation &amp; Leak Detection L.L.C</span>
+        <h1>ركن التطور</h1>
+        <span>RUKN ELTATAWER · أبوظبي</span>
       </div>
     </div>
     <div class="hero-badge">
@@ -1113,7 +921,7 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
 
     <h1 class="hero-title">
       احمِ فيلتك من حرارة أبوظبي<br>
-      بنظام <span class="highlight">الفيبر مرن ( المطاطي ) المعتمد</span>
+      بنظام <span class="highlight">Cool Roof المعتمد</span>
     </h1>
 
     <p class="hero-subtitle">
@@ -1122,8 +930,8 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
     </p>
 
     <div class="quote-meta">
-      <div class="quote-meta-item"><i class="fas fa-hashtag"></i> RET-LEAK-2026-0714</div>
-      <div class="quote-meta-item"><i class="fas fa-calendar"></i> تاريخ الفحص: الأربعاء 1 يوليو 2026</div>
+      <div class="quote-meta-item"><i class="fas fa-hashtag"></i> RET-AD-2024-0487</div>
+      <div class="quote-meta-item"><i class="fas fa-calendar"></i> تاريخ الإصدار: يونيو 2025</div>
       <div class="quote-meta-item"><i class="fas fa-clock"></i> صالح لمدة 30 يوماً</div>
     </div>
 
@@ -1133,15 +941,15 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
         <div class="stat-label">انعكاس الأشعة الشمسية</div>
       </div>
       <div class="stat-item">
-        <div class="stat-num">10 : 20</div>
+        <div class="stat-num">10</div>
         <div class="stat-label">سنوات ضمان شامل</div>
       </div>
       <div class="stat-item">
-        <div class="stat-num">720</div>
+        <div class="stat-num">120</div>
         <div class="stat-label">متر مربع — مساحة المشروع</div>
       </div>
       <div class="stat-item">
-        <div class="stat-num">5000+</div>
+        <div class="stat-num">500+</div>
         <div class="stat-label">مشروع منفذ في الإمارات</div>
       </div>
     </div>
@@ -1170,21 +978,21 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
           <i class="fas fa-user"></i>
           <div>
             <div class="label">صاحب الفيلا</div>
-            <div class="value">محمد سالم الخميسي</div>
+            <div class="value">عبدالله السويدي</div>
           </div>
         </div>
         <div class="info-item">
           <i class="fas fa-location-dot"></i>
           <div>
             <div class="label">موقع المشروع</div>
-            <div class="value">فيلا 313 - شارع حسن بن هميلة المزروعي - حوض 17 - مدينة محمد بن زايد - أبوظبي</div>
+            <div class="value">فيلا 16 - شارع السَّماح - حوض 32 - مدينة خليفة - أبوظبي</div>
           </div>
         </div>
         <div class="info-item">
           <i class="fas fa-ruler-combined"></i>
           <div>
             <div class="label">مساحة السطح</div>
-            <div class="value">720 متر مربع</div>
+            <div class="value">120 متر مربع</div>
           </div>
         </div>
         <div class="info-item">
@@ -1198,14 +1006,14 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
           <i class="fas fa-screwdriver-wrench"></i>
           <div>
             <div class="label">نوع الخدمة</div>
-            <div class="value">عزل مائي وحراري Cool Roof / Roof Protection</div>
+            <div class="value">عزل حراري Cool Roof / Roof Protection</div>
           </div>
         </div>
         <div class="info-item">
           <i class="fas fa-calendar-check"></i>
           <div>
             <div class="label">مدة التنفيذ المتوقعة</div>
-            <div class="value">4 - 5 أيام عمل</div>
+            <div class="value">2 - 3 أيام عمل</div>
           </div>
         </div>
       </div>
@@ -1216,7 +1024,7 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
       <div class="product-header">
         <div class="product-logo"><i class="fas fa-sun"></i></div>
         <div>
-          <h2>Cool Roof & Roof Protection</h2>
+          <h2>Jazeera Cool Roof</h2>
           <p>نظام العزل الأكريليكي المطاطي العاكس للحرارة بنسبة 100%</p>
           <span class="certified-badge"><i class="fas fa-certificate"></i> منتج معتمد ومختبر دولياً</span>
         </div>
@@ -1250,7 +1058,7 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
           <div class="step-num">1</div>
           <div class="step-text">
             <strong>معالجة الزوايا والشقوق</strong>
-            استخدام  Repond 100 لإحكام الزوايا و  Epoxy Filler لردم التشققات
+            استخدام Jazeera Repond 100 لإحكام الزوايا وJazeera Epoxy Filler لردم التشققات
           </div>
         </div>
         <div class="method-step">
@@ -1264,7 +1072,7 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
           <div class="step-num">3</div>
           <div class="step-text">
             <strong>تدعيم بشبكة الألياف</strong>
-            تثبيت شبكة   Tietex T325 لتقوية النظام ومنع التشققات المستقبلية
+            تثبيت شبكة Jazeera Tietex T325 لتقوية النظام ومنع التشققات المستقبلية
           </div>
         </div>
         <div class="method-step">
@@ -1312,30 +1120,59 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
     <div class="price-card fade-in">
       <div class="price-header">
         <h2><i class="fas fa-sun"></i> خيارات نظام Cool Roof</h2>
-        <div class="validity-badge"><i class="fas fa-ruler-combined"></i> المساحة: 720 م²</div>
+        <div class="validity-badge"><i class="fas fa-ruler-combined"></i> المساحة: 120 م²</div>
       </div>
 
-      <div class="price-table-wrap"><table class="price-table">
+      <table class="price-table">
         <thead>
           <tr>
             <th>عدد الطبقات</th>
             <th>نسبة العزل الحراري</th>
             <th>سعر المتر</th>
-            <th>Total (720 م²)</th>
+            <th>الإجمالي (120 م²)</th>
           </tr>
         </thead>
         <tbody>
-<?php $n = 1; foreach ($items as $item): ?>
-        <tr>
-          <td style="text-align:center;"><?= $n++ ?></td>
-          <td colspan="2">
-            <strong><?= e($item['title']) ?></strong>
-            <?php if (!empty($item['description'])): ?><div style="font-size:11px;opacity:.8;"><?= nl2br(e($item['description'])) ?></div><?php endif; ?>
-          </td>
-          <td style="text-align:center;"><strong><?= e(number_format((float)$item['total'], 2)) ?> <?= e($currency) ?></strong></td>
-        </tr>
-<?php endforeach; ?>
-</tbody>
+          <tr>
+            <td>
+              <div class="service-name">2 طبقة</div>
+              <div class="service-desc">مناسب للمناخ المعتدل والميزانية الاقتصادية</div>
+            </td>
+            <td>
+              <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(56,161,105,0.1);color:#276749;padding:4px 12px;border-radius:50px;font-weight:700;font-size:13px;">
+                <i class="fas fa-shield-halved"></i> 40%
+              </span>
+            </td>
+            <td class="price-range">60 د.إ / م²</td>
+            <td><strong style="color:var(--blue-dark);font-size:16px;">7,200 درهم</strong></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="service-name" style="color:var(--gold);">4 طبقات ⭐ الأكثر طلباً</div>
+              <div class="service-desc">الخيار الأمثل — كفاءة عالية وقيمة ممتازة</div>
+            </td>
+            <td>
+              <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(212,160,23,0.15);color:#7B5E0A;padding:4px 12px;border-radius:50px;font-weight:700;font-size:13px;">
+                <i class="fas fa-shield-halved"></i> 55%
+              </span>
+            </td>
+            <td class="price-range" style="color:var(--gold);">110 د.إ / م²</td>
+            <td><strong style="color:var(--gold);font-size:16px;">13,200 درهم</strong></td>
+          </tr>
+          <tr>
+            <td>
+              <div class="service-name" style="color:var(--blue-accent);">6 طبقات — حماية قصوى</div>
+              <div class="service-desc">الحل المثالي لأشد الأسطح تعرضاً للشمس — تبريد فعلي ملحوظ</div>
+            </td>
+            <td>
+              <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(26,109,175,0.12);color:#0B4F8A;padding:4px 12px;border-radius:50px;font-weight:700;font-size:13px;">
+                <i class="fas fa-shield-halved"></i> 70%
+              </span>
+            </td>
+            <td class="price-range" style="color:var(--blue-accent);">160 د.إ / م²</td>
+            <td><strong style="color:var(--blue-accent);font-size:16px;">19,200 درهم</strong></td>
+          </tr>
+        </tbody>
       </table>
 
       <div class="price-note">
@@ -1348,16 +1185,16 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
     <div class="price-card fade-in">
       <div class="price-header" style="background:linear-gradient(135deg,#1B4F72,#2E86C1);">
         <h2><i class="fas fa-shield-halved"></i> خيارات نظام Roof Protection</h2>
-        <div class="validity-badge"><i class="fas fa-ruler-combined"></i> المساحة: 720 م²</div>
+        <div class="validity-badge"><i class="fas fa-ruler-combined"></i> المساحة: 120 م²</div>
       </div>
 
-      <div class="price-table-wrap"><table class="price-table">
+      <table class="price-table">
         <thead>
           <tr>
             <th>عدد الطبقات</th>
             <th>نسبة العزل الحراري</th>
             <th>سعر المتر</th>
-            <th>Total (720 م²)</th>
+            <th>الإجمالي (120 م²)</th>
           </tr>
         </thead>
         <tbody>
@@ -1372,7 +1209,7 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
               </span>
             </td>
             <td class="price-range">25 د.إ / م²</td>
-            <td><strong style="color:var(--blue-dark);font-size:16px;">18,000 درهم</strong></td>
+            <td><strong style="color:var(--blue-dark);font-size:16px;">3,000 درهم</strong></td>
           </tr>
           <tr>
             <td>
@@ -1385,7 +1222,7 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
               </span>
             </td>
             <td class="price-range">45 د.إ / م²</td>
-            <td><strong style="color:var(--blue-dark);font-size:16px;">32,400 درهم</strong></td>
+            <td><strong style="color:var(--blue-dark);font-size:16px;">5,400 درهم</strong></td>
           </tr>
           <tr>
             <td>
@@ -1398,7 +1235,7 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
               </span>
             </td>
             <td class="price-range" style="color:var(--gold);">65 د.إ / م²</td>
-            <td><strong style="color:var(--gold);font-size:16px;">46,800 درهم</strong></td>
+            <td><strong style="color:var(--gold);font-size:16px;">7,800 درهم</strong></td>
           </tr>
           <tr>
             <td>
@@ -1411,7 +1248,7 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
               </span>
             </td>
             <td class="price-range" style="color:var(--blue-accent);">80 د.إ / م²</td>
-            <td><strong style="color:var(--blue-accent);font-size:16px;">57,600 درهم</strong></td>
+            <td><strong style="color:var(--blue-accent);font-size:16px;">9,600 درهم</strong></td>
           </tr>
         </tbody>
       </table>
@@ -1473,7 +1310,7 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
       <p>لا تدع حرارة الصيف تسرق راحتك وتضاعف فاتورتك — فريقنا جاهز للمعاينة المجانية خلال 24 ساعة</p>
 
       <div class="cta-buttons">
-        <a href="https://wa.me/971586634710?text=السلام عليكم، أنا محمد سالم الخميسي، اطلعت على عرض السعر الخاص بعزل سطح فيلا 16 شارع السماح مدينة خليفة أبوظبي، وأريد اعتماد العرض والمضي قدماً. أرجو التواصل." class="btn btn-primary" target="_blank">
+        <a href="https://wa.me/971501234567?text=السلام عليكم، أنا عبدالله السويدي، اطلعت على عرض السعر الخاص بعزل سطح فيلا 16 شارع السماح مدينة خليفة أبوظبي، وأريد اعتماد العرض والمضي قدماً. أرجو التواصل." class="btn btn-primary" target="_blank">
           <i class="fab fa-whatsapp" style="font-size:20px;"></i>
           اعتمد العرض الآن عبر واتساب
         </a>
@@ -1494,31 +1331,12 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
   </div>
 </section>
 
-<!-- FOOTER مع الخريطة مدمجة -->
+<!-- FOOTER -->
 <footer class="footer">
-  <!-- الخريطة داخل الفوتر -->
-  <div class="footer-map-wrap">
-    <iframe width="100%" height="200" style="border:0; filter: brightness(0.85) contrast(1.05); display: block;" loading="lazy" allowfullscreen src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=24.372480,54.538188&zoom=16&maptype=roadmap&language=ar"></iframe>
-  </div>
-
-  <!-- معلومات المكتب -->
-  <div style="margin-bottom: 16px; padding: 14px 20px; background: rgba(255,255,255,0.05); border-radius: 16px; margin: 0 16px 16px;">
-    <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;">
-      <i class="fas fa-location-dot" style="color: #E9C77B;"></i>
-      <span style="font-size: 13px;">مكتب 306، برج A3، مدينة محمد بن زايد، أبوظبي</span>
-      <a href="https://maps.google.com/?q=24.37248,54.538188" target="_blank" style="color: #E9C77B; text-decoration: none; font-size: 12px;">
-        <i class="fas fa-external-link-alt"></i> فتح الخريطة
-      </a>
-    </div>
-  </div>
-
-  <!-- النص الأصلي للفوتر -->
-  <div class="footer-office-bar">
-    <p>
-      <strong>ركن التطور للعوازل وكشف التسربات ذ.م.م</strong> · أبوظبي، الإمارات العربية المتحدة<br>
-      <span style="margin-top:6px;display:inline-block;">هذا العرض سري ومُعد حصرياً لصاحبه · رقم العرض: RET-LEAK-2026-0714 · تاريخ الفحص: الأربعاء 1 يوليو 2026</span>
-    </p>
-  </div>
+  <p>
+    <strong>ركن التطور للمقاولات والخدمات الفنية</strong> · أبوظبي، الإمارات العربية المتحدة<br>
+    <span style="margin-top:6px;display:inline-block;">هذا العرض سري ومُعد حصرياً لصاحبه · جميع الأسعار بالدرهم الإماراتي شاملة الضريبة</span>
+  </p>
 </footer>
 
 <script>

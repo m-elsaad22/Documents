@@ -1,36 +1,54 @@
 <?php
 /**
- * KDMS Dynamic Document Template
- * Design preserved 100% from official HTML.
- * Available vars: $doc, $company, $customer, $items, $media
+ * KDMS Dynamic Template — design preserved 100% from official HTML.
+ * Vars: $doc, $company, $customer, $items, $media
  */
 $lang = $doc['language'] ?? 'ar';
-$dir = $lang === 'ar' ? 'rtl' : 'ltr';
-$companyName = $lang === 'ar' ? ($company['name_ar'] ?? '') : ($company['name_en'] ?? $company['name_ar'] ?? '');
-$companyNameAlt = $lang === 'ar' ? ($company['name_en'] ?? '') : ($company['name_ar'] ?? '');
-$customerName = $lang === 'ar'
-    ? ($customer['name_ar'] ?? $doc['customer_name_ar'] ?? '')
-    : ($customer['name_en'] ?? $customer['name_ar'] ?? $doc['customer_name_en'] ?? '');
-$customerAddress = $lang === 'ar'
-    ? ($customer['address_ar'] ?? $doc['project_address'] ?? '')
-    : ($customer['address_en'] ?? $customer['address_ar'] ?? $doc['project_address'] ?? '');
+$dir = ($lang === 'ar') ? 'rtl' : 'ltr';
+$companyName = ($lang === 'ar')
+    ? ($company['name_ar'] ?? '')
+    : ($company['name_en'] ?? $company['name_ar'] ?? '');
+$companyNameAlt = ($lang === 'ar')
+    ? ($company['name_en'] ?? '')
+    : ($company['name_ar'] ?? '');
+$customerName = ($lang === 'ar')
+    ? ($customer['name_ar'] ?? '')
+    : ($customer['name_en'] ?? $customer['name_ar'] ?? '');
+$customerAddress = ($lang === 'ar')
+    ? ($customer['address_ar'] ?? '')
+    : ($customer['address_en'] ?? $customer['address_ar'] ?? '');
 $projectAddress = $doc['project_address'] ?: $customerAddress;
 $issueDate = format_date($doc['issue_date'] ?? null, $lang);
 $logo = !empty($company['logo']) ? upload_url($company['logo']) : '';
 $seal = !empty($company['seal']) ? upload_url($company['seal']) : '';
 $signature = !empty($company['signature']) ? upload_url($company['signature']) : '';
 $currency = $doc['currency'] ?? ($company['currency'] ?? 'AED');
-$currencyLabel = $lang === 'ar' ? ($company['currency_label_ar'] ?? $currency) : ($company['currency_label_en'] ?? $currency);
-$amountWords = $lang === 'ar' ? ($doc['amount_words_ar'] ?? '') : ($doc['amount_words_en'] ?? $doc['amount_words_ar'] ?? '');
+$currencyLabel = ($lang === 'ar')
+    ? ($company['currency_label_ar'] ?? $currency)
+    : ($company['currency_label_en'] ?? $currency);
+$amountWords = ($lang === 'ar')
+    ? ($doc['amount_words_ar'] ?? '')
+    : ($doc['amount_words_en'] ?? $doc['amount_words_ar'] ?? '');
 $cityCountry = trim(($company['city'] ?? '') . ' — ' . ($company['country'] ?? ''), ' —');
 $offices = [];
 if (!empty($company['offices_json'])) {
-    $offices = json_decode($company['offices_json'], true) ?: [];
+    $decoded = json_decode($company['offices_json'], true);
+    if (is_array($decoded)) { $offices = $decoded; }
 }
 $custom = [];
 if (!empty($doc['custom_fields'])) {
-    $custom = is_array($doc['custom_fields']) ? $doc['custom_fields'] : (json_decode($doc['custom_fields'], true) ?: []);
+    $custom = is_array($doc['custom_fields'])
+        ? $doc['custom_fields']
+        : (json_decode($doc['custom_fields'], true) ?: []);
 }
+$mediaUrls = [];
+foreach (($media ?? []) as $m) {
+    if (!empty($m['file_path'])) {
+        $mediaUrls[] = upload_url($m['file_path']);
+    }
+}
+$totalFmt = number_format((float)($doc['total'] ?? 0), 2);
+$totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
 ?>
 <html lang="<?= e($lang) ?>" dir="<?= e($dir) ?>"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -39,9 +57,10 @@ if (!empty($doc['custom_fields'])) {
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
 :root{
-  --b1:#003087;--b2:#004EA8;--b3:#0070CC;--b4:#2196F3;
+  --b1:#003087;--b2:#004EA8;--b3:#0070CC;
   --sky:#0096C7;--sky-l:#48CAE4;
   --gold:#D4A017;--gold-l:#F0C040;--gold-ll:#FFF0A0;
+  --green:#38A169;--green-l:#68D391;
   --text:#0A1F3A;--muted:#4A6A8A;--white:#fff;--bg:#F0F7FF;
 }
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -51,7 +70,7 @@ body{
   min-height:100vh;padding:20px 14px 36px;color:var(--text);
 }
 
-.print-bar{max-width:720px;margin:0 auto 12px;}
+.print-bar{max-width:720px;margin:0 auto 12px;display:flex;gap:10px;}
 .btn-print{
   display:inline-flex;align-items:center;gap:8px;padding:9px 22px;
   border-radius:9px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;
@@ -61,7 +80,16 @@ body{
   box-shadow:0 4px 18px rgba(212,160,23,0.4),inset 0 1px 0 rgba(255,255,255,0.3);
   transition:all .22s;
 }
-.btn-print:hover{transform:translateY(-2px);}
+.btn-dl{
+  display:inline-flex;align-items:center;gap:8px;padding:9px 22px;
+  border-radius:9px;font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;
+  cursor:pointer;border:none;
+  background:linear-gradient(135deg,var(--b1),var(--b3));
+  color:#fff;
+  box-shadow:0 4px 18px rgba(0,80,170,0.35),inset 0 1px 0 rgba(255,255,255,0.15);
+  transition:all .22s;
+}
+.btn-print:hover,.btn-dl:hover{transform:translateY(-2px);}
 
 /* PAGE */
 .page{
@@ -83,7 +111,6 @@ body{
 .orb1{width:220px;height:220px;top:-85px;left:-65px;background:radial-gradient(circle,rgba(255,255,255,0.1) 0%,transparent 65%);}
 .orb2{width:140px;height:140px;bottom:-50px;right:45px;background:radial-gradient(circle,rgba(212,160,23,0.18) 0%,transparent 65%);}
 
-/* top row */
 .ih-top{display:flex;justify-content:space-between;align-items:center;position:relative;z-index:2;gap:12px;flex-wrap:wrap;}
 .logo-a{display:flex;align-items:center;gap:12px;}
 .lmark{
@@ -107,7 +134,6 @@ body{
   -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1;}
 .db-date{font-size:9px;color:rgba(255,255,255,0.58);margin-top:3px;}
 
-/* title row */
 .ih-title{position:relative;z-index:2;text-align:center;padding:10px 0 2px;}
 .bism{font-family:'Amiri',serif;font-size:13px;color:rgba(255,255,255,0.88);margin-bottom:6px;}
 .title-box{
@@ -118,25 +144,39 @@ body{
 }
 .title-box h1{font-family:'Amiri',serif;font-size:18px;font-weight:700;color:#fff;text-shadow:0 1px 5px rgba(0,0,0,0.25);}
 
-/* client bar */
-.client-bar{position:relative;z-index:2;margin-top:10px;display:flex;gap:7px;flex-wrap:wrap;justify-content:center;}
-.cb-item{
-  background:rgba(255,255,255,0.11);border:1px solid rgba(255,255,255,0.2);
-  border-radius:7px;padding:4px 12px;font-size:11px;color:#fff;
-  display:flex;align-items:center;gap:6px;backdrop-filter:blur(6px);
-}
-.cb-item i{color:var(--gold-l);font-size:10.5px;}
-.cb-item strong{font-weight:800;}
-
-/* stripe */
 .stripe{height:3px;
   background:linear-gradient(90deg,#001560 0%,var(--b3) 20%,var(--sky-l) 40%,var(--gold) 60%,var(--sky-l) 80%,var(--b3) 100%);
   box-shadow:0 2px 8px rgba(33,150,243,0.3);}
 
 /* BODY */
-.ib{padding:18px 32px 20px;background:var(--bg);}
+.rb{padding:18px 32px 22px;background:var(--bg);}
 
-/* client info grid */
+/* Amount hero */
+.amount-hero{
+  background:linear-gradient(135deg,var(--b1),var(--b2),#001560);
+  border-radius:13px;padding:18px 24px;
+  display:flex;justify-content:space-between;align-items:center;
+  margin-bottom:14px;
+  box-shadow:0 6px 24px rgba(0,30,100,0.3),inset 0 1px 0 rgba(255,255,255,0.1),inset 0 -1px 0 rgba(0,0,0,0.15);
+}
+.ah-left .ah-label{font-size:12.5px;font-weight:600;color:rgba(255,255,255,0.72);}
+.ah-left .ah-sub{font-size:10px;color:rgba(255,255,255,0.42);margin-top:3px;}
+.ah-badge{
+  display:inline-flex;align-items:center;gap:6px;margin-top:10px;
+  background:rgba(56,161,105,0.22);border:1px solid rgba(56,161,105,0.45);
+  color:var(--green-l);padding:4px 13px;border-radius:50px;font-size:11px;font-weight:700;
+}
+.ah-badge::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--green-l);flex-shrink:0;}
+.ah-right{text-align:left;}
+.ah-big{
+  font-size:40px;font-weight:900;line-height:1;
+  background:linear-gradient(90deg,var(--gold-ll),var(--gold-l),var(--gold));
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  filter:drop-shadow(0 2px 4px rgba(212,160,23,0.35));
+}
+.ah-cur{font-size:12px;color:rgba(255,255,255,0.48);margin-top:4px;}
+
+/* info grid */
 .info-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
 .info-cell{
   background:linear-gradient(135deg,rgba(10,22,40,0.03),rgba(33,150,243,0.05));
@@ -153,35 +193,40 @@ body{
 .ic-label{font-size:9.5px;text-transform:uppercase;letter-spacing:.7px;color:var(--muted);margin-bottom:3px;font-weight:600;}
 .ic-val{font-size:12.5px;font-weight:700;color:var(--text);line-height:1.35;}
 
-/* table */
-.inv-table{width:100%;border-collapse:collapse;font-size:12px;border-radius:9px;overflow:hidden;box-shadow:0 2px 10px rgba(0,112,204,0.1);margin-bottom:11px;}
-.inv-table thead tr{background:linear-gradient(135deg,var(--b1),var(--b2),var(--b3));}
-.inv-table thead th{padding:8px 12px;text-align:right;color:#fff;font-size:11px;font-weight:700;border-left:1px solid rgba(255,255,255,0.1);}
-.inv-table thead th:first-child{border-left:none;}
-.inv-table tbody tr{border-bottom:1px solid rgba(0,112,204,0.07);background:#fff;}
-.inv-table tbody td{padding:12px 12px;font-size:12px;color:var(--text);vertical-align:middle;border-left:1px solid rgba(0,112,204,0.06);}
-.inv-table tbody td:first-child{border-left:none;}
-.inv-table tbody td.center{text-align:center;}
-.num{text-align:center;font-weight:900;color:var(--gold);}
-
-/* grand total */
-.totals-grand{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:12px 18px;margin-bottom:11px;
-  background:linear-gradient(135deg,var(--b1),var(--b2),var(--b3));
-  border-radius:9px;box-shadow:0 3px 12px rgba(0,80,170,0.25);
+/* desc box */
+.desc-box{
+  background:linear-gradient(135deg,rgba(10,22,40,0.03),rgba(33,150,243,0.04));
+  border:1px solid rgba(33,150,243,0.12);
+  border-right:4px solid var(--gold);
+  border-radius:10px 0 0 10px;
+  padding:12px 16px;margin-bottom:13px;
+  font-size:12.5px;line-height:1.85;color:var(--text);
 }
-.totals-grand .lbl{font-size:12.5px;font-weight:700;color:rgba(255,255,255,0.88);}
-.grand-num{font-size:21px;font-weight:900;
-  background:linear-gradient(90deg,var(--gold-ll),var(--gold-l),var(--gold));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;}
+.desc-box strong{color:var(--b2);}
+
+/* payment method */
+.pay-method{
+  display:flex;align-items:center;gap:12px;
+  background:linear-gradient(135deg,rgba(33,150,243,0.05),rgba(10,22,40,0.03));
+  border:1px solid rgba(33,150,243,0.12);border-radius:10px;
+  padding:11px 16px;margin-bottom:13px;
+}
+.pm-icon{
+  width:34px;height:34px;border-radius:8px;
+  background:linear-gradient(135deg,var(--b2),var(--b3));
+  display:flex;align-items:center;justify-content:center;
+  color:var(--gold-l);font-size:15px;flex-shrink:0;
+  box-shadow:0 2px 8px rgba(10,22,40,0.2);
+}
+.pm-label{font-size:10px;color:var(--muted);margin-bottom:2px;font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+.pm-val{font-size:13.5px;font-weight:800;color:var(--b1);}
 
 /* written */
 .written{
-  text-align:center;font-family:'Amiri',serif;font-size:13.5px;
+  text-align:center;font-family:'Amiri',serif;font-size:14px;
   color:var(--b1);background:rgba(0,112,204,0.05);
   border:1px dashed rgba(0,112,204,0.22);border-radius:7px;
-  padding:8px 14px;margin-bottom:12px;
+  padding:9px 14px;margin-bottom:14px;
 }
 .written span{font-weight:700;color:var(--b2);}
 
@@ -195,39 +240,17 @@ body{
 }
 .note-icon{color:var(--gold);font-size:13px;margin-top:2px;flex-shrink:0;}
 
-/* bottom row: stamp right, offices left */
-.bottom-row{display:flex;gap:16px;align-items:flex-end;margin-top:4px;}
-
-/* offices stacked */
-.offices{display:flex;flex-direction:column;gap:7px;flex:1;}
-.office-card{
-  background:#fff;border:1px solid rgba(0,112,204,0.12);border-radius:8px;
-  padding:9px 12px;display:flex;gap:9px;align-items:flex-start;
-  box-shadow:0 1px 5px rgba(0,80,170,0.06);
-}
-.office-icon{
-  width:28px;height:28px;border-radius:6px;flex-shrink:0;
-  background:linear-gradient(135deg,var(--b1),var(--b3));
-  display:flex;align-items:center;justify-content:center;
-  font-size:11px;color:var(--gold-l);
-  box-shadow:0 2px 6px rgba(0,80,170,0.2);
-}
-.office-city{font-size:9.5px;font-weight:800;color:var(--b2);margin-bottom:2px;}
-.office-addr{font-size:10px;color:var(--muted);line-height:1.5;}
-
-/* stamp — no box, just image */
+/* stamp */
 .stamp-box{text-align:center;min-width:155px;}
 .stamp-lbl{
   font-size:8.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;
   background:linear-gradient(90deg,var(--b3),var(--sky));
-  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
-  margin-bottom:4px;
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:4px;
 }
 .stamp-nm{font-size:11px;font-weight:800;color:var(--b1);margin-bottom:6px;line-height:1.3;}
-.stamp-wrap img{width:155px;height:155px;object-fit:contain;opacity:0.95;display:block;margin:0 auto;}
 .stamp-role{font-size:9px;color:var(--muted);margin-top:4px;}
 
-/* footer bar */
+/* footer */
 .inf{
   background:linear-gradient(135deg,#001060,var(--b1),var(--b2));
   padding:12px 32px;
@@ -236,11 +259,10 @@ body{
 .inf-top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:5px;margin-bottom:10px;}
 .inf-top span{font-size:9px;color:rgba(255,255,255,0.38);}
 .inf-top .rn{background:linear-gradient(90deg,var(--gold-l),var(--gold));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:700;}
-.inf-offices{display:flex;gap:10px;flex-wrap:wrap;margin-top:4px;}
+.inf-offices{display:flex;gap:10px;flex-wrap:wrap;}
 .inf-office{
   flex:1;min-width:180px;
-  background:rgba(255,255,255,0.07);
-  border:1px solid rgba(255,255,255,0.14);
+  background:rgba(255,255,255,0.07);border:1px solid rgba(255,255,255,0.14);
   border-radius:8px;padding:8px 12px;
   display:flex;align-items:flex-start;gap:8px;
 }
@@ -248,8 +270,7 @@ body{
   width:24px;height:24px;border-radius:5px;flex-shrink:0;
   background:linear-gradient(135deg,rgba(212,160,23,0.35),rgba(240,192,64,0.25));
   border:1px solid rgba(212,160,23,0.3);
-  display:flex;align-items:center;justify-content:center;
-  font-size:10px;color:var(--gold-l);
+  display:flex;align-items:center;justify-content:center;font-size:10px;color:var(--gold-l);
 }
 .inf-office-text{font-size:9.5px;color:rgba(255,255,255,0.5);line-height:1.55;}
 .inf-office-text strong{display:block;color:rgba(255,255,255,0.85);font-weight:800;font-size:10px;margin-bottom:1px;}
@@ -262,12 +283,17 @@ body{
 }
 </style>
 
-<?php if (empty($doc['show_seal'])): ?>
-<style>.seal, img.seal, .stamp-wrap, .stamp-box img{display:none!important;}</style>
-<?php endif; ?>
-<?php if (empty($doc['show_signature'])): ?>
-<style>img.sign, .sign{display:none!important;}</style>
-<?php endif; ?>
+<?php if (empty($doc['show_seal'])): ?><style>.seal, img.seal, .stamp-wrap img, .stamp-box img{display:none!important;}</style><?php endif; ?>
+<?php if (empty($doc['show_signature'])): ?><style>img.sign, .sign{display:none!important;}</style><?php endif; ?>
+<style>
+@media print{
+  .kdms-toolbar,.no-print,.print-bar{display:none!important;}
+  @page{size:A4 portrait;margin:10mm;}
+  thead{display:table-header-group;}
+  tr,img,.sig-row,.sig-box,.stamp-box,.info-grid,.amount-hero{break-inside:avoid;page-break-inside:avoid;}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+}
+</style>
 </head>
 <body>
 
@@ -282,7 +308,7 @@ body{
     <div class="ih-top">
       <div class="logo-a">
         <?php if ($logo): ?>
-        <img src="<?= e($logo) ?>" alt="logo" style="width:52px;height:52px;object-fit:contain;border-radius:11px;background:#fff;padding:2px;">
+        <img class="kdms-logo" src="<?= e($logo) ?>" alt="logo" style="width:52px;height:52px;object-fit:contain;border-radius:11px;background:#fff;padding:2px;">
         <?php else: ?>
         <div class="lmark"><i class="fas fa-building"></i></div>
         <?php endif; ?>
@@ -293,7 +319,7 @@ body{
         </div>
       </div>
       <div class="doc-badge">
-        <div class="db-type">رقم الفاتورة</div>
+        <div class="db-type">رقم السند</div>
         <div class="db-num"><?= e($doc['document_number']) ?></div>
         <div class="db-date"><?= e($issueDate) ?></div>
       </div>
@@ -307,21 +333,34 @@ body{
   <div class="stripe"></div>
 
   <!-- BODY -->
-  <div class="ib">
+  <div class="rb">
+
+    <!-- Amount Hero -->
+    <div class="amount-hero">
+      <div class="ah-left">
+        <div class="ah-label">المبلغ المستلم</div>
+        <div class="ah-sub">أعمال إزالة ونقل شجرة الغاف — أبوظبي إلى العين</div>
+        <div class="ah-badge">تم الاستلام</div>
+      </div>
+      <div class="ah-right">
+        <div class="ah-big">2,000</div>
+        <div class="ah-cur">درهم إماراتي (AED)</div>
+      </div>
+    </div>
 
     <!-- Client Info Grid -->
     <div class="info-grid">
       <div class="info-cell">
         <div class="ic-icon"><i class="fas fa-user-tie"></i></div>
         <div>
-          <div class="ic-label">اسم العميل</div>
+          <div class="ic-label">اسم العميل / الدافع</div>
           <div class="ic-val"><?= e($customerName) ?></div>
         </div>
       </div>
       <div class="info-cell">
         <div class="ic-icon"><i class="fas fa-calendar-day"></i></div>
         <div>
-          <div class="ic-label">تاريخ الفاتورة</div>
+          <div class="ic-label">تاريخ الاستلام</div>
           <div class="ic-val"><?= e($issueDate) ?></div>
         </div>
       </div>
@@ -334,42 +373,19 @@ body{
       </div>
     </div>
 
-    <!-- Table -->
-    <table class="inv-table">
-      <thead>
-        <tr>
-          <th style="width:30px;">#</th>
-          <th>وصف الأعمال</th>
-          <th style="width:76px;" class="center">الكمية</th>
-          <th style="width:82px;" class="center">سعر الوحدة</th>
-          <th style="width:86px;" class="center">الإجمالي</th>
-        </tr>
-      </thead>
-      <tbody>
-<?php $n=1; foreach ($items as $item): ?>
-        <tr>
-          <td class="num"><?= $n++ ?></td>
-          <td>
-            <strong style="color:#004EA8;font-size:12.5px;"><?= e($item['title']) ?></strong>
-            <?php if (!empty($item['description'])): ?><br>
-            <span style="font-size:10.5px;color:var(--muted);line-height:1.65;"><?= nl2br(e($item['description'])) ?></span>
-            <?php endif; ?>
-          </td>
-          <td class="center"><?= e(rtrim(rtrim(number_format((float)$item['quantity'], 2), '0'), '.')) ?><?= !empty($item['unit']) ? ' '.e($item['unit']) : '' ?></td>
-          <td class="center"><?= e(number_format((float)$item['unit_price'], 2)) ?> <?= e($currency) ?></td>
-          <td class="center"><strong style="color:#004EA8;font-size:13.5px;"><?= e(number_format((float)$item['total'], 2)) ?> <?= e($currency) ?></strong></td>
-        </tr>
-<?php endforeach; ?>
-</tbody>
-    </table>
+    <!-- Description -->
+    <div class="desc-box">
+      <strong>وصف العمل المنجز:</strong><br>
+      أعمال إزالة شجرة الغاف من موقعها في أبوظبي ونقلها إلى العين — تشمل: القلع الكامل مع الجذور، التحميل، النقل، وإعادة الزراعة في الموقع الجديد.
+    </div>
 
-    <!-- Grand Total -->
-    <div class="totals-grand">
+    <!-- Payment Method -->
+    <div class="pay-method">
+      <div class="pm-icon"><i class="fas fa-money-bill-wave"></i></div>
       <div>
-        <div class="lbl">الإجمالي الكلي شامل جميع الأعمال</div>
-        <div style="font-size:10px;color:rgba(255,255,255,0.55);margin-top:3px;"><i class="fas fa-check-circle" style="color:#68D391;margin-left:4px;"></i>السعر شامل ضريبة القيمة المضافة (VAT)</div>
+        <div class="pm-label">طريقة الدفع</div>
+        <div class="pm-val"><?= e($doc['payment_method'] ?? '') ?></div>
       </div>
-      <div class="grand-num"><?= e(number_format((float)$doc['total'], 2)) ?> <?= e($currencyLabel) ?></div>
     </div>
 
     <!-- Written -->
@@ -384,19 +400,30 @@ body{
         <strong>ملاحظة:</strong> <?= nl2br(e($doc['notes'] ?? '')) ?></div>
     </div>
 
-    <!-- Stamp only -->
-    <div style="display:flex;justify-content:flex-end;">
+    <!-- Stamp -->
+    
+<?php if (!empty($doc['terms'])): ?>
+<div class="kdms-terms" style="margin:14px 0;padding:12px 14px;border:1px solid rgba(0,112,204,.12);border-radius:10px;font-size:12.5px;line-height:1.8;break-inside:avoid;">
+  <?= nl2br(e($doc['terms'])) ?>
+</div>
+<?php endif; ?>
+<?php if (!empty($doc['conditions'])): ?>
+<div class="kdms-conditions" style="margin:14px 0;padding:12px 14px;border:1px solid rgba(0,112,204,.12);border-radius:10px;font-size:12.5px;line-height:1.8;break-inside:avoid;">
+  <?= $doc['conditions'] /* intentionally allows controlled HTML tables from admin */ ?>
+</div>
+<?php endif; ?>
+<div style="display:flex;justify-content:flex-end;">
       <div class="stamp-box">
         <div class="stamp-lbl">ختم وتوقيع الشركة</div>
         <div class="stamp-nm"><?= e($companyName) ?></div>
-        <img src="<?= e($signature ?: $seal) ?>" alt="ختم وتوقيع الشركة" style="width:155px;height:155px;object-fit:contain;opacity:0.95;display:block;margin:4px auto 0;">
+        <img src="<?= e($signature ?: asset('brand/sign-landscaping.webp')) ?>" alt="ختم وتوقيع" style="width:155px;height:155px;object-fit:contain;opacity:0.95;display:block;margin:4px auto 0;">
         <div class="stamp-role">Rukn El-Tatawer for Landscaping LLC</div>
       </div>
     </div>
 
   </div>
 
-  <!-- FOOTER BAR -->
+  <!-- FOOTER -->
   <div class="inf">
     <div class="inf-top">
       <span>ركن التطور لتنسيق الحدائق ذ.م.م — الإمارات العربية المتحدة</span>
@@ -424,7 +451,7 @@ body{
 
 <script>
 function downloadHTML() {
-  const filename = 'RET-LND-INV-0619.html';
+  const filename = 'RET-LND-RCP-0619.html';
   const html = document.documentElement.outerHTML;
   const blob = new Blob([html], { type: 'text/html;charset=utf-8' });
   const url = URL.createObjectURL(blob);

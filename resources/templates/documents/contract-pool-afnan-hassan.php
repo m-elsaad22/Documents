@@ -1,36 +1,54 @@
 <?php
 /**
- * KDMS Dynamic Document Template
- * Design preserved 100% from official HTML.
- * Available vars: $doc, $company, $customer, $items, $media
+ * KDMS Dynamic Template — design preserved 100% from official HTML.
+ * Vars: $doc, $company, $customer, $items, $media
  */
 $lang = $doc['language'] ?? 'ar';
-$dir = $lang === 'ar' ? 'rtl' : 'ltr';
-$companyName = $lang === 'ar' ? ($company['name_ar'] ?? '') : ($company['name_en'] ?? $company['name_ar'] ?? '');
-$companyNameAlt = $lang === 'ar' ? ($company['name_en'] ?? '') : ($company['name_ar'] ?? '');
-$customerName = $lang === 'ar'
-    ? ($customer['name_ar'] ?? $doc['customer_name_ar'] ?? '')
-    : ($customer['name_en'] ?? $customer['name_ar'] ?? $doc['customer_name_en'] ?? '');
-$customerAddress = $lang === 'ar'
-    ? ($customer['address_ar'] ?? $doc['project_address'] ?? '')
-    : ($customer['address_en'] ?? $customer['address_ar'] ?? $doc['project_address'] ?? '');
+$dir = ($lang === 'ar') ? 'rtl' : 'ltr';
+$companyName = ($lang === 'ar')
+    ? ($company['name_ar'] ?? '')
+    : ($company['name_en'] ?? $company['name_ar'] ?? '');
+$companyNameAlt = ($lang === 'ar')
+    ? ($company['name_en'] ?? '')
+    : ($company['name_ar'] ?? '');
+$customerName = ($lang === 'ar')
+    ? ($customer['name_ar'] ?? '')
+    : ($customer['name_en'] ?? $customer['name_ar'] ?? '');
+$customerAddress = ($lang === 'ar')
+    ? ($customer['address_ar'] ?? '')
+    : ($customer['address_en'] ?? $customer['address_ar'] ?? '');
 $projectAddress = $doc['project_address'] ?: $customerAddress;
 $issueDate = format_date($doc['issue_date'] ?? null, $lang);
 $logo = !empty($company['logo']) ? upload_url($company['logo']) : '';
 $seal = !empty($company['seal']) ? upload_url($company['seal']) : '';
 $signature = !empty($company['signature']) ? upload_url($company['signature']) : '';
 $currency = $doc['currency'] ?? ($company['currency'] ?? 'AED');
-$currencyLabel = $lang === 'ar' ? ($company['currency_label_ar'] ?? $currency) : ($company['currency_label_en'] ?? $currency);
-$amountWords = $lang === 'ar' ? ($doc['amount_words_ar'] ?? '') : ($doc['amount_words_en'] ?? $doc['amount_words_ar'] ?? '');
+$currencyLabel = ($lang === 'ar')
+    ? ($company['currency_label_ar'] ?? $currency)
+    : ($company['currency_label_en'] ?? $currency);
+$amountWords = ($lang === 'ar')
+    ? ($doc['amount_words_ar'] ?? '')
+    : ($doc['amount_words_en'] ?? $doc['amount_words_ar'] ?? '');
 $cityCountry = trim(($company['city'] ?? '') . ' — ' . ($company['country'] ?? ''), ' —');
 $offices = [];
 if (!empty($company['offices_json'])) {
-    $offices = json_decode($company['offices_json'], true) ?: [];
+    $decoded = json_decode($company['offices_json'], true);
+    if (is_array($decoded)) { $offices = $decoded; }
 }
 $custom = [];
 if (!empty($doc['custom_fields'])) {
-    $custom = is_array($doc['custom_fields']) ? $doc['custom_fields'] : (json_decode($doc['custom_fields'], true) ?: []);
+    $custom = is_array($doc['custom_fields'])
+        ? $doc['custom_fields']
+        : (json_decode($doc['custom_fields'], true) ?: []);
 }
+$mediaUrls = [];
+foreach (($media ?? []) as $m) {
+    if (!empty($m['file_path'])) {
+        $mediaUrls[] = upload_url($m['file_path']);
+    }
+}
+$totalFmt = number_format((float)($doc['total'] ?? 0), 2);
+$totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
 ?>
 <!DOCTYPE html>
 <html lang="<?= e($lang) ?>" dir="<?= e($dir) ?>">
@@ -589,12 +607,17 @@ if (!empty($doc['custom_fields'])) {
   }
 </style>
 
-<?php if (empty($doc['show_seal'])): ?>
-<style>.seal, img.seal, .stamp-wrap, .stamp-box img{display:none!important;}</style>
-<?php endif; ?>
-<?php if (empty($doc['show_signature'])): ?>
-<style>img.sign, .sign{display:none!important;}</style>
-<?php endif; ?>
+<?php if (empty($doc['show_seal'])): ?><style>.seal, img.seal, .stamp-wrap img, .stamp-box img{display:none!important;}</style><?php endif; ?>
+<?php if (empty($doc['show_signature'])): ?><style>img.sign, .sign{display:none!important;}</style><?php endif; ?>
+<style>
+@media print{
+  .kdms-toolbar,.no-print,.print-bar{display:none!important;}
+  @page{size:A4 portrait;margin:10mm;}
+  thead{display:table-header-group;}
+  tr,img,.sig-row,.sig-box,.stamp-box,.info-grid,.amount-hero{break-inside:avoid;page-break-inside:avoid;}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+}
+</style>
 </head>
 <body>
 
@@ -610,7 +633,7 @@ if (!empty($doc['custom_fields'])) {
   <div class="water-circle wc1"></div>
   <div class="water-circle wc2"></div>
   <div class="hero-img-strip">
-    <img src="https://www.rukn-eltatawer.com/s2.jpeg" alt="">
+    <img src="<?= e($mediaUrls[1] ?? asset('brand/s2.jpeg')) ?>" alt="">
   </div>
 
   <div class="hero-top-bar">
@@ -642,7 +665,7 @@ if (!empty($doc['custom_fields'])) {
     </h1>
 
     <div class="quote-meta">
-      <div class="quote-meta-item"><i class="fas fa-hashtag"></i> <?= e($doc['document_number']) ?></div>
+      <div class="quote-meta-item"><i class="fas fa-hashtag"></i> RET-POOL-AIN-2026-0721</div>
       <div class="quote-meta-item"><i class="fas fa-calendar"></i> تاريخ التحرير: 21 يوليو 2026</div>
       <div class="quote-meta-item"><i class="fas fa-map-marker-alt"></i> التوصيل إلى: مدينة العين</div>
     </div>
@@ -713,7 +736,7 @@ if (!empty($doc['custom_fields'])) {
 
         <!-- Product hero image -->
         <div class="product-hero">
-          <img class="product-hero-img" src="https://www.rukn-eltatawer.com/s1.jpeg" alt="غطاء مسبح فقاعات مع بكرة ستانلس">
+          <img class="product-hero-img" src="<?= e($mediaUrls[0] ?? asset('brand/s1.jpeg')) ?>" alt="غطاء مسبح فقاعات مع بكرة ستانلس">
           <div class="product-hero-overlay">
             <div class="product-hero-title">
               غطاء فقاعات شمسي + بكرة ستانلس ستيل
@@ -797,10 +820,10 @@ if (!empty($doc['custom_fields'])) {
 
         <!-- Product gallery -->
         <div class="gallery-strip">
-          <img src="https://www.rukn-eltatawer.com/s2.jpeg" alt="بكرة المسبح">
-          <img src="https://www.rukn-eltatawer.com/s5.jpeg" alt="مقبض البكرة">
-          <img src="https://www.rukn-eltatawer.com/s7.webp" alt="ربط الغطاء">
-          <img src="https://www.rukn-eltatawer.com/s3.webp" alt="الغطاء على المسبح">
+          <img src="<?= e($mediaUrls[1] ?? asset('brand/s2.jpeg')) ?>" alt="بكرة المسبح">
+          <img src="<?= e($mediaUrls[4] ?? asset('brand/s5.jpeg')) ?>" alt="مقبض البكرة">
+          <img src="<?= e($mediaUrls[5] ?? asset('brand/s7.webp')) ?>" alt="ربط الغطاء">
+          <img src="<?= e($mediaUrls[2] ?? asset('brand/s3.webp')) ?>" alt="الغطاء على المسبح">
         </div>
       </div>
     </div>
@@ -872,7 +895,7 @@ if (!empty($doc['custom_fields'])) {
 
 <!-- Image divider strip -->
 <div class="img-divider">
-  <img src="https://www.rukn-eltatawer.com/s4.jpg" alt="بكرة مسبح">
+  <img src="<?= e($mediaUrls[3] ?? asset('brand/s4.jpg')) ?>" alt="بكرة مسبح">
   <div class="img-divider-overlay">
     <div class="img-divider-text">
       أنظمة أغطية المسابح الاحترافية
@@ -947,7 +970,7 @@ if (!empty($doc['custom_fields'])) {
           <div class="sb-label">الطرف الأول — المورّد</div>
           <div class="sb-name">شركة ركن التطور لأحواض السباحة</div>
           <div class="sig-stamp">
-            <img src="<?= e($seal) ?>" alt="ختم وتوقيع ركن التطور">
+            <img src="<?= e($seal ?: asset('brand/khtm-swimming.png')) ?>" alt="ختم وتوقيع ركن التطور">
           </div>
           <div class="sig-date">21 يوليو 2026</div>
         </div>
@@ -1015,18 +1038,5 @@ if (!empty($doc['custom_fields'])) {
   </div>
 </footer>
 
-
-<?php if (!empty($media)): ?>
-<div class="kdms-media" style="margin:16px 0;display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px;">
-<?php foreach ($media as $m): if (($m['type'] ?? '') === 'image' && !empty($m['file_path'])): ?>
-  <figure style="margin:0;break-inside:avoid;page-break-inside:avoid;">
-    <img src="<?= e(upload_url($m['file_path'])) ?>" alt="<?= e($m['title'] ?? '') ?>" style="width:100%;max-height:260px;object-fit:cover;border-radius:8px;border:1px solid rgba(0,0,0,.08);">
-    <?php if (!empty($m['caption']) || !empty($m['title'])): ?>
-    <figcaption style="font-size:11px;color:#4A6A8A;margin-top:6px;text-align:center;"><?= e($m['caption'] ?: $m['title']) ?></figcaption>
-    <?php endif; ?>
-  </figure>
-<?php endif; endforeach; ?>
-</div>
-<?php endif; ?>
 </body>
 </html>

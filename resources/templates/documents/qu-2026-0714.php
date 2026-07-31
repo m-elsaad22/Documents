@@ -1321,7 +1321,7 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
             <th>عدد الطبقات</th>
             <th>نسبة العزل الحراري</th>
             <th>سعر المتر</th>
-            <th>Total (720 م²)</th>
+            <th>الإجمالي (720 م²)</th>
           </tr>
         </thead>
         <tbody>
@@ -1357,7 +1357,7 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
             <th>عدد الطبقات</th>
             <th>نسبة العزل الحراري</th>
             <th>سعر المتر</th>
-            <th>Total (720 م²)</th>
+            <th>الإجمالي (720 م²)</th>
           </tr>
         </thead>
         <tbody>

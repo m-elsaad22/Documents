@@ -1,36 +1,54 @@
 <?php
 /**
- * KDMS Dynamic Document Template
- * Design preserved 100% from official HTML.
- * Available vars: $doc, $company, $customer, $items, $media
+ * KDMS Dynamic Template — design preserved 100% from official HTML.
+ * Vars: $doc, $company, $customer, $items, $media
  */
 $lang = $doc['language'] ?? 'ar';
-$dir = $lang === 'ar' ? 'rtl' : 'ltr';
-$companyName = $lang === 'ar' ? ($company['name_ar'] ?? '') : ($company['name_en'] ?? $company['name_ar'] ?? '');
-$companyNameAlt = $lang === 'ar' ? ($company['name_en'] ?? '') : ($company['name_ar'] ?? '');
-$customerName = $lang === 'ar'
-    ? ($customer['name_ar'] ?? $doc['customer_name_ar'] ?? '')
-    : ($customer['name_en'] ?? $customer['name_ar'] ?? $doc['customer_name_en'] ?? '');
-$customerAddress = $lang === 'ar'
-    ? ($customer['address_ar'] ?? $doc['project_address'] ?? '')
-    : ($customer['address_en'] ?? $customer['address_ar'] ?? $doc['project_address'] ?? '');
+$dir = ($lang === 'ar') ? 'rtl' : 'ltr';
+$companyName = ($lang === 'ar')
+    ? ($company['name_ar'] ?? '')
+    : ($company['name_en'] ?? $company['name_ar'] ?? '');
+$companyNameAlt = ($lang === 'ar')
+    ? ($company['name_en'] ?? '')
+    : ($company['name_ar'] ?? '');
+$customerName = ($lang === 'ar')
+    ? ($customer['name_ar'] ?? '')
+    : ($customer['name_en'] ?? $customer['name_ar'] ?? '');
+$customerAddress = ($lang === 'ar')
+    ? ($customer['address_ar'] ?? '')
+    : ($customer['address_en'] ?? $customer['address_ar'] ?? '');
 $projectAddress = $doc['project_address'] ?: $customerAddress;
 $issueDate = format_date($doc['issue_date'] ?? null, $lang);
 $logo = !empty($company['logo']) ? upload_url($company['logo']) : '';
 $seal = !empty($company['seal']) ? upload_url($company['seal']) : '';
 $signature = !empty($company['signature']) ? upload_url($company['signature']) : '';
 $currency = $doc['currency'] ?? ($company['currency'] ?? 'AED');
-$currencyLabel = $lang === 'ar' ? ($company['currency_label_ar'] ?? $currency) : ($company['currency_label_en'] ?? $currency);
-$amountWords = $lang === 'ar' ? ($doc['amount_words_ar'] ?? '') : ($doc['amount_words_en'] ?? $doc['amount_words_ar'] ?? '');
+$currencyLabel = ($lang === 'ar')
+    ? ($company['currency_label_ar'] ?? $currency)
+    : ($company['currency_label_en'] ?? $currency);
+$amountWords = ($lang === 'ar')
+    ? ($doc['amount_words_ar'] ?? '')
+    : ($doc['amount_words_en'] ?? $doc['amount_words_ar'] ?? '');
 $cityCountry = trim(($company['city'] ?? '') . ' — ' . ($company['country'] ?? ''), ' —');
 $offices = [];
 if (!empty($company['offices_json'])) {
-    $offices = json_decode($company['offices_json'], true) ?: [];
+    $decoded = json_decode($company['offices_json'], true);
+    if (is_array($decoded)) { $offices = $decoded; }
 }
 $custom = [];
 if (!empty($doc['custom_fields'])) {
-    $custom = is_array($doc['custom_fields']) ? $doc['custom_fields'] : (json_decode($doc['custom_fields'], true) ?: []);
+    $custom = is_array($doc['custom_fields'])
+        ? $doc['custom_fields']
+        : (json_decode($doc['custom_fields'], true) ?: []);
 }
+$mediaUrls = [];
+foreach (($media ?? []) as $m) {
+    if (!empty($m['file_path'])) {
+        $mediaUrls[] = upload_url($m['file_path']);
+    }
+}
+$totalFmt = number_format((float)($doc['total'] ?? 0), 2);
+$totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
 ?>
 <!DOCTYPE html>
 <html lang="<?= e($lang) ?>" dir="<?= e($dir) ?>">
@@ -170,12 +188,17 @@ body{font-family:'Cairo',sans-serif;background:linear-gradient(135deg,#0A1628 0%
 }
 </style>
 
-<?php if (empty($doc['show_seal'])): ?>
-<style>.seal, img.seal, .stamp-wrap, .stamp-box img{display:none!important;}</style>
-<?php endif; ?>
-<?php if (empty($doc['show_signature'])): ?>
-<style>img.sign, .sign{display:none!important;}</style>
-<?php endif; ?>
+<?php if (empty($doc['show_seal'])): ?><style>.seal, img.seal, .stamp-wrap img, .stamp-box img{display:none!important;}</style><?php endif; ?>
+<?php if (empty($doc['show_signature'])): ?><style>img.sign, .sign{display:none!important;}</style><?php endif; ?>
+<style>
+@media print{
+  .kdms-toolbar,.no-print,.print-bar{display:none!important;}
+  @page{size:A4 portrait;margin:10mm;}
+  thead{display:table-header-group;}
+  tr,img,.sig-row,.sig-box,.stamp-box,.info-grid,.amount-hero{break-inside:avoid;page-break-inside:avoid;}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+}
+</style>
 </head>
 <body>
 
@@ -191,7 +214,7 @@ body{font-family:'Cairo',sans-serif;background:linear-gradient(135deg,#0A1628 0%
     <div class="rh-top">
       <div class="logo-a">
         <?php if ($logo): ?>
-        <img src="<?= e($logo) ?>" alt="logo" style="width:52px;height:52px;object-fit:contain;border-radius:11px;background:#fff;padding:2px;">
+        <img class="kdms-logo" src="<?= e($logo) ?>" alt="logo" style="width:52px;height:52px;object-fit:contain;border-radius:11px;background:#fff;padding:2px;">
         <?php else: ?>
         <div class="lmark"><i class="fas fa-building"></i></div>
         <?php endif; ?>
@@ -225,7 +248,7 @@ body{font-family:'Cairo',sans-serif;background:linear-gradient(135deg,#0A1628 0%
         <div class="ah-badge">تم الاستلام</div>
       </div>
       <div class="ah-amount">
-        <div class="big"><?= e(number_format((float)$doc['total'], 0)) ?></div>
+        <div class="big"><?= e($totalFmtInt) ?></div>
         <div class="cur">درهم إماراتي (AED)</div>
       </div>
     </div>
@@ -282,17 +305,28 @@ body{font-family:'Cairo',sans-serif;background:linear-gradient(135deg,#0A1628 0%
 
     <!-- Written Amount -->
     <div class="written">
-      المبلغ كتابة: &nbsp;<em><?= e($amountWords) ?></em>
+      المبلغ كتابة: &nbsp;<span><?= e($amountWords) ?></span>
     </div>
 
     <!-- Signatures -->
-    <div class="sig-row">
+    
+<?php if (!empty($doc['terms'])): ?>
+<div class="kdms-terms" style="margin:14px 0;padding:12px 14px;border:1px solid rgba(0,112,204,.12);border-radius:10px;font-size:12.5px;line-height:1.8;break-inside:avoid;">
+  <?= nl2br(e($doc['terms'])) ?>
+</div>
+<?php endif; ?>
+<?php if (!empty($doc['conditions'])): ?>
+<div class="kdms-conditions" style="margin:14px 0;padding:12px 14px;border:1px solid rgba(0,112,204,.12);border-radius:10px;font-size:12.5px;line-height:1.8;break-inside:avoid;">
+  <?= $doc['conditions'] /* intentionally allows controlled HTML tables from admin */ ?>
+</div>
+<?php endif; ?>
+<div class="sig-row">
       <div class="sig-box">
         <div class="sb-lbl">المقاول — الطرف الأول</div>
         <div class="sb-nm"><?= e($customerName) ?></div>
         <div class="sig-imgs">
-          <img class="seal" src="<?= e($seal) ?>" alt="ختم الشركة">
-          <img class="sign" src="<?= e($signature ?: $seal) ?>" alt="توقيع المدير">
+          <img class="seal" src="<?= e($seal ?: asset('brand/khtm.webp')) ?>" alt="ختم الشركة">
+          <img class="sign" src="<?= e($signature ?: asset('brand/sign.webp')) ?>" alt="توقيع المدير">
         </div>
         <div class="sb-role">المدير العام</div>
       </div>

@@ -1,40 +1,6 @@
-<?php
-/**
- * KDMS Dynamic Document Template
- * Design preserved 100% from official HTML.
- * Available vars: $doc, $company, $customer, $items, $media
- */
-$lang = $doc['language'] ?? 'ar';
-$dir = $lang === 'ar' ? 'rtl' : 'ltr';
-$companyName = $lang === 'ar' ? ($company['name_ar'] ?? '') : ($company['name_en'] ?? $company['name_ar'] ?? '');
-$companyNameAlt = $lang === 'ar' ? ($company['name_en'] ?? '') : ($company['name_ar'] ?? '');
-$customerName = $lang === 'ar'
-    ? ($customer['name_ar'] ?? $doc['customer_name_ar'] ?? '')
-    : ($customer['name_en'] ?? $customer['name_ar'] ?? $doc['customer_name_en'] ?? '');
-$customerAddress = $lang === 'ar'
-    ? ($customer['address_ar'] ?? $doc['project_address'] ?? '')
-    : ($customer['address_en'] ?? $customer['address_ar'] ?? $doc['project_address'] ?? '');
-$projectAddress = $doc['project_address'] ?: $customerAddress;
-$issueDate = format_date($doc['issue_date'] ?? null, $lang);
-$logo = !empty($company['logo']) ? upload_url($company['logo']) : '';
-$seal = !empty($company['seal']) ? upload_url($company['seal']) : '';
-$signature = !empty($company['signature']) ? upload_url($company['signature']) : '';
-$currency = $doc['currency'] ?? ($company['currency'] ?? 'AED');
-$currencyLabel = $lang === 'ar' ? ($company['currency_label_ar'] ?? $currency) : ($company['currency_label_en'] ?? $currency);
-$amountWords = $lang === 'ar' ? ($doc['amount_words_ar'] ?? '') : ($doc['amount_words_en'] ?? $doc['amount_words_ar'] ?? '');
-$cityCountry = trim(($company['city'] ?? '') . ' — ' . ($company['country'] ?? ''), ' —');
-$offices = [];
-if (!empty($company['offices_json'])) {
-    $offices = json_decode($company['offices_json'], true) ?: [];
-}
-$custom = [];
-if (!empty($doc['custom_fields'])) {
-    $custom = is_array($doc['custom_fields']) ? $doc['custom_fields'] : (json_decode($doc['custom_fields'], true) ?: []);
-}
-?>
-<html lang="<?= e($lang) ?>" dir="<?= e($dir) ?>"><head><meta charset="UTF-8">
+<html lang="ar" dir="rtl"><head><meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><?= e($doc['title'] ?? '') ?> | <?= e($companyName) ?></title>
+<title>سند قبض — ركن التطور لتنسيق الحدائق | خادم الرميثي</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&amp;family=Cairo:wght@300;400;600;700;900&amp;display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
@@ -264,17 +230,12 @@ body{
   *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
 }
 </style>
-
-<?php if (empty($doc['show_seal'])): ?>
-<style>.seal, img.seal, .stamp-wrap, .stamp-box img{display:none!important;}</style>
-<?php endif; ?>
-<?php if (empty($doc['show_signature'])): ?>
-<style>img.sign, .sign{display:none!important;}</style>
-<?php endif; ?>
 </head>
 <body>
 
-<!-- KDMS_TOOLBAR -->
+<div class="print-bar">
+  <button class="btn-print" onclick="window.print()"><i class="fas fa-file-pdf"></i> تحميل PDF</button>
+</div>
 
 <div class="page">
 
@@ -284,26 +245,22 @@ body{
     <div class="orb orb2"></div>
     <div class="ih-top">
       <div class="logo-a">
-        <?php if ($logo): ?>
-        <img src="<?= e($logo) ?>" alt="logo" style="width:52px;height:52px;object-fit:contain;border-radius:11px;background:#fff;padding:2px;">
-        <?php else: ?>
-        <div class="lmark"><i class="fas fa-building"></i></div>
-        <?php endif; ?>
+        <div class="lmark"><i class="fas fa-leaf"></i></div>
         <div>
-          <div class="co-name"><?= e($companyName) ?></div>
-          <div class="co-name-en"><?= e($companyNameAlt) ?></div>
-          <div class="co-sub"><?= e($cityCountry) ?></div>
+          <div class="co-name">ركن التطور لتنسيق الحدائق ذ.م.م</div>
+          <div class="co-name-en">Rukn El-Tatawer for Landscaping LLC</div>
+          <div class="co-sub">أبوظبي — الإمارات العربية المتحدة</div>
         </div>
       </div>
       <div class="doc-badge">
         <div class="db-type">رقم السند</div>
-        <div class="db-num"><?= e($doc['document_number']) ?></div>
-        <div class="db-date"><?= e($issueDate) ?></div>
+        <div class="db-num">RET-LND-RCP-0619</div>
+        <div class="db-date">الجمعة، 19 يونيو 2026</div>
       </div>
     </div>
     <div class="ih-title">
       <div class="bism">بسم الله الرحمن الرحيم</div>
-      <div class="title-box"><h1><?= e($doc['title']) ?></h1></div>
+      <div class="title-box"><h1>سند قبض</h1></div>
     </div>
   </div>
 
@@ -345,7 +302,7 @@ body{
         <div class="ic-icon"><i class="fas fa-location-dot"></i></div>
         <div>
           <div class="ic-label">عنوان العميل</div>
-          <div class="ic-val"><?= e($customerAddress) ?></div>
+          <div class="ic-val">فيلا 12، شخبوط، أبوظبي</div>
         </div>
       </div>
     </div>
@@ -361,28 +318,30 @@ body{
       <div class="pm-icon"><i class="fas fa-money-bill-wave"></i></div>
       <div>
         <div class="pm-label">طريقة الدفع</div>
-        <div class="pm-val"><?= e($doc['payment_method'] ?? '') ?></div>
+        <div class="pm-val">نقداً — كاش</div>
       </div>
     </div>
 
     <!-- Written -->
     <div class="written">
-      المبلغ كتابةً: <span><?= e($amountWords) ?></span>
+      المبلغ كتابةً: <span>ألفا درهم إماراتي لا غير</span>
     </div>
 
     <!-- Note -->
     <div class="info-note">
       <i class="fas fa-circle-info note-icon"></i>
       <div>
-        <strong>ملاحظة:</strong> <?= nl2br(e($doc['notes'] ?? '')) ?></div>
+        <strong>ملاحظة:</strong> تم استلام المبلغ كاملاً وهذا السند يُعدّ إثباتاً رسمياً للدفع ·
+        السعر شامل ضريبة القيمة المضافة (VAT).
+      </div>
     </div>
 
     <!-- Stamp -->
     <div style="display:flex;justify-content:flex-end;">
       <div class="stamp-box">
         <div class="stamp-lbl">ختم وتوقيع الشركة</div>
-        <div class="stamp-nm"><?= e($companyName) ?></div>
-        <img src="<?= e($signature ?: $seal) ?>" alt="ختم وتوقيع" style="width:155px;height:155px;object-fit:contain;opacity:0.95;display:block;margin:4px auto 0;">
+        <div class="stamp-nm">ركن التطور لتنسيق الحدائق ذ.م.م</div>
+        <img src="https://www.rukn-eltatawer.com/sign-landscaping.webp" alt="ختم وتوقيع" style="width:155px;height:155px;object-fit:contain;opacity:0.95;display:block;margin:4px auto 0;">
         <div class="stamp-role">Rukn El-Tatawer for Landscaping LLC</div>
       </div>
     </div>
@@ -393,7 +352,7 @@ body{
   <div class="inf">
     <div class="inf-top">
       <span>ركن التطور لتنسيق الحدائق ذ.م.م — الإمارات العربية المتحدة</span>
-      <span class="rn"><?= e($doc['document_number']) ?> &nbsp;|&nbsp; <?= e($issueDate) ?></span>
+      <span class="rn">RET-LND-RCP-0619 &nbsp;|&nbsp; 19 يونيو 2026</span>
     </div>
     <div class="inf-offices">
       <div class="inf-office">

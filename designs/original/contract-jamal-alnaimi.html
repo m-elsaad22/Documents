@@ -1,61 +1,9 @@
-<?php
-/**
- * KDMS Dynamic Template — design preserved 100% from official HTML.
- * Vars: $doc, $company, $customer, $items, $media
- */
-$lang = $doc['language'] ?? 'ar';
-$dir = ($lang === 'ar') ? 'rtl' : 'ltr';
-$companyName = ($lang === 'ar')
-    ? ($company['name_ar'] ?? '')
-    : ($company['name_en'] ?? $company['name_ar'] ?? '');
-$companyNameAlt = ($lang === 'ar')
-    ? ($company['name_en'] ?? '')
-    : ($company['name_ar'] ?? '');
-$customerName = ($lang === 'ar')
-    ? ($customer['name_ar'] ?? '')
-    : ($customer['name_en'] ?? $customer['name_ar'] ?? '');
-$customerAddress = ($lang === 'ar')
-    ? ($customer['address_ar'] ?? '')
-    : ($customer['address_en'] ?? $customer['address_ar'] ?? '');
-$projectAddress = $doc['project_address'] ?: $customerAddress;
-$issueDate = format_date($doc['issue_date'] ?? null, $lang);
-$logo = !empty($company['logo']) ? upload_url($company['logo']) : '';
-$seal = !empty($company['seal']) ? upload_url($company['seal']) : '';
-$signature = !empty($company['signature']) ? upload_url($company['signature']) : '';
-$currency = $doc['currency'] ?? ($company['currency'] ?? 'AED');
-$currencyLabel = ($lang === 'ar')
-    ? ($company['currency_label_ar'] ?? $currency)
-    : ($company['currency_label_en'] ?? $currency);
-$amountWords = ($lang === 'ar')
-    ? ($doc['amount_words_ar'] ?? '')
-    : ($doc['amount_words_en'] ?? $doc['amount_words_ar'] ?? '');
-$cityCountry = trim(($company['city'] ?? '') . ' — ' . ($company['country'] ?? ''), ' —');
-$offices = [];
-if (!empty($company['offices_json'])) {
-    $decoded = json_decode($company['offices_json'], true);
-    if (is_array($decoded)) { $offices = $decoded; }
-}
-$custom = [];
-if (!empty($doc['custom_fields'])) {
-    $custom = is_array($doc['custom_fields'])
-        ? $doc['custom_fields']
-        : (json_decode($doc['custom_fields'], true) ?: []);
-}
-$mediaUrls = [];
-foreach (($media ?? []) as $m) {
-    if (!empty($m['file_path'])) {
-        $mediaUrls[] = upload_url($m['file_path']);
-    }
-}
-$totalFmt = number_format((float)($doc['total'] ?? 0), 2);
-$totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
-?>
 <!DOCTYPE html>
-<html lang="<?= e($lang) ?>" dir="<?= e($dir) ?>">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><?= e($doc['title'] ?? '') ?> | <?= e($companyName) ?></title>
+<title>عقد أعمال عزل سطح جراج سيارات — جمال النعيمي | ركن التطور</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -442,18 +390,6 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
     .section { padding: 40px 14px; }
   }
 </style>
-
-<?php if (empty($doc['show_seal'])): ?><style>.seal, img.seal, .stamp-wrap img, .stamp-box img{display:none!important;}</style><?php endif; ?>
-<?php if (empty($doc['show_signature'])): ?><style>img.sign, .sign{display:none!important;}</style><?php endif; ?>
-<style>
-@media print{
-  .kdms-toolbar,.no-print,.print-bar{display:none!important;}
-  @page{size:A4 portrait;margin:10mm;}
-  thead{display:table-header-group;}
-  tr,img,.sig-row,.sig-box,.stamp-box,.info-grid,.amount-hero{break-inside:avoid;page-break-inside:avoid;}
-  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
-}
-</style>
 </head>
 <body>
 
@@ -565,21 +501,18 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
               <tr><th style="width:36px;">#</th><th>البند</th><th style="width:120px;">المواصفة</th></tr>
             </thead>
             <tbody>
-<?php $n = 1; foreach ($items as $item): ?>
-        <tr>
-          <td style="text-align:center;"><?= $n++ ?></td>
-          <td colspan="1">
-            <strong><?= e($item['title']) ?></strong>
-            <?php if (!empty($item['description'])): ?><div style="font-size:11px;opacity:.8;"><?= nl2br(e($item['description'])) ?></div><?php endif; ?>
-          </td>
-          <td style="text-align:center;"><strong><?= e(number_format((float)$item['total'], 2)) ?> <?= e($currency) ?></strong></td>
-        </tr>
-<?php endforeach; ?>
-</tbody>
+              <tr><td>1</td><td>تحضير السطح — معالجة طبقة العزل القديمة التالفة والشاش المفرغ الموجود بها وتنظيف السطح بالكامل </td><td>سطح كامل</td></tr>
+              <tr><td>2</td><td>تسوية السطح بطبقة أسمنتيشن (Teraco) لمعالجة الفراغات الناتجة عن العزل القديم غير السليم وضبط استواء السطح بالكامل</td><td>سطح كامل</td></tr>
+              <tr><td>3</td><td>تعبئة التشققات باستخدام Epoxy Crack Filler للأسطح الخرسانية</td><td>جميع التشققات</td></tr>
+              <tr><td>4</td><td>طلاء طبقة Primer بسماكة 75 مايكرون بنسبة تخفيف 10–15% ماء عذب بالرول</td><td>75 مايكرون</td></tr>
+              <tr><td>5</td><td>تركيب شبك نسيج Tietex T325 على الفواصل والوصلات وفتحات التصريف مع تداخل 5–10 سم</td><td>T325</td></tr>
+              <tr><td>6</td><td>تطبيق نظام Cool Roof — 4 طبقات عاكسة (500 مايكرون لكل طبقة) مع تداخل 5–10 سم على الفواصل لكامل المساحة</td><td>4×500 مايكرون</td></tr>
+              <tr><td>7</td><td>التحقق من جودة التطبيق وتسليم العمل بشكل رسمي</td><td>تسليم رسمي</td></tr>
+            </tbody>
           </table>
         </div>
         <div class="info-badges">
-          <div class="info-badge"><i class="fas fa-ruler-combined"></i> المساحة Totalة: <strong>55 متر مربع</strong></div>
+          <div class="info-badge"><i class="fas fa-ruler-combined"></i> المساحة الإجمالية: <strong>55 متر مربع</strong></div>
           <div class="info-badge"><i class="fas fa-calendar-days"></i> مدة التنفيذ: <strong>يوم عمل واحد</strong></div>
         </div>
       </div>
@@ -633,7 +566,7 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
                 <td><strong style="color:var(--gold);font-size:15px;">445.5 درهم</strong><br><span style="font-size:11.5px;color:var(--gray-mid);">20 يوليو 2026</span></td>
               </tr>
               <tr class="total-row">
-                <td colspan="3">Total قبل الخصم</td>
+                <td colspan="3">الإجمالي قبل الخصم</td>
                 <td class="total-amount">4,950 درهم</td>
               </tr>
               <tr class="vat-row">
@@ -706,7 +639,7 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
           <div class="sb-label">الطرف الأول — المقاول</div>
           <div class="sb-name">ركن التطور لأنظمة العزل الحديث ذ.م.م</div>
           <div class="sig-images">
-            <img class="combined" src="<?= e($seal ?: asset('brand/khtm.webp')) ?>" alt="ختم وتوقيع ركن التطور">
+            <img class="combined" src="https://www.rukn-eltatawer.com/khtm.webp" alt="ختم وتوقيع ركن التطور">
           </div>
         </div>
         <div class="sig-box">

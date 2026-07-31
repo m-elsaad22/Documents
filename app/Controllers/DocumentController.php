@@ -185,6 +185,18 @@ class DocumentController
             'show_signature' => input('show_signature') ? 1 : 0,
             'show_seal' => input('show_seal') ? 1 : 0,
         ];
+
+        $customJson = trim((string) input('custom_fields_json', ''));
+        if ($customJson !== '') {
+            $decoded = json_decode($customJson, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $data['custom_fields'] = $decoded;
+            } else {
+                flash('error', 'حقل JSON الإضافي غير صالح');
+                redirect($_SERVER['HTTP_REFERER'] ?? '/admin/documents');
+            }
+        }
+
         if ($data['title'] === '') {
             $data['title'] = doc_type_label($type) . ' ' . date('Y-m-d');
         }

@@ -84,26 +84,6 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
     overflow-x: hidden;
   }
 
-
-  /* ===== PRINT / PDF BUTTON ===== */
-  .no-print {
-    max-width: 960px;
-    margin: 0 auto 18px;
-    padding: 14px 20px 0;
-    display: flex;
-    gap: 10px;
-    flex-wrap: wrap;
-  }
-  .btn-pdf {
-    display: inline-flex; align-items: center; gap: 9px;
-    padding: 11px 26px; border-radius: 9px; cursor: pointer; border: none;
-    font-family: 'Cairo', sans-serif; font-size: 14px; font-weight: 700;
-    background: linear-gradient(135deg, var(--gold), var(--gold-light));
-    color: var(--blue-dark); box-shadow: 0 4px 18px rgba(212,160,23,.35);
-    transition: all .25s;
-  }
-  .btn-pdf:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(212,160,23,.45); }
-
   /* ===== HERO ===== */
   .hero {
     background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-mid) 50%, #0D3260 100%);
@@ -497,7 +477,7 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
 
   .method-steps {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1fr;
     gap: 12px;
   }
 
@@ -620,13 +600,12 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
   }
 
   .price-table thead th {
-    padding: 12px 16px;
+    padding: 14px 20px;
     text-align: right;
-    font-size: 12px;
+    font-size: 13px;
     font-weight: 700;
     color: var(--blue-dark);
     border-bottom: 2px solid rgba(11,37,69,0.1);
-    white-space: nowrap;
   }
 
   .price-table tbody tr {
@@ -637,8 +616,8 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
   .price-table tbody tr:hover { background: rgba(26,109,175,0.04); }
 
   .price-table tbody td {
-    padding: 13px 16px;
-    font-size: 13px;
+    padding: 16px 20px;
+    font-size: 14px;
     color: var(--text-body);
     vertical-align: middle;
   }
@@ -894,46 +873,16 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
 
   .trust-item i { color: var(--success); font-size: 14px; }
 
-
-  /* ===== MOBILE IMPROVEMENTS ===== */
-  /* Base font size boost for readability on phones */
-  .base-card, .client-card, .product-card, .price-card { font-size: 14px; }
-  .section-title { font-size: clamp(17px, 4vw, 22px) !important; }
-  .section-sub { font-size: clamp(13px, 3vw, 15px) !important; }
-
-  /* Hero top-bar wraps gracefully */
-  .hero-top-bar { flex-wrap: wrap; gap: 8px; }
-
-  /* Touch-friendly tap targets */
-  .btn { min-height: 48px; }
-
-  /* Price table horizontal scroll on small screens */
-  .price-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
-
-  /* Spec items stack on very small */
-  @media (max-width: 360px) {
-    .specs-grid { grid-template-columns: 1fr !important; }
-    .hero-stats { flex-direction: column; align-items: center; }
-    .price-table thead th, .price-table tbody td { font-size: 12px !important; padding: 10px 8px !important; }
-  }
-
-  /* Footer map border radius */
-  .footer-map-wrap { border-radius: 20px; overflow: hidden; margin-bottom: 20px; }
-
-  /* ===== FOOTER WITH MAP ===== */
+  /* ===== FOOTER ===== */
   .footer {
     background: var(--blue-dark);
     color: rgba(255,255,255,0.6);
-    font-size: 13px;
-    padding: 0;
-  }
-  .footer-office-bar {
-    padding: 18px 24px;
     text-align: center;
+    padding: 28px 20px;
+    font-size: 13px;
   }
-  .footer-office-bar strong { color: var(--gold-light); }
 
-
+  .footer strong { color: var(--gold-light); }
 
   /* ===== RESPONSIVE ===== */
   @media (max-width: 640px) {
@@ -947,25 +896,15 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
     .hero-badge span { display: none; }
     .client-card, .product-card, .price-card, .cta-section, .warranty-card { padding: 22px 18px; }
     .price-header { padding: 18px; }
-    .price-table thead th, .price-table tbody td { padding: 12px 10px; font-size: 13px; }
-    .price-table-wrap { border-radius: 12px; }
-    .hero-title { font-size: clamp(20px, 5vw, 28px) !important; }
-    .hero-subtitle { font-size: 14px !important; }
+    .price-table thead th, .price-table tbody td { padding: 12px 12px; font-size: 13px; }
     .grand-amount { font-size: 18px !important; }
     .cta-section h2 { font-size: 20px; }
     .btn { padding: 14px 22px; font-size: 14px; }
     .section { padding: 40px 14px; }
   }
 
-
-  /* ===== PRINT ===== */
-  @media print {
-    body { background: #fff; }
-    .no-print { display: none; }
-    footer iframe { display: none; }
-    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
-  }
-
+  @media (max-width: 400px) {
+    .specs-grid { grid-template-columns: 1fr; }
     .hero-title { font-size: 22px; }
   }
 
@@ -1004,66 +943,6 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
   }
 
   .quote-meta-item i { color: var(--gold-light); font-size: 12px; }
-
-  /* Full-width tables — no padding, table fills card */
-  .price-card { padding: 0 !important; overflow: hidden; }
-  .price-header { padding: 20px 22px !important; }
-  .price-table-wrap {
-    width: 100%;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
-  }
-  .price-table {
-    width: 100% !important;
-    min-width: 520px;
-  }
-
-  /* Container for the whole section — no side padding so price-card bleeds */
-  .section .container { padding-left: 0; padding-right: 0; }
-  .section .client-card,
-  .section .product-card,
-  .section .warranty-card,
-  .section .cta-section,
-  .section .benefits-grid,
-  .section .method-steps,
-  .section .specs-grid,
-  .section .base-card {
-    margin-left: 16px;
-    margin-right: 16px;
-  }
-  .section .price-card {
-    margin-left: 0;
-    margin-right: 0;
-    border-radius: 0;
-  }
-  /* Re-add border-radius only for medium+ screens */
-  @media (min-width: 641px) {
-    .section .container { padding-left: 16px; padding-right: 16px; }
-    .section .price-card { margin-left: 0; margin-right: 0; border-radius: 20px; }
-    .section .client-card,
-    .section .product-card,
-    .section .warranty-card,
-    .section .cta-section,
-    .section .benefits-grid,
-    .section .method-steps,
-    .section .specs-grid,
-    .section .base-card {
-      margin-left: 0;
-      margin-right: 0;
-    }
-    .price-table { min-width: 0; }
-  }
-
-  /* Smaller font in responsive overrides too */
-  @media (max-width: 640px) {
-    .price-table thead th { font-size: 11px !important; padding: 10px 10px !important; }
-    .price-table tbody td { font-size: 11px !important; padding: 10px 10px !important; }
-    .price-table .service-desc { font-size: 10px !important; }
-  }
-
-  /* Sections containing price tables: remove side padding for full bleed */
-  .section.has-table { padding-left: 0; padding-right: 0; }
-  .section.has-table .section-header { padding-left: 20px; padding-right: 20px; }
 </style>
 
 <?php if (empty($doc['show_seal'])): ?><style>.seal, img.seal, .stamp-wrap img, .stamp-box img{display:none!important;}</style><?php endif; ?>
@@ -1080,13 +959,6 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
 </head>
 <body>
 
-<!-- PRINT BUTTON -->
-<div class="no-print">
-  <button class="btn-pdf" onclick="window.print()">
-    <i class="fas fa-file-pdf"></i> طباعة / تحميل PDF
-  </button>
-</div>
-
 <!-- ===== HERO ===== -->
 <section class="hero">
   <div class="hero-sun"></div>
@@ -1095,8 +967,8 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
     <div class="logo-area">
       <div class="logo-icon"><i class="fas fa-building-shield"></i></div>
       <div class="logo-text">
-        <h1>ركن التطور للعوازل وكشف التسربات ذ.م.م</h1>
-        <span>RUKN ELTATAWER · Insulation &amp; Leak Detection L.L.C</span>
+        <h1>ركن التطور</h1>
+        <span>RUKN ELTATAWER · أبوظبي</span>
       </div>
     </div>
     <div class="hero-badge">
@@ -1113,7 +985,7 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
 
     <h1 class="hero-title">
       احمِ فيلتك من حرارة أبوظبي<br>
-      بنظام <span class="highlight">الفيبر مرن ( المطاطي ) المعتمد</span>
+      بنظام <span class="highlight">Roof Protection المعتمد</span>
     </h1>
 
     <p class="hero-subtitle">
@@ -1122,9 +994,9 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
     </p>
 
     <div class="quote-meta">
-      <div class="quote-meta-item"><i class="fas fa-hashtag"></i> RET-LEAK-2026-0714</div>
-      <div class="quote-meta-item"><i class="fas fa-calendar"></i> تاريخ الفحص: الأربعاء 1 يوليو 2026</div>
-      <div class="quote-meta-item"><i class="fas fa-clock"></i> صالح لمدة 30 يوماً</div>
+      <div class="quote-meta-item"><i class="fas fa-hashtag"></i> RET-AD-2024-0487</div>
+      <div class="quote-meta-item"><i class="fas fa-calendar"></i> تاريخ الإصدار: 21 أبريل 2026</div>
+      <div class="quote-meta-item"><i class="fas fa-clock"></i> المعاينة: 21 أبريل 2026</div>
     </div>
 
     <div class="hero-stats">
@@ -1133,15 +1005,15 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
         <div class="stat-label">انعكاس الأشعة الشمسية</div>
       </div>
       <div class="stat-item">
-        <div class="stat-num">10 : 20</div>
+        <div class="stat-num">10</div>
         <div class="stat-label">سنوات ضمان شامل</div>
       </div>
       <div class="stat-item">
-        <div class="stat-num">720</div>
+        <div class="stat-num">120</div>
         <div class="stat-label">متر مربع — مساحة المشروع</div>
       </div>
       <div class="stat-item">
-        <div class="stat-num">5000+</div>
+        <div class="stat-num">500+</div>
         <div class="stat-label">مشروع منفذ في الإمارات</div>
       </div>
     </div>
@@ -1170,21 +1042,21 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
           <i class="fas fa-user"></i>
           <div>
             <div class="label">صاحب الفيلا</div>
-            <div class="value">محمد سالم الخميسي</div>
+            <div class="value">عبدالله السويدي</div>
           </div>
         </div>
         <div class="info-item">
           <i class="fas fa-location-dot"></i>
           <div>
             <div class="label">موقع المشروع</div>
-            <div class="value">فيلا 313 - شارع حسن بن هميلة المزروعي - حوض 17 - مدينة محمد بن زايد - أبوظبي</div>
+            <div class="value">فيلا 16 - شارع السَّماح - حوض 32 - مدينة خليفة - أبوظبي</div>
           </div>
         </div>
         <div class="info-item">
           <i class="fas fa-ruler-combined"></i>
           <div>
             <div class="label">مساحة السطح</div>
-            <div class="value">720 متر مربع</div>
+            <div class="value">120 متر مربع</div>
           </div>
         </div>
         <div class="info-item">
@@ -1198,14 +1070,14 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
           <i class="fas fa-screwdriver-wrench"></i>
           <div>
             <div class="label">نوع الخدمة</div>
-            <div class="value">عزل مائي وحراري Cool Roof / Roof Protection</div>
+            <div class="value">Roof Protection — 3 طبقات</div>
           </div>
         </div>
         <div class="info-item">
           <i class="fas fa-calendar-check"></i>
           <div>
             <div class="label">مدة التنفيذ المتوقعة</div>
-            <div class="value">4 - 5 أيام عمل</div>
+            <div class="value">2 - 3 أيام عمل</div>
           </div>
         </div>
       </div>
@@ -1216,7 +1088,7 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
       <div class="product-header">
         <div class="product-logo"><i class="fas fa-sun"></i></div>
         <div>
-          <h2>Cool Roof & Roof Protection</h2>
+          <h2>Roof Protection System</h2>
           <p>نظام العزل الأكريليكي المطاطي العاكس للحرارة بنسبة 100%</p>
           <span class="certified-badge"><i class="fas fa-certificate"></i> منتج معتمد ومختبر دولياً</span>
         </div>
@@ -1249,29 +1121,43 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
         <div class="method-step">
           <div class="step-num">1</div>
           <div class="step-text">
-            <strong>معالجة الزوايا والشقوق</strong>
-            استخدام  Repond 100 لإحكام الزوايا و  Epoxy Filler لردم التشققات
+            <strong>تحضير السطح</strong>
+            تنظيف شامل للسطح من جميع الأغراض والغبار والشوائب تمهيداً للتطبيق
           </div>
         </div>
         <div class="method-step">
           <div class="step-num">2</div>
           <div class="step-text">
-            <strong>طبقة أساس (Primer)</strong>
-            تطبيق طبقة Primer بسماكة 75 ميكرون لضمان التصاق مثالي بالسطح
+            <strong>معالجة الأركان الحادة</strong>
+            تطبيق "ريبوند 100" مع خليط من الإسمنت والرمل بزاوية 45 درجة لإحكام جميع الأركان
           </div>
         </div>
         <div class="method-step">
           <div class="step-num">3</div>
           <div class="step-text">
-            <strong>تدعيم بشبكة الألياف</strong>
-            تثبيت شبكة   Tietex T325 لتقوية النظام ومنع التشققات المستقبلية
+            <strong>تعبئة التشققات</strong>
+            استخدام "Epoxy Crack Filler" لردم وتعبئة جميع التشققات في الأسطح الخرسانية
           </div>
         </div>
         <div class="method-step">
           <div class="step-num">4</div>
           <div class="step-text">
-            <strong>طبقتان نهائيتان عاكستان</strong>
-            تطبيق طبقتين من Cool Roof بسماكة 500 ميكرون لكل منهما لأقصى كفاءة عزل
+            <strong>طبقة Primer أساسية</strong>
+            طلاء طبقة Primer بسماكة 75 مايكرون بنسبة تخفيف 10-15٪ ماء عذب، تطبيق بالرول
+          </div>
+        </div>
+        <div class="method-step">
+          <div class="step-num">5</div>
+          <div class="step-text">
+            <strong>تركيب شبك النسيج Tietex T325</strong>
+            تثبيت الشبك على الأركان وفتحات التصريف والمواسير مع تداخل 5-10 سم على الزوايا
+          </div>
+        </div>
+        <div class="method-step">
+          <div class="step-num">6</div>
+          <div class="step-text">
+            <strong>تطبيق طبقات العزل (500 مايكرون/طبقة)</strong>
+            طلاء طبقة عزل 500 مايكرون بالرول، تثبيت شبك T325، إعادة التطبيق 500 مايكرون مع تداخل 5-10 سم على الزوايا لكامل المساحة
           </div>
         </div>
       </div>
@@ -1306,22 +1192,20 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
       </div>
     </div>
 
-    <!-- Pricing Tables -->
-
-    <!-- TABLE 1: Cool Roof -->
+    <!-- Pricing Table -->
     <div class="price-card fade-in">
-      <div class="price-header">
-        <h2><i class="fas fa-sun"></i> خيارات نظام Cool Roof</h2>
-        <div class="validity-badge"><i class="fas fa-ruler-combined"></i> المساحة: 720 م²</div>
+      <div class="price-header" style="background:linear-gradient(135deg,#1B4F72,#2E86C1);">
+        <h2><i class="fas fa-shield-halved"></i> نظام Roof Protection — 3 طبقات</h2>
+        <div class="validity-badge"><i class="fas fa-ruler-combined"></i> المساحة: 120 م²</div>
       </div>
 
-      <div class="price-table-wrap"><table class="price-table">
+      <table class="price-table">
         <thead>
           <tr>
-            <th>عدد الطبقات</th>
+            <th>الخدمة</th>
             <th>نسبة العزل الحراري</th>
             <th>سعر المتر</th>
-            <th>Total (720 م²)</th>
+            <th>الإجمالي (120 م²)</th>
           </tr>
         </thead>
         <tbody>
@@ -1338,87 +1222,37 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
 </tbody>
       </table>
 
-      <div class="price-note">
-        <i class="fas fa-circle-info"></i>
-        <span>جميع الأسعار بالدرهم الإماراتي · بدون ضريبة · تشمل: المواد + العمالة + تجهيز السطح + تنظيف الموقع بعد الانتهاء.</span>
+      <!-- Payment Terms -->
+      <div style="padding:24px 20px;border-top:1px solid rgba(11,37,69,0.08);">
+        <div style="display:flex;align-items:center;gap:10px;margin-bottom:16px;">
+          <i class="fas fa-money-bill-wave" style="color:var(--blue-accent);font-size:16px;"></i>
+          <span style="font-size:15px;font-weight:800;color:var(--blue-dark);">شروط الدفع</span>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;">
+          <div style="background:var(--gray-light);border-radius:12px;padding:16px;text-align:center;border-top:3px solid var(--blue-dark);">
+            <div style="font-size:26px;font-weight:900;color:var(--blue-dark);line-height:1;">50%</div>
+            <div style="font-size:12px;font-weight:700;color:var(--blue-accent);margin:6px 0 4px;">دفعة مقدمة</div>
+            <div style="font-size:11px;color:var(--gray-mid);">عند التعاقد وتوقيع العقد</div>
+            <div style="font-size:13px;font-weight:800;color:var(--blue-dark);margin-top:8px;">3,900 درهم</div>
+          </div>
+          <div style="background:var(--gray-light);border-radius:12px;padding:16px;text-align:center;border-top:3px solid var(--blue-accent);">
+            <div style="font-size:26px;font-weight:900;color:var(--blue-dark);line-height:1;">40%</div>
+            <div style="font-size:12px;font-weight:700;color:var(--blue-accent);margin:6px 0 4px;">عند بدء العمل</div>
+            <div style="font-size:11px;color:var(--gray-mid);">في اليوم الأول من التنفيذ</div>
+            <div style="font-size:13px;font-weight:800;color:var(--blue-dark);margin-top:8px;">3,120 درهم</div>
+          </div>
+          <div style="background:var(--gray-light);border-radius:12px;padding:16px;text-align:center;border-top:3px solid var(--gold);">
+            <div style="font-size:26px;font-weight:900;color:var(--blue-dark);line-height:1;">10%</div>
+            <div style="font-size:12px;font-weight:700;color:var(--gold);margin:6px 0 4px;">عند الإنتهاء والتسليم</div>
+            <div style="font-size:11px;color:var(--gray-mid);">بعد الاختبار وتسليم السطح</div>
+            <div style="font-size:13px;font-weight:800;color:var(--blue-dark);margin-top:8px;">780 درهم</div>
+          </div>
+        </div>
       </div>
-    </div>
-
-    <!-- TABLE 2: Roof Protection -->
-    <div class="price-card fade-in">
-      <div class="price-header" style="background:linear-gradient(135deg,#1B4F72,#2E86C1);">
-        <h2><i class="fas fa-shield-halved"></i> خيارات نظام Roof Protection</h2>
-        <div class="validity-badge"><i class="fas fa-ruler-combined"></i> المساحة: 720 م²</div>
-      </div>
-
-      <div class="price-table-wrap"><table class="price-table">
-        <thead>
-          <tr>
-            <th>عدد الطبقات</th>
-            <th>نسبة العزل الحراري</th>
-            <th>سعر المتر</th>
-            <th>Total (720 م²)</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>
-              <div class="service-name">1 طبقة</div>
-              <div class="service-desc">حماية أساسية من الشمس والعوامل الجوية</div>
-            </td>
-            <td>
-              <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(56,161,105,0.1);color:#276749;padding:4px 12px;border-radius:50px;font-weight:700;font-size:13px;">
-                <i class="fas fa-shield"></i> 20%
-              </span>
-            </td>
-            <td class="price-range">25 د.إ / م²</td>
-            <td><strong style="color:var(--blue-dark);font-size:16px;">18,000 درهم</strong></td>
-          </tr>
-          <tr>
-            <td>
-              <div class="service-name">2 طبقة</div>
-              <div class="service-desc">حماية محسّنة لفترة أطول</div>
-            </td>
-            <td>
-              <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(56,161,105,0.1);color:#276749;padding:4px 12px;border-radius:50px;font-weight:700;font-size:13px;">
-                <i class="fas fa-shield"></i> 30%
-              </span>
-            </td>
-            <td class="price-range">45 د.إ / م²</td>
-            <td><strong style="color:var(--blue-dark);font-size:16px;">32,400 درهم</strong></td>
-          </tr>
-          <tr>
-            <td>
-              <div class="service-name" style="color:var(--gold);">3 طبقات ⭐ الموصى به</div>
-              <div class="service-desc">التوازن المثالي بين التكلفة والأداء</div>
-            </td>
-            <td>
-              <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(212,160,23,0.15);color:#7B5E0A;padding:4px 12px;border-radius:50px;font-weight:700;font-size:13px;">
-                <i class="fas fa-shield"></i> 40%
-              </span>
-            </td>
-            <td class="price-range" style="color:var(--gold);">65 د.إ / م²</td>
-            <td><strong style="color:var(--gold);font-size:16px;">46,800 درهم</strong></td>
-          </tr>
-          <tr>
-            <td>
-              <div class="service-name" style="color:var(--blue-accent);">4 طبقات — حماية متكاملة</div>
-              <div class="service-desc">أقصى درجات الحماية لنظام Roof Protection</div>
-            </td>
-            <td>
-              <span style="display:inline-flex;align-items:center;gap:6px;background:rgba(26,109,175,0.12);color:#0B4F8A;padding:4px 12px;border-radius:50px;font-weight:700;font-size:13px;">
-                <i class="fas fa-shield"></i> 50%
-              </span>
-            </td>
-            <td class="price-range" style="color:var(--blue-accent);">80 د.إ / م²</td>
-            <td><strong style="color:var(--blue-accent);font-size:16px;">57,600 درهم</strong></td>
-          </tr>
-        </tbody>
-      </table>
 
       <div class="price-note">
         <i class="fas fa-circle-info"></i>
-        <span>جميع الأسعار بالدرهم الإماراتي · بدون ضريبة · تشمل: المواد + العمالة + تجهيز السطح + تنظيف الموقع بعد الانتهاء.</span>
+        <span>جميع الأسعار بالدرهم الإماراتي · تشمل: المواد + العمالة + تجهيز السطح + تنظيف الموقع بعد الانتهاء.</span>
       </div>
     </div>
 
@@ -1473,13 +1307,13 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
       <p>لا تدع حرارة الصيف تسرق راحتك وتضاعف فاتورتك — فريقنا جاهز للمعاينة المجانية خلال 24 ساعة</p>
 
       <div class="cta-buttons">
-        <a href="https://wa.me/971586634710?text=السلام عليكم، أنا محمد سالم الخميسي، اطلعت على عرض السعر الخاص بعزل سطح فيلا 16 شارع السماح مدينة خليفة أبوظبي، وأريد اعتماد العرض والمضي قدماً. أرجو التواصل." class="btn btn-primary" target="_blank">
+        <a href="https://wa.me/971586634710?text=السلام عليكم، أنا عبدالله السويدي، اطلعت على عرض السعر الخاص بعزل سطح فيلا 16 شارع السماح مدينة خليفة أبوظبي، وأريد اعتماد العرض والمضي قدماً. أرجو التواصل." class="btn btn-primary" target="_blank">
           <i class="fab fa-whatsapp" style="font-size:20px;"></i>
           اعتمد العرض الآن عبر واتساب
         </a>
-        <a href="#" class="btn btn-secondary" onclick="downloadSpecs(); return false;">
+        <a href="#" class="btn btn-secondary" onclick="downloadPDF(); return false;">
           <i class="fas fa-file-pdf"></i>
-          تحميل المواصفات التقنية
+          تحميل عرض السعر PDF
         </a>
       </div>
 
@@ -1494,31 +1328,12 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
   </div>
 </section>
 
-<!-- FOOTER مع الخريطة مدمجة -->
+<!-- FOOTER -->
 <footer class="footer">
-  <!-- الخريطة داخل الفوتر -->
-  <div class="footer-map-wrap">
-    <iframe width="100%" height="200" style="border:0; filter: brightness(0.85) contrast(1.05); display: block;" loading="lazy" allowfullscreen src="https://www.google.com/maps/embed/v1/place?key=AIzaSyBFw0Qbyq9zTFTd-tUY6dZWTgaQzuU17R8&q=24.372480,54.538188&zoom=16&maptype=roadmap&language=ar"></iframe>
-  </div>
-
-  <!-- معلومات المكتب -->
-  <div style="margin-bottom: 16px; padding: 14px 20px; background: rgba(255,255,255,0.05); border-radius: 16px; margin: 0 16px 16px;">
-    <div style="display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap;">
-      <i class="fas fa-location-dot" style="color: #E9C77B;"></i>
-      <span style="font-size: 13px;">مكتب 306، برج A3، مدينة محمد بن زايد، أبوظبي</span>
-      <a href="https://maps.google.com/?q=24.37248,54.538188" target="_blank" style="color: #E9C77B; text-decoration: none; font-size: 12px;">
-        <i class="fas fa-external-link-alt"></i> فتح الخريطة
-      </a>
-    </div>
-  </div>
-
-  <!-- النص الأصلي للفوتر -->
-  <div class="footer-office-bar">
-    <p>
-      <strong>ركن التطور للعوازل وكشف التسربات ذ.م.م</strong> · أبوظبي، الإمارات العربية المتحدة<br>
-      <span style="margin-top:6px;display:inline-block;">هذا العرض سري ومُعد حصرياً لصاحبه · رقم العرض: RET-LEAK-2026-0714 · تاريخ الفحص: الأربعاء 1 يوليو 2026</span>
-    </p>
-  </div>
+  <p>
+    <strong>ركن التطور لأنظمة العزل الحديث ذ.م.م</strong> · أبوظبي، الإمارات العربية المتحدة<br>
+    <span style="margin-top:6px;display:inline-block;">هذا العرض مُعد حصرياً لصاحبه ·</span>
+  </p>
 </footer>
 
 <script>
@@ -1533,11 +1348,24 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
 
   document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-  // Download specs (placeholder)
-  function downloadSpecs() {
-    alert('سيتم إرسال المواصفات التقنية الكاملة على واتساب أو البريد الإلكتروني — تواصل معنا لتلقّيها فوراً.');
+  function downloadPDF() {
+    window.print();
   }
 </script>
+
+<style>
+@media print {
+  body { background: #fff !important; }
+  .hero { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .product-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .warranty-card { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .grand-total-row { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  .cta-section { display: none; }
+  .btn { display: none; }
+  .trust-row { display: none; }
+  .footer { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+}
+</style>
 
 </body>
 </html>

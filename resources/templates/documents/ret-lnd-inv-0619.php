@@ -316,7 +316,7 @@ body{
         </div>
       </div>
       <div class="doc-badge">
-        <div class="db-type">رقم الشهادة</div>
+        <div class="db-type">رقم الفاتورة</div>
         <div class="db-num"><?= e($doc['document_number']) ?></div>
         <div class="db-date"><?= e($issueDate) ?></div>
       </div>

@@ -1,61 +1,9 @@
-<?php
-/**
- * KDMS Dynamic Template — design preserved 100% from official HTML.
- * Vars: $doc, $company, $customer, $items, $media
- */
-$lang = $doc['language'] ?? 'ar';
-$dir = ($lang === 'ar') ? 'rtl' : 'ltr';
-$companyName = ($lang === 'ar')
-    ? ($company['name_ar'] ?? '')
-    : ($company['name_en'] ?? $company['name_ar'] ?? '');
-$companyNameAlt = ($lang === 'ar')
-    ? ($company['name_en'] ?? '')
-    : ($company['name_ar'] ?? '');
-$customerName = ($lang === 'ar')
-    ? ($customer['name_ar'] ?? '')
-    : ($customer['name_en'] ?? $customer['name_ar'] ?? '');
-$customerAddress = ($lang === 'ar')
-    ? ($customer['address_ar'] ?? '')
-    : ($customer['address_en'] ?? $customer['address_ar'] ?? '');
-$projectAddress = $doc['project_address'] ?: $customerAddress;
-$issueDate = format_date($doc['issue_date'] ?? null, $lang);
-$logo = !empty($company['logo']) ? upload_url($company['logo']) : '';
-$seal = !empty($company['seal']) ? upload_url($company['seal']) : '';
-$signature = !empty($company['signature']) ? upload_url($company['signature']) : '';
-$currency = $doc['currency'] ?? ($company['currency'] ?? 'AED');
-$currencyLabel = ($lang === 'ar')
-    ? ($company['currency_label_ar'] ?? $currency)
-    : ($company['currency_label_en'] ?? $currency);
-$amountWords = ($lang === 'ar')
-    ? ($doc['amount_words_ar'] ?? '')
-    : ($doc['amount_words_en'] ?? $doc['amount_words_ar'] ?? '');
-$cityCountry = trim(($company['city'] ?? '') . ' — ' . ($company['country'] ?? ''), ' —');
-$offices = [];
-if (!empty($company['offices_json'])) {
-    $decoded = json_decode($company['offices_json'], true);
-    if (is_array($decoded)) { $offices = $decoded; }
-}
-$custom = [];
-if (!empty($doc['custom_fields'])) {
-    $custom = is_array($doc['custom_fields'])
-        ? $doc['custom_fields']
-        : (json_decode($doc['custom_fields'], true) ?: []);
-}
-$mediaUrls = [];
-foreach (($media ?? []) as $m) {
-    if (!empty($m['file_path'])) {
-        $mediaUrls[] = upload_url($m['file_path']);
-    }
-}
-$totalFmt = number_format((float)($doc['total'] ?? 0), 2);
-$totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
-?>
 <!DOCTYPE html>
-<html lang="<?= e($lang) ?>" dir="<?= e($dir) ?>">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><?= e($doc['title'] ?? '') ?> | <?= e($companyName) ?></title>
+<title>عرض سعر - شبكة ري متكاملة | ركن التطور - العين</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
@@ -700,18 +648,6 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
     .section { padding: 40px 14px; }
   }
 </style>
-
-<?php if (empty($doc['show_seal'])): ?><style>.seal, img.seal, .stamp-wrap img, .stamp-box img{display:none!important;}</style><?php endif; ?>
-<?php if (empty($doc['show_signature'])): ?><style>img.sign, .sign{display:none!important;}</style><?php endif; ?>
-<style>
-@media print{
-  .kdms-toolbar,.no-print,.print-bar{display:none!important;}
-  @page{size:A4 portrait;margin:10mm;}
-  thead{display:table-header-group;}
-  tr,img,.sig-row,.sig-box,.stamp-box,.info-grid,.amount-hero{break-inside:avoid;page-break-inside:avoid;}
-  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
-}
-</style>
 </head>
 <body>
 
@@ -798,17 +734,17 @@ $totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
       <table class="price-table">
         <thead><tr><th>الخيار</th><th>المواصفات التقنية</th><th>الإجمالي (درهم)</th></tr></thead>
         <tbody>
-<?php $n = 1; foreach ($items as $item): ?>
-        <tr>
-          <td style="text-align:center;"><?= $n++ ?></td>
-          <td colspan="1">
-            <strong><?= e($item['title']) ?></strong>
-            <?php if (!empty($item['description'])): ?><div style="font-size:11px;opacity:.8;"><?= nl2br(e($item['description'])) ?></div><?php endif; ?>
-          </td>
-          <td style="text-align:center;"><strong><?= e(number_format((float)$item['total'], 2)) ?> <?= e($currency) ?></strong></td>
-        </tr>
-<?php endforeach; ?>
-</tbody>
+          <tr>
+            <td><div class="service-name">نظام منتج أوروبي وصيني</div><div class="service-desc">خيار عملي واقتصادي</div></td>
+            <td><span style="background:#e3f2fd; padding:4px 12px; border-radius:50px; font-size:12px;">أنابيب HDPE، محابس PVC، فلاتر + 13600 م خراطيم GR</span></td>
+            <td class="price-range" style="font-weight:800; color:var(--blue-dark);"> 18,317 درهم</td>
+          </tr>
+          <tr>
+            <td><div class="service-name" style="color:var(--gold);">نظام منتج أمريكي الأعلى جودة ⭐ الأكثر طلباً</div><div class="service-desc">تحكم كامل يوفر العمالة والمياه</div></td>
+            <td><span style="background:#FFF3E0; padding:4px 12px; border-radius:50px; font-size:12px;">أنابيب HDPE، محابس كهربائية، لوحة تحكم وكابلات، فلاتر + 13600 م GR</span></td>
+            <td style="font-weight:800; color:var(--gold);">26,553 درهم</td>
+          </tr>
+        </tbody>
       </table>
       <div class="price-note"><i class="fas fa-circle-info"></i><span>السعر شامل التوريد والتركيب والتمديد، بناءً على توفير العميل للحفار والمضخة والخزان.</span></div>
     </div>

@@ -92,6 +92,15 @@ $action = $isEdit ? '/admin/documents/'.(int)$d['id'] : '/admin/documents';
     <div class="full"><label>ملاحظات</label><textarea name="notes"><?= e($d['notes'] ?? '') ?></textarea></div>
     <div class="full"><label>الشروط</label><textarea name="terms"><?= e($d['terms'] ?? '') ?></textarea></div>
     <div class="full"><label>الشروط الإضافية / الجداول</label><textarea name="conditions" placeholder="يمكن وضع جداول HTML أو نص"><?= e($d['conditions'] ?? '') ?></textarea></div>
+    <div class="full">
+      <label>حقول إضافية (JSON) — للتقارير والعقود المتقدمة</label>
+      <?php
+        $cf = $d['custom_fields'] ?? '';
+        if (is_array($cf)) { $cf = json_encode($cf, JSON_UNESCAPED_UNICODE|JSON_PRETTY_PRINT); }
+      ?>
+      <textarea name="custom_fields_json" placeholder='{"site_area":"120","layers":"3","warranty_years":"10"}'><?= e($cf) ?></textarea>
+      <div class="help">تُمرَّر إلى القالب عبر متغير <code>$custom</code> مع الحفاظ على تصميم القالب الرسمي.</div>
+    </div>
     <div><label><input type="checkbox" name="show_signature" value="1" <?= !isset($d['show_signature']) || !empty($d['show_signature'])?'checked':'' ?>> إظهار التوقيع</label></div>
     <div><label><input type="checkbox" name="show_seal" value="1" <?= !isset($d['show_seal']) || !empty($d['show_seal'])?'checked':'' ?>> إظهار الختم</label></div>
   </div>

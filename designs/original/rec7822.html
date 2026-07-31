@@ -1,61 +1,9 @@
-<?php
-/**
- * KDMS Dynamic Template — design preserved 100% from official HTML.
- * Vars: $doc, $company, $customer, $items, $media
- */
-$lang = $doc['language'] ?? 'ar';
-$dir = ($lang === 'ar') ? 'rtl' : 'ltr';
-$companyName = ($lang === 'ar')
-    ? ($company['name_ar'] ?? '')
-    : ($company['name_en'] ?? $company['name_ar'] ?? '');
-$companyNameAlt = ($lang === 'ar')
-    ? ($company['name_en'] ?? '')
-    : ($company['name_ar'] ?? '');
-$customerName = ($lang === 'ar')
-    ? ($customer['name_ar'] ?? '')
-    : ($customer['name_en'] ?? $customer['name_ar'] ?? '');
-$customerAddress = ($lang === 'ar')
-    ? ($customer['address_ar'] ?? '')
-    : ($customer['address_en'] ?? $customer['address_ar'] ?? '');
-$projectAddress = $doc['project_address'] ?: $customerAddress;
-$issueDate = format_date($doc['issue_date'] ?? null, $lang);
-$logo = !empty($company['logo']) ? upload_url($company['logo']) : '';
-$seal = !empty($company['seal']) ? upload_url($company['seal']) : '';
-$signature = !empty($company['signature']) ? upload_url($company['signature']) : '';
-$currency = $doc['currency'] ?? ($company['currency'] ?? 'AED');
-$currencyLabel = ($lang === 'ar')
-    ? ($company['currency_label_ar'] ?? $currency)
-    : ($company['currency_label_en'] ?? $currency);
-$amountWords = ($lang === 'ar')
-    ? ($doc['amount_words_ar'] ?? '')
-    : ($doc['amount_words_en'] ?? $doc['amount_words_ar'] ?? '');
-$cityCountry = trim(($company['city'] ?? '') . ' — ' . ($company['country'] ?? ''), ' —');
-$offices = [];
-if (!empty($company['offices_json'])) {
-    $decoded = json_decode($company['offices_json'], true);
-    if (is_array($decoded)) { $offices = $decoded; }
-}
-$custom = [];
-if (!empty($doc['custom_fields'])) {
-    $custom = is_array($doc['custom_fields'])
-        ? $doc['custom_fields']
-        : (json_decode($doc['custom_fields'], true) ?: []);
-}
-$mediaUrls = [];
-foreach (($media ?? []) as $m) {
-    if (!empty($m['file_path'])) {
-        $mediaUrls[] = upload_url($m['file_path']);
-    }
-}
-$totalFmt = number_format((float)($doc['total'] ?? 0), 2);
-$totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
-?>
 <!DOCTYPE html>
-<html lang="<?= e($lang) ?>" dir="<?= e($dir) ?>">
+<html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><?= e($doc['title'] ?? '') ?> | <?= e($companyName) ?></title>
+<title>سند قبض — الدفعة الأولى 75% | ركن التطور</title>
 <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&family=Inter:wght@300;400;600;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 <style>
@@ -187,22 +135,12 @@ body{font-family:'Cairo',sans-serif;background:linear-gradient(135deg,#0A1628 0%
   *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
 }
 </style>
-
-<?php if (empty($doc['show_seal'])): ?><style>.seal, img.seal, .stamp-wrap img, .stamp-box img{display:none!important;}</style><?php endif; ?>
-<?php if (empty($doc['show_signature'])): ?><style>img.sign, .sign{display:none!important;}</style><?php endif; ?>
-<style>
-@media print{
-  .kdms-toolbar,.no-print,.print-bar{display:none!important;}
-  @page{size:A4 portrait;margin:10mm;}
-  thead{display:table-header-group;}
-  tr,img,.sig-row,.sig-box,.stamp-box,.info-grid,.amount-hero{break-inside:avoid;page-break-inside:avoid;}
-  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
-}
-</style>
 </head>
 <body>
 
-<!-- KDMS_TOOLBAR -->
+<div class="print-bar">
+  <button class="btn-print" onclick="window.print()"><i class="fas fa-file-pdf"></i> تحميل سند القبض PDF</button>
+</div>
 
 <div class="page">
 
@@ -213,26 +151,22 @@ body{font-family:'Cairo',sans-serif;background:linear-gradient(135deg,#0A1628 0%
 
     <div class="rh-top">
       <div class="logo-a">
-        <?php if ($logo): ?>
-        <img class="kdms-logo" src="<?= e($logo) ?>" alt="logo" style="width:52px;height:52px;object-fit:contain;border-radius:11px;background:#fff;padding:2px;">
-        <?php else: ?>
-        <div class="lmark"><i class="fas fa-building"></i></div>
-        <?php endif; ?>
+        <div class="lmark"><i class="fas fa-building-shield"></i></div>
         <div>
-          <div class="co-name"><?= e($companyName) ?></div>
-          <div class="co-name-en"><?= e($companyNameAlt) ?></div>
-          <div class="co-sub"><?= e($cityCountry) ?></div>
+          <div class="co-name">ركن التطور لأنظمة العزل الحديث ذ.م.م</div>
+          <div class="co-name-en">Rukn El-Tatawer for Modern Insulation Systems LLC</div>
+          <div class="co-sub">أبوظبي — الإمارات العربية المتحدة</div>
         </div>
       </div>
       <div class="doc-badge">
-        <div class="db-type">Receipt No.</div>
-        <div class="db-num"><?= e($doc['document_number']) ?></div>
-        <div class="db-date"><?= e($issueDate) ?></div>
+        <div class="db-type">رقم السند</div>
+        <div class="db-num">RET-RCP-2026-0609</div>
+        <div class="db-date">التاريخ: الخميس، 11 يونيو 2026</div>
       </div>
     </div>
 
     <div class="rh-title">
-      <div class="title-box"><h1><?= e($doc['title']) ?></h1></div>
+      <div class="title-box"><h1>سند قبض — الدفعة الأولى</h1></div>
     </div>
   </div>
 
@@ -248,7 +182,7 @@ body{font-family:'Cairo',sans-serif;background:linear-gradient(135deg,#0A1628 0%
         <div class="ah-badge">تم الاستلام</div>
       </div>
       <div class="ah-amount">
-        <div class="big"><?= e($totalFmtInt) ?></div>
+        <div class="big">6,000</div>
         <div class="cur">درهم إماراتي (AED)</div>
       </div>
     </div>
@@ -259,28 +193,28 @@ body{font-family:'Cairo',sans-serif;background:linear-gradient(135deg,#0A1628 0%
         <div class="ic-icon"><i class="fas fa-user-tie"></i></div>
         <div>
           <div class="ic-label">العميل / الدافع</div>
-          <div class="ic-val"><?= e($customerName) ?></div>
+          <div class="ic-val">عادل عمار على سالم</div>
         </div>
       </div>
       <div class="info-cell">
         <div class="ic-icon"><i class="fas fa-calendar-day"></i></div>
         <div>
-          <div class="ic-label">Payment Date</div>
-          <div class="ic-val"><?= e($issueDate) ?></div>
+          <div class="ic-label">تاريخ السداد</div>
+          <div class="ic-val">الخميس، 11 يونيو 2026</div>
         </div>
       </div>
       <div class="info-cell" style="grid-column:1/-1;">
         <div class="ic-icon"><i class="fas fa-location-dot"></i></div>
         <div>
-          <div class="ic-label">Project Address</div>
-          <div class="ic-val"><?= e($projectAddress) ?></div>
+          <div class="ic-label">عنوان المشروع</div>
+          <div class="ic-val">فيلا 23b، الإحداثيات 25.238178,55.357197، أبوظبي</div>
         </div>
       </div>
     </div>
 
     <!-- Description -->
     <div class="desc-box">
-      تم استلام المبلغ أعلاه من <strong>السيد / عادل عمار على سالم</strong> وذلك كـ <strong>دفعة أولى (75%)</strong> من القيمة Totalة للعقد رقم <strong>RET-CON-2026-0609</strong>، والمتعلق بـ:
+      تم استلام المبلغ أعلاه من <strong>السيد / عادل عمار على سالم</strong> وذلك كـ <strong>دفعة أولى (75%)</strong> من القيمة الإجمالية للعقد رقم <strong>RET-CON-2026-0609</strong>، والمتعلق بـ:
       <ul style="margin-top:6px;margin-right:20px;">
         <li>تركيب زجاج سيكوريت 10 مم شفاف (29 متر مربع) — 7,250 درهم</li>
         <li>توريد وتركيب مكيف ستار تراك 1 طن — 700 درهم</li>
@@ -291,42 +225,31 @@ body{font-family:'Cairo',sans-serif;background:linear-gradient(135deg,#0A1628 0%
     <!-- Note -->
     <div class="note-box">
       <i class="fas fa-circle-info note-icon"></i>
-      <div><strong>ملاحظة مهمة:</strong> <?= nl2br(e($doc['notes'] ?? '')) ?></div>
+      <div><strong>ملاحظة مهمة:</strong> هذا السند يثبت استلام الدفعة الأولى البالغة <strong>6,000 درهم</strong> (ستة آلاف درهم إماراتي فقط لا غير)، على أن يتم سداد الرصيد المتبقي وقدره <strong>2,000 درهم</strong> (الدفعة الثانية 25%) بعد الانتهاء من أعمال التركيب والتسليم النهائي.</div>
     </div>
 
     <!-- Payment Method -->
     <div class="pay-method">
       <div class="pm-icon"><i class="fas fa-money-bill-wave"></i></div>
       <div>
-        <div class="pm-label">Payment Method</div>
-        <div class="pm-val"><?= e($doc['payment_method'] ?? '') ?></div>
+        <div class="pm-label">طريقة السداد</div>
+        <div class="pm-val">نقدي / تحويل بنكي</div>
       </div>
     </div>
 
     <!-- Written Amount -->
     <div class="written">
-      Amount in words: &nbsp;<span><?= e($amountWords) ?></span>
+      المبلغ كتابة: &nbsp;<em>ستة آلاف درهم إماراتي فقط لا غير</em>
     </div>
 
     <!-- Signatures -->
-    
-<?php if (!empty($doc['terms'])): ?>
-<div class="kdms-terms" style="margin:14px 0;padding:12px 14px;border:1px solid rgba(0,112,204,.12);border-radius:10px;font-size:12.5px;line-height:1.8;break-inside:avoid;">
-  <?= nl2br(e($doc['terms'])) ?>
-</div>
-<?php endif; ?>
-<?php if (!empty($doc['conditions'])): ?>
-<div class="kdms-conditions" style="margin:14px 0;padding:12px 14px;border:1px solid rgba(0,112,204,.12);border-radius:10px;font-size:12.5px;line-height:1.8;break-inside:avoid;">
-  <?= $doc['conditions'] /* intentionally allows controlled HTML tables from admin */ ?>
-</div>
-<?php endif; ?>
-<div class="sig-row">
+    <div class="sig-row">
       <div class="sig-box">
         <div class="sb-lbl">المقاول — الطرف الأول</div>
-        <div class="sb-nm"><?= e($customerName) ?></div>
+        <div class="sb-nm">ركن التطور لأنظمة العزل الحديث ذ.م.م</div>
         <div class="sig-imgs">
-          <img class="seal" src="<?= e($seal ?: asset('brand/khtm.webp')) ?>" alt="ختم الشركة">
-          <img class="sign" src="<?= e($signature ?: asset('brand/sign.webp')) ?>" alt="توقيع المدير">
+          <img class="seal" src="https://www.rukn-eltatawer.com/khtm.webp" alt="ختم الشركة">
+          <img class="sign" src="https://www.rukn-eltatawer.com/sign.webp" alt="توقيع المدير">
         </div>
         <div class="sb-role">المدير العام</div>
       </div>
@@ -344,7 +267,7 @@ body{font-family:'Cairo',sans-serif;background:linear-gradient(135deg,#0A1628 0%
   <!-- FOOTER -->
   <div class="rf">
     <span>ركن التطور لأنظمة العزل الحديث ذ.م.م — أبوظبي، الإمارات</span>
-    <span class="rn"><?= e($doc['document_number']) ?> &nbsp;|&nbsp; <?= e($issueDate) ?></span>
+    <span class="rn">RET-RCP-2026-0609 &nbsp;|&nbsp; 11 يونيو 2026</span>
     <span>هذا السند مستند قانوني معتمد</span>
   </div>
 
