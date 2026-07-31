@@ -1,0 +1,1 @@
+<!DOCTYPE html><html lang="ar" dir="rtl"><body style="font-family:Cairo,sans-serif;text-align:center;padding:80px"><h1>404</h1><p>الصفحة غير موجودة</p><a href="/admin">العودة</a></body></html>

@@ -1,0 +1,804 @@
+<?php
+/**
+ * KDMS Dynamic Document Template
+ * Design preserved 100% from official HTML.
+ * Available vars: $doc, $company, $customer, $items, $media
+ */
+$lang = $doc['language'] ?? 'ar';
+$dir = $lang === 'ar' ? 'rtl' : 'ltr';
+$companyName = $lang === 'ar' ? ($company['name_ar'] ?? '') : ($company['name_en'] ?? $company['name_ar'] ?? '');
+$companyNameAlt = $lang === 'ar' ? ($company['name_en'] ?? '') : ($company['name_ar'] ?? '');
+$customerName = $lang === 'ar'
+    ? ($customer['name_ar'] ?? $doc['customer_name_ar'] ?? '')
+    : ($customer['name_en'] ?? $customer['name_ar'] ?? $doc['customer_name_en'] ?? '');
+$customerAddress = $lang === 'ar'
+    ? ($customer['address_ar'] ?? $doc['project_address'] ?? '')
+    : ($customer['address_en'] ?? $customer['address_ar'] ?? $doc['project_address'] ?? '');
+$projectAddress = $doc['project_address'] ?: $customerAddress;
+$issueDate = format_date($doc['issue_date'] ?? null, $lang);
+$logo = !empty($company['logo']) ? upload_url($company['logo']) : '';
+$seal = !empty($company['seal']) ? upload_url($company['seal']) : '';
+$signature = !empty($company['signature']) ? upload_url($company['signature']) : '';
+$currency = $doc['currency'] ?? ($company['currency'] ?? 'AED');
+$currencyLabel = $lang === 'ar' ? ($company['currency_label_ar'] ?? $currency) : ($company['currency_label_en'] ?? $currency);
+$amountWords = $lang === 'ar' ? ($doc['amount_words_ar'] ?? '') : ($doc['amount_words_en'] ?? $doc['amount_words_ar'] ?? '');
+$cityCountry = trim(($company['city'] ?? '') . ' — ' . ($company['country'] ?? ''), ' —');
+$offices = [];
+if (!empty($company['offices_json'])) {
+    $offices = json_decode($company['offices_json'], true) ?: [];
+}
+$custom = [];
+if (!empty($doc['custom_fields'])) {
+    $custom = is_array($doc['custom_fields']) ? $doc['custom_fields'] : (json_decode($doc['custom_fields'], true) ?: []);
+}
+?>
+<!DOCTYPE html>
+<html lang="<?= e($lang) ?>" dir="<?= e($dir) ?>">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><?= e($doc['title'] ?? '') ?> | <?= e($companyName) ?></title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=DM+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+:root {
+  --ink:     #0A1520;
+  --ink-mid: #1A2E45;
+  --ink-l:   #2A4A6E;
+  --teal:    #0A5C6E;
+  --teal-m:  #0D7B8A;
+  --teal-l:  #12A3B4;
+  --teal-xl: #7DD8E4;
+  --gold:    #9A6B00;
+  --gold-m:  #C8890A;
+  --gold-l:  #E8A820;
+  --gold-xl: #FFD060;
+  --red:     #8B1A1A;
+  --red-l:   #C0392B;
+  --amber:   #7A4500;
+  --amber-l: #D4700A;
+  --green:   #0A5C2A;
+  --green-l: #1A8A45;
+  --bg:      #F2F6FA;
+  --bg-alt:  #E8EFF7;
+  --white:   #FFFFFF;
+  --border:  rgba(10,92,110,0.12);
+  --text:    #1A2E3A;
+  --muted:   #4A6070;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: #D8E4EF;
+  color: var(--text);
+  font-size: 14px;
+  line-height: 1.8;
+  padding: 28px 16px 60px;
+}
+
+.no-print { max-width: 940px; margin: 0 auto 18px; }
+.btn-pdf {
+  display: inline-flex; align-items: center; gap: 9px;
+  padding: 11px 26px; border-radius: 9px; cursor: pointer; border: none;
+  font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 700;
+  background: linear-gradient(135deg, var(--gold), var(--gold-l), var(--gold-xl));
+  color: var(--ink); box-shadow: 0 4px 18px rgba(200,137,10,.35);
+  transition: all .25s;
+}
+.btn-pdf:hover { transform: translateY(-2px); }
+
+.page {
+  max-width: 940px; margin: 0 auto; background: var(--white);
+  box-shadow: 0 2px 4px rgba(0,0,0,.08), 0 12px 40px rgba(0,0,0,.18), 0 40px 100px rgba(0,0,0,.12);
+  border-radius: 3px; overflow: hidden;
+  border-top: 6px solid var(--teal);
+}
+
+/* HEADER */
+.rh {
+  background: linear-gradient(160deg, var(--ink) 0%, var(--ink-mid) 40%, var(--teal) 100%);
+  position: relative; overflow: hidden; padding: 32px 48px 28px;
+}
+.rh::before {
+  content:''; position:absolute; inset:0;
+  background-image: repeating-linear-gradient(-45deg,transparent,transparent 20px,rgba(255,255,255,.02) 20px,rgba(255,255,255,.02) 21px);
+}
+.rh::after {
+  content:''; position:absolute; inset:0;
+  background: radial-gradient(ellipse at 80% 50%, rgba(18,163,180,.2) 0%, transparent 60%);
+}
+.ro { position:absolute; border-radius:50%; pointer-events:none; }
+.ro1 { width:300px;height:300px;top:-120px;left:-80px; background:radial-gradient(circle,rgba(255,255,255,.06) 0%,transparent 65%); }
+.ro2 { width:200px;height:200px;bottom:-80px;right:80px; background:radial-gradient(circle,rgba(18,163,180,.15) 0%,transparent 65%); }
+
+.rh-inner { position:relative; z-index:2; }
+
+.rh-top { display:flex; justify-content:space-between; align-items:flex-start; gap:20px; flex-wrap:wrap; margin-bottom:28px; }
+
+.co-block { display:flex; align-items:center; gap:16px; }
+.co-icon {
+  width:58px;height:58px;border-radius:12px;flex-shrink:0;
+  background:linear-gradient(145deg,var(--gold-xl),var(--gold-l),var(--gold-m));
+  box-shadow:0 4px 16px rgba(200,137,10,.45),inset 0 1px 0 rgba(255,255,255,.5);
+  display:flex;align-items:center;justify-content:center;font-size:24px;color:var(--ink);
+}
+.co-name { font-size:13.5px; font-weight:700; color:#fff; text-shadow:0 1px 4px rgba(0,0,0,.3); line-height:1.3; }
+.co-sub { font-size:9px; color:rgba(255,255,255,.55); letter-spacing:.5px; margin-top:4px; }
+
+.doc-stamp {
+  background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.2);
+  border-radius:10px; padding:12px 20px; text-align:right;
+  backdrop-filter:blur(8px); box-shadow:inset 0 1px 0 rgba(255,255,255,.15);
+}
+.ds-label { font-size:9px; letter-spacing:2px; text-transform:uppercase; color:rgba(255,255,255,.55); margin-bottom:4px; }
+.ds-num {
+  font-size:17px; font-weight:900; line-height:1;
+  background:linear-gradient(90deg,var(--gold-xl),var(--gold-l));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+.ds-date { font-size:10px; color:rgba(255,255,255,.45); margin-top:4px; }
+
+.rh-title { text-align:center; margin-bottom:20px; }
+.report-tag {
+  display:inline-block; font-size:9px; letter-spacing:3px; text-transform:uppercase;
+  color:var(--teal-xl); border:1px solid rgba(125,216,228,.3); border-radius:4px;
+  padding:4px 14px; margin-bottom:10px;
+}
+.rh-title h1 { font-family:'Playfair Display',serif; font-size:26px; font-weight:700; color:#fff; text-shadow:0 2px 8px rgba(0,0,0,.3); line-height:1.3; }
+.rh-title .rh-sub { font-size:12.5px; color:rgba(255,255,255,.55); margin-top:6px; }
+
+.urgency-bar {
+  display:flex; align-items:center; justify-content:center; gap:12px;
+  background:linear-gradient(135deg,rgba(192,57,43,.25),rgba(139,26,26,.2));
+  border:1px solid rgba(192,57,43,.4); border-radius:8px; padding:10px 20px;
+  font-size:13px; font-weight:700; color:#F1948A; letter-spacing:.5px;
+}
+.urgency-bar::before, .urgency-bar::after {
+  content:''; width:8px;height:8px;border-radius:50%;background:#E74C3C;
+  animation:pls 1.4s ease infinite;
+}
+@keyframes pls { 0%,100%{opacity:1;transform:scale(1);}50%{opacity:.3;transform:scale(1.5);} }
+
+.prop-bar {
+  background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.15);
+  border-radius:10px; padding:14px 20px; margin-top:16px;
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(175px,1fr)); gap:12px;
+}
+.pb-item { display:flex; align-items:flex-start; gap:9px; }
+.pb-item i { color:var(--gold-l); font-size:12px; margin-top:3px; flex-shrink:0; }
+.pb-label { font-size:9px; color:rgba(255,255,255,.5); margin-bottom:2px; letter-spacing:.4px; text-transform:uppercase; }
+.pb-val { font-size:13px; font-weight:700; color:#fff; line-height:1.3; }
+
+.stripe { height:4px; background:linear-gradient(90deg,var(--ink) 0%,var(--teal) 30%,var(--teal-xl) 55%,var(--gold-l) 75%,var(--teal) 100%); }
+
+/* BODY */
+.rb { padding:36px 48px 44px; background:var(--white); }
+
+.section { margin-bottom:32px; }
+
+.sec-head {
+  display:flex; align-items:center; gap:12px;
+  border-bottom:2px solid var(--bg-alt); padding-bottom:12px; margin-bottom:18px;
+}
+.sec-icon {
+  width:36px;height:36px;border-radius:9px;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;font-size:15px;
+  box-shadow:0 2px 8px rgba(0,0,0,.12);
+}
+.si-teal  { background:linear-gradient(135deg,var(--teal),var(--teal-m)); color:#fff; }
+.si-gold  { background:linear-gradient(135deg,var(--gold),var(--gold-l)); color:var(--ink); }
+.si-red   { background:linear-gradient(135deg,var(--red),var(--red-l)); color:#fff; }
+.si-green { background:linear-gradient(135deg,var(--green),var(--green-l)); color:#fff; }
+.si-amber { background:linear-gradient(135deg,var(--amber),var(--amber-l)); color:#fff; }
+.si-ink   { background:linear-gradient(135deg,var(--ink),var(--ink-l)); color:#fff; }
+
+.sec-head h2 { font-family:'Playfair Display',serif; font-size:18px; font-weight:700; color:var(--ink); }
+.sec-num {
+  width:22px;height:22px;border-radius:50%;flex-shrink:0;
+  background:linear-gradient(135deg,var(--teal),var(--teal-m));
+  color:#fff;font-size:11px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;
+}
+.sec-line { flex:1; height:1px; background:var(--bg-alt); }
+
+.preamble {
+  background:linear-gradient(135deg,rgba(10,92,110,.04),rgba(10,92,110,.02));
+  border:1px solid var(--border); border-left:4px solid var(--teal);
+  border-radius:10px 0 0 10px; padding:16px 20px; font-size:14px; line-height:2; color:var(--text);
+}
+
+/* condition cards */
+.cond-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
+.cond-card { border-radius:11px; overflow:hidden; box-shadow:0 2px 10px rgba(0,0,0,.07); border:1px solid var(--border); }
+.cc-head { padding:10px 14px; font-size:11px; font-weight:700; display:flex;align-items:center;gap:7px; }
+.cc-teal  .cc-head { background:linear-gradient(135deg,var(--teal),var(--teal-m)); color:#fff; }
+.cc-red   .cc-head { background:linear-gradient(135deg,var(--red),var(--red-l)); color:#fff; }
+.cc-amber .cc-head { background:linear-gradient(135deg,var(--amber),var(--amber-l)); color:#fff; }
+.cc-body { padding:13px 14px; background:var(--white); font-size:13px; color:var(--text); line-height:1.7; }
+
+/* findings */
+.findings-list { list-style:none; }
+.fi {
+  display:flex; gap:14px; padding:13px 16px; margin-bottom:8px;
+  border-radius:10px; border:1px solid var(--border);
+  background:linear-gradient(135deg,rgba(10,92,110,.03),rgba(10,92,110,.01));
+}
+.fi:last-child { margin-bottom:0; }
+.fi-num {
+  width:28px;height:28px;flex-shrink:0;border-radius:50%;
+  background:linear-gradient(135deg,var(--teal),var(--teal-m));
+  color:#fff;font-size:12px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;margin-top:2px;
+}
+.fi-title { font-size:13.5px; font-weight:700; color:var(--ink); margin-bottom:4px; }
+.fi-desc { font-size:13px; color:var(--muted); line-height:1.7; }
+.fi-tag { display:inline-flex;align-items:center;gap:5px;margin-top:6px;padding:3px 10px;border-radius:50px;font-size:11px;font-weight:600; }
+.tag-high { background:rgba(192,57,43,.1);color:var(--red-l);border:1px solid rgba(192,57,43,.2); }
+.tag-med  { background:rgba(212,112,10,.1);color:var(--amber-l);border:1px solid rgba(212,112,10,.2); }
+.tag-info { background:rgba(10,92,110,.08);color:var(--teal-m);border:1px solid rgba(10,92,110,.15); }
+
+/* humidity section */
+.hum-card {
+  background:linear-gradient(135deg,rgba(212,112,10,.06),rgba(122,69,0,.04));
+  border:1px solid rgba(212,112,10,.2); border-radius:12px; padding:18px 22px;
+}
+.hum-title { font-size:14px; font-weight:800; color:var(--amber-l); margin-bottom:12px; display:flex;align-items:center;gap:8px; }
+.hum-list { list-style:none; }
+.hum-item { display:flex;gap:10px;padding:8px 0;border-bottom:1px dashed rgba(212,112,10,.15); font-size:13px;color:var(--text); }
+.hum-item:last-child { border-bottom:none; }
+.hum-dot { width:8px;height:8px;border-radius:50%;background:var(--amber-l);flex-shrink:0;margin-top:7px; }
+.hum-steps {
+  display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-top:14px;
+}
+.hs-box {
+  background:var(--white); border-radius:10px; padding:13px 14px; border:1px solid var(--border);
+  text-align:center; box-shadow:0 1px 4px rgba(0,0,0,.06);
+}
+.hs-num { width:28px;height:28px;border-radius:50%;background:linear-gradient(135deg,var(--amber),var(--amber-l));color:#fff;font-size:12px;font-weight:800;display:flex;align-items:center;justify-content:center;margin:0 auto 8px; }
+.hs-title { font-size:12.5px;font-weight:700;color:var(--ink);margin-bottom:4px; }
+.hs-desc { font-size:11.5px;color:var(--muted);line-height:1.5; }
+
+/* root cause */
+.rca-item { display:flex;gap:14px;padding:14px 16px;margin-bottom:8px;border-radius:10px;border:1px solid var(--border);background:var(--white); }
+.rca-num {
+  width:32px;height:32px;flex-shrink:0;border-radius:50%;
+  background:linear-gradient(135deg,var(--gold),var(--gold-l));
+  color:var(--ink);font-size:12px;font-weight:900;
+  display:flex;align-items:center;justify-content:center;box-shadow:0 2px 6px rgba(200,137,10,.3);margin-top:2px;
+}
+.rca-title { font-size:13.5px;font-weight:700;color:var(--ink);margin-bottom:4px; }
+.rca-desc { font-size:13px;color:var(--muted);line-height:1.7; }
+
+/* risk */
+.risk-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.risk-card { border-radius:10px;overflow:hidden;border:1px solid var(--border); }
+.rc-head { padding:9px 14px;font-size:12px;font-weight:700;display:flex;align-items:center;gap:7px; }
+.rc-current .rc-head { background:linear-gradient(135deg,var(--amber),var(--amber-l)); color:#fff; }
+.rc-future  .rc-head { background:linear-gradient(135deg,var(--red),var(--red-l)); color:#fff; }
+.rc-body { padding:13px 14px;background:var(--white);font-size:13px;color:var(--text);line-height:1.7; }
+.rc-body li { margin-bottom:5px;display:flex;gap:8px;align-items:flex-start; }
+.rc-body li i { font-size:10px;margin-top:5px;flex-shrink:0; }
+.rc-current .rc-body li i { color:var(--amber-l); }
+.rc-future  .rc-body li i { color:var(--red-l); }
+
+/* solution cards */
+.sol-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.sol-card { border-radius:13px;overflow:hidden;border:1px solid var(--border);box-shadow:0 3px 14px rgba(0,0,0,.08); }
+.sol-head { padding:14px 18px;display:flex;align-items:center;gap:12px; }
+.sol-1 .sol-head { background:linear-gradient(135deg,var(--ink-mid),var(--ink-l)); }
+.sol-2 .sol-head { background:linear-gradient(135deg,var(--teal),var(--teal-m)); }
+.sol-head-icon { width:36px;height:36px;border-radius:9px;background:rgba(255,255,255,.15);display:flex;align-items:center;justify-content:center;font-size:16px;color:#fff;flex-shrink:0; }
+.sol-head-text h3 { font-size:14px;font-weight:800;color:#fff; }
+.sol-head-text .sh-sub { font-size:11px;color:rgba(255,255,255,.65);margin-top:2px; }
+.sol-body { padding:16px 18px;background:var(--white); }
+.sol-steps { list-style:none;margin-bottom:12px; }
+.sol-step { display:flex;gap:10px;padding:6px 0;font-size:13px;color:var(--text);border-bottom:1px dashed var(--bg-alt); }
+.sol-step:last-child { border-bottom:none; }
+.ss-n { width:20px;height:20px;border-radius:50%;flex-shrink:0;font-size:10px;font-weight:800;display:flex;align-items:center;justify-content:center;margin-top:2px; }
+.sol-1 .ss-n { background:var(--ink);color:#fff; }
+.sol-2 .ss-n { background:var(--teal);color:#fff; }
+.sol-meta { display:flex;gap:10px;flex-wrap:wrap; }
+.sm-badge { display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:7px;font-size:12px;font-weight:700; }
+.sm-dur { background:rgba(10,92,110,.08);color:var(--teal);border:1px solid rgba(10,92,110,.15); }
+.sm-war { background:rgba(200,137,10,.1);color:var(--gold-m);border:1px solid rgba(200,137,10,.2); }
+.sm-rec { background:rgba(10,92,58,.1);color:var(--green-l);border:1px solid rgba(26,138,69,.2); }
+
+/* comparison table */
+.cmp-table { width:100%;border-collapse:collapse;border-radius:12px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,.08); }
+.cmp-table thead tr { background:linear-gradient(135deg,var(--ink),var(--ink-l)); }
+.cmp-table thead th { padding:13px 16px;text-align:left;color:#fff;font-size:12px;font-weight:700; border-right:1px solid rgba(255,255,255,.08); }
+.cmp-table thead th:last-child { border-right:none; }
+.cmp-table tbody tr { border-bottom:1px solid rgba(10,92,110,.08); }
+.cmp-table tbody tr:nth-child(even) { background:rgba(10,92,110,.03); }
+.cmp-table tbody td { padding:12px 16px;font-size:13px;color:var(--text);border-right:1px solid rgba(10,92,110,.06); }
+.cmp-table tbody td:first-child { font-weight:700;color:var(--ink); }
+.cmp-table tbody td:last-child { border-right:none; }
+.cmp-table .winner { background:linear-gradient(135deg,rgba(10,92,58,.06),rgba(26,138,69,.04)) !important; }
+.winner-badge { display:inline-flex;align-items:center;gap:5px;background:rgba(26,138,69,.12);border:1px solid rgba(26,138,69,.25);color:var(--green-l);padding:3px 10px;border-radius:50px;font-size:11px;font-weight:700;margin-right:6px; }
+
+/* recommendation */
+.rec-box {
+  background:linear-gradient(135deg,var(--teal),var(--teal-m));
+  border-radius:14px;padding:24px 28px;color:#fff;
+  box-shadow:0 8px 28px rgba(10,92,110,.3),inset 0 1px 0 rgba(255,255,255,.12);
+  margin-bottom:24px;
+}
+.rec-title { font-family:'Playfair Display',serif;font-size:19px;font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:10px; }
+.rec-points { list-style:none;margin-top:10px; }
+.rp { display:flex;gap:10px;padding:7px 0;border-bottom:1px solid rgba(255,255,255,.1);font-size:13px;color:rgba(255,255,255,.92); }
+.rp:last-child { border-bottom:none; }
+.rp-dot { width:8px;height:8px;border-radius:50%;background:var(--gold-xl);flex-shrink:0;margin-top:7px; }
+
+.closing {
+  background:linear-gradient(135deg,rgba(10,92,110,.04),rgba(10,92,110,.02));
+  border:1px solid var(--border);border-left:4px solid var(--gold-m);
+  border-radius:10px 0 0 10px;padding:16px 20px;font-size:13.5px;line-height:2;color:var(--text);
+  font-style:italic;
+}
+
+/* signatures */
+.sig-row { display:grid;grid-template-columns:1fr 1fr;gap:24px;margin-top:28px; }
+.sig-box { background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:18px;text-align:center; }
+.sig-lbl { font-size:9.5px;font-weight:700;letter-spacing:1px;text-transform:uppercase;color:var(--teal);margin-bottom:4px; }
+.sig-name { font-size:13px;font-weight:800;color:var(--ink);margin-bottom:16px; }
+.sig-line { border-top:1.5px solid var(--ink-l);padding-top:8px;font-size:11px;color:var(--muted); }
+
+/* FOOTER */
+.rf {
+  background:linear-gradient(135deg,var(--ink),var(--ink-mid),var(--teal));
+  padding:12px 48px;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;
+}
+.rf span { font-size:10px;color:rgba(255,255,255,.35); }
+.rf .rn { background:linear-gradient(90deg,var(--gold-xl),var(--gold-l));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:700; }
+.rf .addr { color:rgba(255,255,255,.4); }
+
+@media print {
+  body{background:#fff;padding:0;}
+  .no-print{display:none;}
+  .page{box-shadow:none;border-radius:0;max-width:100%;}
+  *{-webkit-print-color-adjust:exact !important;print-color-adjust:exact !important;}
+}
+@media(max-width:640px){
+  .rb,.rh{padding:22px 18px;}
+  .cond-grid{grid-template-columns:1fr;}
+  .hum-steps{grid-template-columns:1fr;}
+  .risk-grid{grid-template-columns:1fr;}
+  .sol-grid{grid-template-columns:1fr;}
+  .sig-row{grid-template-columns:1fr;}
+  .rf{padding:12px 18px;flex-direction:column;text-align:center;}
+}
+</style>
+
+<?php if (empty($doc['show_seal'])): ?>
+<style>.seal, img.seal, .stamp-wrap, .stamp-box img{display:none!important;}</style>
+<?php endif; ?>
+<?php if (empty($doc['show_signature'])): ?>
+<style>img.sign, .sign{display:none!important;}</style>
+<?php endif; ?>
+</head>
+<body>
+
+<div class="no-print">
+  <button class="btn-pdf" onclick="window.print()"><i class="fas fa-file-pdf"></i> Download Report PDF</button>
+</div>
+
+<div class="page">
+
+  <!-- HEADER -->
+  <div class="rh">
+    <div class="ro ro1"></div><div class="ro ro2"></div>
+    <div class="rh-inner">
+
+      <div class="rh-top">
+        <div class="co-block">
+          <div class="co-icon"><i class="fas fa-droplet-slash"></i></div>
+          <div>
+            <div class="co-name"><?= e($companyName) ?></div>
+            <div class="co-sub"><?= e($cityCountry) ?></div>
+          </div>
+        </div>
+        <div class="doc-stamp">
+          <div class="ds-label">Report Reference</div>
+          <div class="ds-num">RET-RPT-2026-0743</div>
+          <div class="ds-date">Issued: 17, 07, 2026</div>
+        </div>
+      </div>
+
+      <div class="rh-title">
+        <div class="report-tag">Official Technical Inspection Report</div>
+        <h1>Water Leak Detection & Structural Moisture<br>Assessment Report — Residential Apartment</h1>
+        <div class="rh-sub">Prepared by: Technical Inspection & Engineering Diagnostics Division · Rukn El-Tatawer</div>
+      </div>
+
+      <div class="urgency-bar">
+        <i class="fas fa-triangle-exclamation"></i>
+        Priority Level: HIGH — Immediate Intervention Required
+      </div>
+
+      <div class="prop-bar">
+        <div class="pb-item">
+          <i class="fas fa-user-tie"></i>
+          <div><div class="pb-label">Client Name</div><div class="pb-val">Pradeepkumar</div></div>
+        </div>
+        <div class="pb-item">
+          <i class="fas fa-building"></i>
+          <div><div class="pb-label">Property Type</div><div class="pb-val">Residential Apartment</div></div>
+        </div>
+        <div class="pb-item">
+          <i class="fas fa-location-dot"></i>
+          <div><div class="pb-label">Address</div><div class="pb-val">Al Maha Tower 5, Unit 1401, Reem Island, Abu Dhabi</div></div>
+        </div>
+        <div class="pb-item">
+          <i class="fas fa-calendar-check"></i>
+          <div><div class="pb-label">Inspection Date</div><div class="pb-val">17, 07, 2026</div></div>
+        </div>
+        <div class="pb-item">
+          <i class="fas fa-bath"></i>
+          <div><div class="pb-label">Units Inspected</div><div class="pb-val">3 Bathrooms + Apartment Walls</div></div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="stripe"></div>
+
+  <!-- BODY -->
+  <div class="rb">
+
+    <!-- 1. Introduction -->
+    <div class="section">
+      <div class="sec-head">
+        <div class="sec-icon si-teal"><i class="fas fa-file-lines"></i></div>
+        <div class="sec-num">1</div>
+        <h2>Introduction & Scope of Inspection</h2>
+        <div class="sec-line"></div>
+      </div>
+      <div class="preamble">
+        At the formal request of <strong>Mr. Pradeepkumar</strong>, the specialist engineering team of Rukn El-Tatawer for Water Leak Detection, Treatment & Building Maintenance LLC conducted a comprehensive technical inspection of the residential apartment located at <strong>Al Maha Tower 5, Unit 1401, Reem Island, Abu Dhabi</strong>, on <strong>17, 07, 2026</strong>.
+        <br><br>
+        This report aims to accurately diagnose all water leakage and structural moisture issues within the unit, identify root causes, assess current and potential future damage, and present engineering solutions ranked by effectiveness, cost, and time efficiency. The inspection covered <strong>3 bathrooms</strong> — including floor tiling systems, drainage points, and sub-base layers — as well as <strong>visible wall humidity and moisture penetration</strong> across the apartment's internal and external walls.
+      </div>
+    </div>
+
+    <!-- 2. General Condition -->
+    <div class="section">
+      <div class="sec-head">
+        <div class="sec-icon si-amber"><i class="fas fa-clipboard-list"></i></div>
+        <div class="sec-num">2</div>
+        <h2>General Condition Assessment</h2>
+        <div class="sec-line"></div>
+      </div>
+      <div class="cond-grid">
+        <div class="cond-card cc-teal">
+          <div class="cc-head"><i class="fas fa-bath"></i> Bathrooms (3 Units)</div>
+          <div class="cc-body">All three bathrooms exhibit multiple failures within the waterproofing system at floor and wall interfaces. Active water migration through degraded grout joints was confirmed, with water penetrating the sub-base layer and migrating to adjacent areas.</div>
+        </div>
+        <div class="cond-card cc-red">
+          <div class="cc-head"><i class="fas fa-circle-exclamation"></i> Wall Moisture & Humidity</div>
+          <div class="cc-body">Visible moisture and rising damp were identified on multiple internal and external-facing walls across the apartment. The plaster layer has deteriorated in several zones, and repainting alone will not resolve the underlying moisture ingress without structural treatment.</div>
+        </div>
+        <div class="cond-card cc-amber">
+          <div class="cc-head"><i class="fas fa-house-crack"></i> Overall Assessment</div>
+          <div class="cc-body">The combined effect of bathroom leakage and wall moisture has created a persistent damp environment within the unit, which — if left untreated — poses significant risks to both structural integrity and occupant health.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Technical Findings -->
+    <div class="section">
+      <div class="sec-head">
+        <div class="sec-icon si-red"><i class="fas fa-magnifying-glass-chart"></i></div>
+        <div class="sec-num">3</div>
+        <h2>Technical Findings</h2>
+        <div class="sec-line"></div>
+      </div>
+
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px;font-weight:600;letter-spacing:.3px;">A. BATHROOM FLOOR & WATERPROOFING ISSUES (3 Bathrooms)</p>
+      <ul class="findings-list" style="margin-bottom:24px;">
+        <li class="fi">
+          <div class="fi-num">1</div>
+          <div>
+            <div class="fi-title">Non-Waterproof Grout Used in Tile Joints</div>
+            <div class="fi-desc">Standard non-waterproof grout was applied during the original tiling installation — a material unsuitable for wet zones. This rendered the joint system entirely permeable to water under daily usage conditions.</div>
+            <span class="fi-tag tag-high"><i class="fas fa-circle-exclamation"></i> High Severity</span>
+          </div>
+        </li>
+        <li class="fi">
+          <div class="fi-num">2</div>
+          <div>
+            <div class="fi-title">Salinity Reaction & Accelerated Joint Erosion</div>
+            <div class="fi-desc">Prolonged exposure to water containing dissolved salts triggered a progressive chemical reaction with the grout matrix, resulting in complete erosion of tile joints across all three bathrooms — creating open pathways for direct water infiltration into the sub-base layer.</div>
+            <span class="fi-tag tag-high"><i class="fas fa-circle-exclamation"></i> High Severity</span>
+          </div>
+        </li>
+        <li class="fi">
+          <div class="fi-num">3</div>
+          <div>
+            <div class="fi-title">Sub-base Settlement & Void Formation</div>
+            <div class="fi-desc">Water saturation of the sand sub-base layer over an extended period caused progressive settlement, resulting in air voids beneath the ceramic tiles. These voids undermine the structural support of the tile bed and accelerate overall floor system degradation.</div>
+            <span class="fi-tag tag-high"><i class="fas fa-circle-exclamation"></i> High Severity</span>
+          </div>
+        </li>
+        <li class="fi">
+          <div class="fi-num">4</div>
+          <div>
+            <div class="fi-title">Active Water Leakage & Saturated Sub-base</div>
+            <div class="fi-desc">Water infiltrating through degraded joints has fully saturated the sub-base fill. Active leakage was confirmed below the bathroom floors, with moisture migration extending to adjacent areas and neighbouring units below.</div>
+            <span class="fi-tag tag-high"><i class="fas fa-circle-exclamation"></i> High Severity</span>
+          </div>
+        </li>
+        <li class="fi">
+          <div class="fi-num">5</div>
+          <div>
+            <div class="fi-title">Drainage Deficiency at Drain Points</div>
+            <div class="fi-desc">Reduced drainage efficiency was noted at the floor drain outlets across the inspected bathrooms. Partial blockage or insufficient gradient may be contributing to water pooling and prolonged surface contact — accelerating tile joint deterioration.</div>
+            <span class="fi-tag tag-med"><i class="fas fa-circle-exclamation"></i> Medium Severity</span>
+          </div>
+        </li>
+      </ul>
+
+      <p style="font-size:13px;color:var(--muted);margin-bottom:14px;font-weight:600;letter-spacing:.3px;">B. WALL MOISTURE & RISING DAMP</p>
+      <div class="hum-card">
+        <div class="hum-title"><i class="fas fa-droplets"></i> Moisture Infiltration — Internal & External Walls</div>
+        <ul class="hum-list">
+          <li class="hum-item"><div class="hum-dot"></div> Visible damp patches and moisture staining identified on multiple internal walls throughout the apartment</li>
+          <li class="hum-item"><div class="hum-dot"></div> Plaster layer has begun to delaminate and bubble in moisture-affected zones, indicating prolonged water saturation behind the finish layer</li>
+          <li class="hum-item"><div class="hum-dot"></div> Discolouration and efflorescence observed at wall-floor junctions, consistent with rising damp and salt migration</li>
+          <li class="hum-item"><div class="hum-dot"></div> The existing paint and plaster layers are providing no meaningful moisture barrier — repainting without structural treatment will be cosmetic only and temporary</li>
+        </ul>
+        <div class="hum-steps" style="margin-top:16px;">
+          <div class="hs-box">
+            <div class="hs-num">1</div>
+            <div class="hs-title">Full Plaster Removal</div>
+            <div class="hs-desc">Remove all deteriorated and moisture-affected plaster layers to expose the bare substrate</div>
+          </div>
+          <div class="hs-box">
+            <div class="hs-num">2</div>
+            <div class="hs-title">Anti-Humidity Treatment</div>
+            <div class="hs-desc">Apply specialist anti-moisture compound and waterproofing render to the substrate before re-plastering</div>
+          </div>
+          <div class="hs-box">
+            <div class="hs-num">3</div>
+            <div class="hs-title">Re-plaster & Repaint</div>
+            <div class="hs-desc">Apply new plaster coat followed by moisture-resistant premium paint for a durable, professional finish</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Root Cause Analysis -->
+    <div class="section">
+      <div class="sec-head">
+        <div class="sec-icon si-gold"><i class="fas fa-sitemap"></i></div>
+        <div class="sec-num">4</div>
+        <h2>Root Cause Analysis</h2>
+        <div class="sec-line"></div>
+      </div>
+      <div class="rca-item">
+        <div class="rca-num">1</div>
+        <div>
+          <div class="rca-title">Inappropriate Material Selection During Construction</div>
+          <div class="rca-desc">Standard-grade, non-waterproof grout was applied in wet zones, contravening basic engineering requirements for bathroom environments in the Gulf's high-salinity climate. This was the primary trigger for all subsequent failures.</div>
+        </div>
+      </div>
+      <div class="rca-item">
+        <div class="rca-num">2</div>
+        <div>
+          <div class="rca-title">Absence of Primary Waterproofing Membrane</div>
+          <div class="rca-desc">No effective waterproofing layer was applied beneath the ceramic tile system or at sub-base level during original construction, leaving the structural slab fully exposed to moisture absorption over time.</div>
+        </div>
+      </div>
+      <div class="rca-item">
+        <div class="rca-num">3</div>
+        <div>
+          <div class="rca-title">Cumulative Damage from Delayed Treatment</div>
+          <div class="rca-desc">The leakage did not develop suddenly — it accumulated progressively over time without corrective intervention, allowing water to fully saturate the sub-base layers, create settlement voids, and ultimately penetrate surrounding walls.</div>
+        </div>
+      </div>
+      <div class="rca-item">
+        <div class="rca-num">4</div>
+        <div>
+          <div class="rca-title">Climatic & Salinity Factors</div>
+          <div class="rca-desc">Abu Dhabi's high ambient temperature and elevated water salinity significantly accelerate the chemical degradation of non-waterproof grout, leading to a faster erosion cycle than would occur in temperate climates.</div>
+        </div>
+      </div>
+      <div class="rca-item">
+        <div class="rca-num">5</div>
+        <div>
+          <div class="rca-title">Inadequate Wall Waterproofing at Construction Stage</div>
+          <div class="rca-desc">The absence of a moisture-resistant plaster system behind the wall finish allowed atmospheric humidity and bathroom steam to penetrate the plaster over time, resulting in the observed rising damp and surface deterioration.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Damage & Risks -->
+    <div class="section">
+      <div class="sec-head">
+        <div class="sec-icon si-red"><i class="fas fa-shield-halved"></i></div>
+        <div class="sec-num">5</div>
+        <h2>Current Damage & Future Risks</h2>
+        <div class="sec-line"></div>
+      </div>
+      <div class="risk-grid">
+        <div class="risk-card rc-current">
+          <div class="rc-head"><i class="fas fa-eye"></i> Documented Current Damage</div>
+          <div class="rc-body"><ul>
+            <li><i class="fas fa-diamond"></i> Complete grout joint erosion in all three bathroom floor systems</li>
+            <li><i class="fas fa-diamond"></i> Sub-base settlement and air void formation beneath ceramic tiles</li>
+            <li><i class="fas fa-diamond"></i> Active water migration beyond bathroom boundaries</li>
+            <li><i class="fas fa-diamond"></i> Plaster delamination and moisture staining on multiple walls</li>
+            <li><i class="fas fa-diamond"></i> Efflorescence and salt deposits at wall-floor junctions</li>
+            <li><i class="fas fa-diamond"></i> Reduced occupant comfort and visible aesthetic degradation</li>
+          </ul></div>
+        </div>
+        <div class="risk-card rc-future">
+          <div class="rc-head"><i class="fas fa-triangle-exclamation"></i> Future Risks if Left Untreated</div>
+          <div class="rc-body"><ul>
+            <li><i class="fas fa-diamond"></i> Progressive structural weakening of floor slabs and load-bearing walls</li>
+            <li><i class="fas fa-diamond"></i> Reinforcement steel corrosion within concrete elements due to sustained moisture exposure</li>
+            <li><i class="fas fa-diamond"></i> Mould and fungal growth posing serious health risks to occupants</li>
+            <li><i class="fas fa-diamond"></i> Leakage migration to lower apartments with potential liability implications</li>
+            <li><i class="fas fa-diamond"></i> Significant decline in property value and rental potential</li>
+            <li><i class="fas fa-diamond"></i> Exponentially higher remediation costs the longer treatment is delayed</li>
+          </ul></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6. Recommended Solutions -->
+    <div class="section">
+      <div class="sec-head">
+        <div class="sec-icon si-teal"><i class="fas fa-screwdriver-wrench"></i></div>
+        <div class="sec-num">6</div>
+        <h2>Recommended Solutions</h2>
+        <div class="sec-line"></div>
+      </div>
+      <div class="sol-grid">
+        <div class="sol-card sol-1">
+          <div class="sol-head">
+            <div class="sol-head-icon"><i class="fas fa-hammer"></i></div>
+            <div class="sol-head-text">
+              <h3>Solution 1 — Traditional Repair</h3>
+              <div class="sh-sub">Full Demolition & Rebuild</div>
+            </div>
+          </div>
+          <div class="sol-body">
+            <ul class="sol-steps">
+              <li class="sol-step"><div class="ss-n">1</div> Full demolition of floor tiles and removal of all existing ceramics</li>
+              <li class="sol-step"><div class="ss-n">2</div> Excavation and full replacement of the saturated sand sub-base</li>
+              <li class="sol-step"><div class="ss-n">3</div> Application of a new waterproofing membrane on the exposed concrete slab</li>
+              <li class="sol-step"><div class="ss-n">4</div> Full replacement of drainage pipes and re-routing of drain lines</li>
+              <li class="sol-step"><div class="ss-n">5</div> Installation of new ceramic tiles with certified waterproof grout</li>
+            </ul>
+            <div class="sol-meta">
+              <span class="sm-badge sm-dur"><i class="fas fa-clock"></i> 5+ Working Days</span>
+              <span class="sm-badge sm-war"><i class="fas fa-coins"></i> Higher Cost</span>
+            </div>
+          </div>
+        </div>
+        <div class="sol-card sol-2">
+          <div class="sol-head">
+            <div class="sol-head-icon"><i class="fas fa-syringe"></i></div>
+            <div class="sol-head-text">
+              <h3>Solution 2 — Injection System <span style="background:rgba(255,255,255,.2);padding:2px 8px;border-radius:4px;font-size:11px;">Recommended</span></h3>
+              <div class="sh-sub">Advanced Non-Destructive Injection</div>
+            </div>
+          </div>
+          <div class="sol-body">
+            <ul class="sol-steps">
+              <li class="sol-step"><div class="ss-n">1</div> Systematic removal of grout joints using a dedicated machine — no tile breaking</li>
+              <li class="sol-step"><div class="ss-n">2</div> Works executed in structured engineering phases for precision and consistency</li>
+              <li class="sol-step"><div class="ss-n">3</div> Injection of specialist waterproofing compound directly beneath the ceramic layer</li>
+              <li class="sol-step"><div class="ss-n">4</div> Complete void-filling to restore sub-base stability and eliminate air gaps</li>
+              <li class="sol-step"><div class="ss-n">5</div> Sub-base converted into an active, bonded waterproofing barrier</li>
+            </ul>
+            <div class="sol-meta">
+              <span class="sm-badge sm-dur"><i class="fas fa-clock"></i> 1 Day Only</span>
+              <span class="sm-badge sm-war"><i class="fas fa-shield-halved"></i> 2–10 Year Warranty</span>
+              <span class="sm-badge sm-rec"><i class="fas fa-check-circle"></i> Best Value</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7. Comparison -->
+    <div class="section">
+      <div class="sec-head">
+        <div class="sec-icon si-ink"><i class="fas fa-table-columns"></i></div>
+        <div class="sec-num">7</div>
+        <h2>Solution Comparison</h2>
+        <div class="sec-line"></div>
+      </div>
+      <table class="cmp-table">
+        <thead>
+          <tr>
+            <th>Criterion</th>
+            <th>Solution 1 (Traditional)</th>
+            <th>Solution 2 (Injection) ⭐</th>
+          </tr>
+        </thead>
+        <tbody>
+<?php $n=1; foreach ($items as $item): ?>
+        <tr>
+          <td class="num"><?= $n++ ?></td>
+          <td>
+            <strong style="color:#004EA8;font-size:12.5px;"><?= e($item['title']) ?></strong>
+            <?php if (!empty($item['description'])): ?><br>
+            <span style="font-size:10.5px;color:var(--muted);line-height:1.65;"><?= nl2br(e($item['description'])) ?></span>
+            <?php endif; ?>
+          </td>
+          <td class="center"><?= e(rtrim(rtrim(number_format((float)$item['quantity'], 2), '0'), '.')) ?><?= !empty($item['unit']) ? ' '.e($item['unit']) : '' ?></td>
+          <td class="center"><?= e(number_format((float)$item['unit_price'], 2)) ?> <?= e($currency) ?></td>
+          <td class="center"><strong style="color:#004EA8;font-size:13.5px;"><?= e(number_format((float)$item['total'], 2)) ?> <?= e($currency) ?></strong></td>
+        </tr>
+<?php endforeach; ?>
+</tbody>
+      </table>
+    </div>
+
+    <!-- 8. Final Recommendations -->
+    <div class="section">
+      <div class="sec-head">
+        <div class="sec-icon si-green"><i class="fas fa-star"></i></div>
+        <div class="sec-num">8</div>
+        <h2>Final Recommendations</h2>
+        <div class="sec-line"></div>
+      </div>
+      <div class="rec-box">
+        <div class="rec-title"><i class="fas fa-award"></i> Engineering Team Recommendations — Rukn El-Tatawer</div>
+        <p style="font-size:13.5px;color:rgba(255,255,255,.9);line-height:2;">
+          Based on the findings of this comprehensive field inspection and root cause analysis, the engineering team of Rukn El-Tatawer recommends adopting <strong>Solution 2 (Injection System)</strong> as the primary and optimal treatment method. Upon client approval, our team will proceed as follows:
+        </p>
+        <ul class="rec-points">
+          <li class="rp"><div class="rp-dot"></div> <strong>Bathrooms — Priority Treatment:</strong> Our team will apply the injection waterproofing system across all three bathrooms in a single working day, using certified materials warranted for a minimum of 5 years, fully sealing all sub-tile voids and restoring the waterproofing layer without any demolition.</li>
+          <li class="rp"><div class="rp-dot"></div> <strong>Wall Moisture Treatment:</strong> Our team will strip all moisture-affected plaster zones, apply a specialist anti-humidity treatment compound to the substrate, re-plaster with moisture-resistant render, and complete the walls with premium moisture-resistant paint for a lasting and professional finish.</li>
+          <li class="rp"><div class="rp-dot"></div> <strong>Drainage Inspection & Clearance:</strong> Our team will inspect and clear all bathroom drain points to restore full flow capacity and eliminate water pooling conditions that accelerate future joint degradation.</li>
+          <li class="rp"><div class="rp-dot"></div> <strong>Post-Treatment Verification:</strong> Upon completion, our team will conduct a final technical check to verify the effectiveness of all applied treatments and confirm that moisture readings have returned to acceptable levels throughout the unit.</li>
+        </ul>
+      </div>
+
+      <!-- URGENCY WARNING -->
+      <div style="background:linear-gradient(135deg,rgba(139,26,26,.12),rgba(192,57,43,.08));border:2px solid rgba(192,57,43,.35);border-radius:14px;padding:22px 26px;margin-bottom:0;">
+        <div style="display:flex;align-items:flex-start;gap:14px;">
+          <div style="width:44px;height:44px;border-radius:10px;background:linear-gradient(135deg,var(--red),var(--red-l));display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff;flex-shrink:0;box-shadow:0 4px 12px rgba(192,57,43,.4);">
+            <i class="fas fa-triangle-exclamation"></i>
+          </div>
+          <div>
+            <div style="font-size:15px;font-weight:800;color:var(--red-l);margin-bottom:10px;font-family:'Playfair Display',serif;">Critical Urgency Notice — Immediate Action Required</div>
+            <p style="font-size:13.5px;color:var(--text);line-height:1.9;margin-bottom:10px;">
+              The bathroom leakage issues documented in this report represent an <strong>active and ongoing structural risk</strong>. Water continues to migrate beyond the bathroom boundaries with every day of use, penetrating the concrete slab, saturating adjacent walls, and potentially reaching the apartment directly below. In multi-storey residential buildings, this constitutes a <strong>direct liability to neighbouring units and to the building structure as a whole</strong>.
+            </p>
+            <p style="font-size:13.5px;color:var(--text);line-height:1.9;margin-bottom:10px;">
+              Continued delay in treatment may result in <strong>damage to the apartment below</strong>, for which the property owner of Unit 1401 may bear full <strong>legal and financial responsibility</strong> under UAE building regulations and civil liability law. The longer treatment is deferred, the greater the structural deterioration — and the significantly higher the eventual cost of remediation.
+            </p>
+            <div style="background:rgba(139,26,26,.1);border:1px solid rgba(192,57,43,.3);border-radius:10px;padding:14px 18px;margin-bottom:14px;display:flex;gap:12px;align-items:flex-start;">
+              <i class="fas fa-circle-exclamation" style="color:var(--red-l);font-size:18px;margin-top:2px;flex-shrink:0;"></i>
+              <p style="font-size:13.5px;color:var(--text);line-height:1.9;margin:0;">
+                <strong style="color:var(--red-l);">Confirmed Finding — Lower Apartment Ceiling Already Affected:</strong>
+                It is with absolute certainty that the moisture now visible on the walls of Unit 1401 did <strong>not begin here</strong>. Before reaching these walls, the leaking water from the bathroom floors had already penetrated downward and <strong>appeared on the ceiling of the apartment directly below</strong>. At present, that ceiling moisture is concealed beneath gypsum board and decorative finishes — masking the true extent of the damage. However, <strong>this concealment is only temporary</strong>. As water saturation continues to build, it is only a matter of time before the ceiling plasterwork, gypsum, and decorative finishes of the lower unit begin to deteriorate, crack, and collapse — at which point the owner of Unit 1401 will face an <strong>immediate and undeniable legal and financial claim</strong> from the affected neighbours below.
+              </p>
+            </div>
+            <div style="background:rgba(192,57,43,.08);border:1px solid rgba(192,57,43,.2);border-radius:8px;padding:12px 16px;font-size:13px;font-weight:700;color:var(--red-l);display:flex;align-items:center;gap:10px;">
+              <i class="fas fa-gavel"></i>
+              Rukn El-Tatawer strongly urges the client to authorise bathroom treatment at the earliest possible opportunity — ideally within 48 hours — to prevent further structural damage, avoid legal exposure, and protect the value and safety of the property.
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </div><!-- /rb -->
+
+  <!-- FOOTER -->
+  <div class="rf">
+    <span>Rukn El-Tatawer for Water Leak Detection, Treatment & Building Maintenance LLC · Abu Dhabi, UAE</span>
+    <span class="rn"><?= e($doc['document_number']) ?> &nbsp;|&nbsp; <?= e($issueDate) ?></span>
+    <span class="addr">Office 306, Mazyed Mall, Mohammed Bin Zayed City, Abu Dhabi</span>
+  </div>
+
+</div><!-- /page -->
+</body>
+</html>

@@ -1,0 +1,15 @@
+.env
+storage/kdms.sqlite
+storage/installed.lock
+storage/uploads/**
+!storage/uploads/.gitkeep
+storage/pdfs/**
+!storage/pdfs/.gitkeep
+storage/logs/**
+!storage/logs/.gitkeep
+storage/backups/**
+!storage/backups/.gitkeep
+storage/cache/**
+!storage/cache/.gitkeep
+.DS_Store
+*.log
