@@ -1,0 +1,2007 @@
+{
+  "summary": {
+    "total_templates": 18,
+    "by_type": {
+      "catalog": 1,
+      "contract": 4,
+      "invoice": 1,
+      "quotation": 6,
+      "receipt": 2,
+      "report": 4
+    },
+    "unique_remote_images": 11,
+    "note": "ZIP contains HTML templates only. Logos/seals/signatures are remote URLs inside HTML (rukn-eltatawer.com). No binary logo files inside ZIP."
+  },
+  "all_remote_images": [
+    "https://sns-interior.com/khtm-swimming.png",
+    "https://www.rukn-eltatawer.com/khtm-swimming.png",
+    "https://www.rukn-eltatawer.com/khtm.webp",
+    "https://www.rukn-eltatawer.com/s1.jpeg",
+    "https://www.rukn-eltatawer.com/s2.jpeg",
+    "https://www.rukn-eltatawer.com/s3.webp",
+    "https://www.rukn-eltatawer.com/s4.jpg",
+    "https://www.rukn-eltatawer.com/s5.jpeg",
+    "https://www.rukn-eltatawer.com/s7.webp",
+    "https://www.rukn-eltatawer.com/sign-landscaping.webp",
+    "https://www.rukn-eltatawer.com/sign.webp"
+  ],
+  "all_fonts": [
+    "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&amp;family=Cairo:wght@300;400;600;700;900&amp;display=swap",
+    "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&family=Inter:wght@300;400;600;700;900&display=swap",
+    "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap",
+    "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap",
+    "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800;900&family=Playfair+Display:wght@700;900&display=swap",
+    "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Cairo:wght@300;400;500;600;700;900&family=Amiri:wght@400;700&display=swap",
+    "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=DM+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap"
+  ],
+  "all_ext_css": [
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css",
+    "https://fonts.googleapis.com",
+    "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&amp;family=Cairo:wght@300;400;600;700;900&amp;display=swap",
+    "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&family=Inter:wght@300;400;600;700;900&display=swap",
+    "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap",
+    "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap",
+    "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800;900&family=Playfair+Display:wght@700;900&display=swap",
+    "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Cairo:wght@300;400;500;600;700;900&family=Amiri:wght@400;700&display=swap",
+    "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=DM+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap"
+  ],
+  "all_ext_js": [],
+  "fields_by_type": {
+    "receipt": [
+      "اسم العميل / الدافع",
+      "العميل / الدافع",
+      "تاريخ الاستلام",
+      "تاريخ السداد",
+      "عنوان العميل",
+      "عنوان المشروع"
+    ],
+    "invoice": [
+      "اسم العميل",
+      "تاريخ الفاتورة",
+      "عنوان العميل"
+    ]
+  },
+  "templates": [
+    {
+      "file": "ret-lnd-rcp-0827.html",
+      "original_name": "ret-lnd-rcp-0827.html",
+      "title": "سند قبض — ركن التطور لتنسيق الحدائق | خادم الرميثي",
+      "lang": "ar",
+      "type": "receipt",
+      "size": 15894,
+      "images_count": 1,
+      "images": [
+        "https://www.rukn-eltatawer.com/sign-landscaping.webp"
+      ],
+      "seals_signs_logos": [
+        "https://www.rukn-eltatawer.com/sign-landscaping.webp"
+      ],
+      "fonts": [
+        "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&amp;family=Cairo:wght@300;400;600;700;900&amp;display=swap"
+      ],
+      "external_css": [
+        "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&amp;family=Cairo:wght@300;400;600;700;900&amp;display=swap",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      ],
+      "label_pairs": [
+        [
+          "اسم العميل / الدافع",
+          "خادم الرميثي"
+        ],
+        [
+          "تاريخ الاستلام",
+          "الجمعة، 19 يونيو 2026"
+        ],
+        [
+          "عنوان العميل",
+          "فيلا 12، شخبوط، أبوظبي"
+        ]
+      ],
+      "company_bits": {
+        "co-name": [
+          "ركن التطور لتنسيق الحدائق ذ.م.م"
+        ],
+        "co-name-en": [
+          "Rukn El-Tatawer for Landscaping LLC"
+        ],
+        "db-num": [
+          "RET-LND-RCP-0619"
+        ],
+        "title-h1": [
+          "سند قبض"
+        ],
+        "written": [
+          "المبلغ كتابةً: ألفا درهم إماراتي لا غير"
+        ],
+        "pm-val": [
+          "نقداً — كاش"
+        ]
+      },
+      "table_headers": [],
+      "has_items_table": false,
+      "has_signatures": true,
+      "strong_labels_sample": [
+        "وصف العمل المنجز:",
+        "ملاحظة:",
+        "مكتب أبوظبي",
+        "مكتب دبي"
+      ],
+      "css_color_vars": [
+        [
+          "--b1",
+          "#003087"
+        ],
+        [
+          "--b2",
+          "#004EA8"
+        ],
+        [
+          "--b3",
+          "#0070CC"
+        ],
+        [
+          "--sky",
+          "#0096C7"
+        ],
+        [
+          "--sky-l",
+          "#48CAE4"
+        ],
+        [
+          "--gold",
+          "#D4A017"
+        ],
+        [
+          "--gold-l",
+          "#F0C040"
+        ],
+        [
+          "--gold-ll",
+          "#FFF0A0"
+        ],
+        [
+          "--green",
+          "#38A169"
+        ],
+        [
+          "--green-l",
+          "#68D391"
+        ],
+        [
+          "--text",
+          "#0A1F3A"
+        ],
+        [
+          "--muted",
+          "#4A6A8A"
+        ],
+        [
+          "--white",
+          "#fff"
+        ],
+        [
+          "--bg",
+          "#F0F7FF"
+        ]
+      ]
+    },
+    {
+      "file": "rec7822.html",
+      "original_name": "rec7822.html",
+      "title": "سند قبض — الدفعة الأولى 75% | ركن التطور",
+      "lang": "ar",
+      "type": "receipt",
+      "size": 16268,
+      "images_count": 2,
+      "images": [
+        "https://www.rukn-eltatawer.com/khtm.webp",
+        "https://www.rukn-eltatawer.com/sign.webp"
+      ],
+      "seals_signs_logos": [
+        "https://www.rukn-eltatawer.com/khtm.webp",
+        "https://www.rukn-eltatawer.com/sign.webp"
+      ],
+      "fonts": [
+        "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&family=Inter:wght@300;400;600;700;900&display=swap"
+      ],
+      "external_css": [
+        "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&family=Inter:wght@300;400;600;700;900&display=swap",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      ],
+      "label_pairs": [
+        [
+          "العميل / الدافع",
+          "عادل عمار على سالم"
+        ],
+        [
+          "تاريخ السداد",
+          "الخميس، 11 يونيو 2026"
+        ],
+        [
+          "عنوان المشروع",
+          "فيلا 23b، الإحداثيات 25.238178,55.357197، أبوظبي"
+        ]
+      ],
+      "company_bits": {
+        "co-name": [
+          "ركن التطور لأنظمة العزل الحديث ذ.م.م"
+        ],
+        "co-name-en": [
+          "Rukn El-Tatawer for Modern Insulation Systems LLC"
+        ],
+        "db-num": [
+          "RET-RCP-2026-0609"
+        ],
+        "title-h1": [
+          "سند قبض — الدفعة الأولى"
+        ],
+        "big-amount": [
+          "6,000"
+        ],
+        "written": [
+          "المبلغ كتابة: &nbsp;ستة آلاف درهم إماراتي فقط لا غير"
+        ],
+        "pm-val": [
+          "نقدي / تحويل بنكي"
+        ]
+      },
+      "table_headers": [],
+      "has_items_table": false,
+      "has_signatures": true,
+      "strong_labels_sample": [
+        "السيد / عادل عمار على سالم",
+        "دفعة أولى (75%)",
+        "RET-CON-2026-0609",
+        "ملاحظة مهمة:",
+        "6,000 درهم",
+        "2,000 درهم"
+      ],
+      "css_color_vars": [
+        [
+          "--royal-1",
+          "#0A1628"
+        ],
+        [
+          "--royal-2",
+          "#0D2246"
+        ],
+        [
+          "--royal-3",
+          "#1A3A6E"
+        ],
+        [
+          "--pepsi-1",
+          "#003087"
+        ],
+        [
+          "--pepsi-2",
+          "#004EA8"
+        ],
+        [
+          "--pepsi-3",
+          "#0070CC"
+        ],
+        [
+          "--sky-2",
+          "#0096C7"
+        ],
+        [
+          "--sky-3",
+          "#48CAE4"
+        ],
+        [
+          "--gold-2",
+          "#B8860B"
+        ],
+        [
+          "--gold-3",
+          "#D4A017"
+        ],
+        [
+          "--gold-4",
+          "#F0C040"
+        ],
+        [
+          "--gold-5",
+          "#FFF0A0"
+        ],
+        [
+          "--silver-3",
+          "#CFD8DC"
+        ],
+        [
+          "--white",
+          "#FFFFFF"
+        ],
+        [
+          "--white-m",
+          "#F8FAFF"
+        ],
+        [
+          "--text",
+          "#0D1B2A"
+        ],
+        [
+          "--muted",
+          "#4A6080"
+        ]
+      ]
+    },
+    {
+      "file": "ret-lnd-inv-0619.html",
+      "original_name": "ret-lnd-inv-0619.html",
+      "title": "فاتورة — ركن التطور لتنسيق الحدائق | خادم الرميثي",
+      "lang": "ar",
+      "type": "invoice",
+      "size": 16607,
+      "images_count": 1,
+      "images": [
+        "https://www.rukn-eltatawer.com/sign-landscaping.webp"
+      ],
+      "seals_signs_logos": [
+        "https://www.rukn-eltatawer.com/sign-landscaping.webp"
+      ],
+      "fonts": [
+        "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&amp;family=Cairo:wght@300;400;600;700;900&amp;display=swap"
+      ],
+      "external_css": [
+        "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&amp;family=Cairo:wght@300;400;600;700;900&amp;display=swap",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      ],
+      "label_pairs": [
+        [
+          "اسم العميل",
+          "خادم الرميثي"
+        ],
+        [
+          "تاريخ الفاتورة",
+          "الجمعة، 19 يونيو 2026"
+        ],
+        [
+          "عنوان العميل",
+          "فيلا 12، شخبوط، أبوظبي"
+        ]
+      ],
+      "company_bits": {
+        "co-name": [
+          "ركن التطور لتنسيق الحدائق ذ.م.م"
+        ],
+        "co-name-en": [
+          "Rukn El-Tatawer for Landscaping LLC"
+        ],
+        "db-num": [
+          "RET-LND-INV-0619"
+        ],
+        "title-h1": [
+          "فاتورة أعمال تنسيق الحدائق"
+        ],
+        "grand-num": [
+          "2,000 درهم إماراتي"
+        ],
+        "written": [
+          "المبلغ كتابةً: ألفا درهم إماراتي لا غير"
+        ]
+      },
+      "table_headers": [
+        "#",
+        "وصف الأعمال",
+        "الكمية",
+        "سعر الوحدة",
+        "الإجمالي"
+      ],
+      "has_items_table": true,
+      "has_signatures": true,
+      "strong_labels_sample": [
+        "ملاحظة:",
+        "مكتب أبوظبي",
+        "مكتب دبي"
+      ],
+      "css_color_vars": [
+        [
+          "--b1",
+          "#003087"
+        ],
+        [
+          "--b2",
+          "#004EA8"
+        ],
+        [
+          "--b3",
+          "#0070CC"
+        ],
+        [
+          "--b4",
+          "#2196F3"
+        ],
+        [
+          "--sky",
+          "#0096C7"
+        ],
+        [
+          "--sky-l",
+          "#48CAE4"
+        ],
+        [
+          "--gold",
+          "#D4A017"
+        ],
+        [
+          "--gold-l",
+          "#F0C040"
+        ],
+        [
+          "--gold-ll",
+          "#FFF0A0"
+        ],
+        [
+          "--text",
+          "#0A1F3A"
+        ],
+        [
+          "--muted",
+          "#4A6A8A"
+        ],
+        [
+          "--white",
+          "#fff"
+        ],
+        [
+          "--bg",
+          "#F0F7FF"
+        ]
+      ]
+    },
+    {
+      "file": "quotation-irrigation-ar.html",
+      "original_name": "┘Г┘И╪к┘К╪┤┘Ж ╪┤╪и┘Г╪й ╪▒┘К.html",
+      "title": "عرض سعر - شبكة ري متكاملة | ركن التطور - العين",
+      "lang": "ar",
+      "type": "quotation",
+      "size": 26571,
+      "images_count": 0,
+      "images": [],
+      "seals_signs_logos": [],
+      "fonts": [
+        "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap"
+      ],
+      "external_css": [
+        "https://fonts.googleapis.com",
+        "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      ],
+      "label_pairs": [],
+      "company_bits": {},
+      "table_headers": [
+        "الخيار",
+        "المواصفات التقنية",
+        "الإجمالي (درهم)",
+        "الخيار",
+        "المواصفات التقنية",
+        "الإجمالي (درهم)"
+      ],
+      "has_items_table": true,
+      "has_signatures": false,
+      "strong_labels_sample": [
+        "تمديد الخطوط",
+        "تركيب المحابس",
+        "شبكة التنقيط",
+        "الاختبار والتشغيل"
+      ],
+      "css_color_vars": [
+        [
+          "--blue-dark",
+          "#0B2545"
+        ],
+        [
+          "--blue-mid",
+          "#134074"
+        ],
+        [
+          "--blue-accent",
+          "#1A6DAF"
+        ],
+        [
+          "--blue-light",
+          "#2196D3"
+        ],
+        [
+          "--gold",
+          "#D4A017"
+        ],
+        [
+          "--gold-light",
+          "#F0C040"
+        ],
+        [
+          "--gray-dark",
+          "#2D3748"
+        ],
+        [
+          "--gray-mid",
+          "#718096"
+        ],
+        [
+          "--gray-light",
+          "#EDF2F7"
+        ],
+        [
+          "--white",
+          "#FFFFFF"
+        ],
+        [
+          "--success",
+          "#2E7D32"
+        ],
+        [
+          "--text-body",
+          "#2D3748"
+        ]
+      ]
+    },
+    {
+      "file": "contract-jamal-alnaimi.html",
+      "original_name": "contract-jamal-alnaimi.html",
+      "title": "عقد أعمال عزل سطح جراج سيارات — جمال النعيمي | ركن التطور",
+      "lang": "ar",
+      "type": "contract",
+      "size": 32175,
+      "images_count": 1,
+      "images": [
+        "https://www.rukn-eltatawer.com/khtm.webp"
+      ],
+      "seals_signs_logos": [
+        "https://www.rukn-eltatawer.com/khtm.webp"
+      ],
+      "fonts": [
+        "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap"
+      ],
+      "external_css": [
+        "https://fonts.googleapis.com",
+        "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      ],
+      "label_pairs": [],
+      "company_bits": {},
+      "table_headers": [
+        "#",
+        "البند",
+        "المواصفة",
+        "النسبة",
+        "الدفعة",
+        "الاستحقاق",
+        "المبلغ / التاريخ"
+      ],
+      "has_items_table": true,
+      "has_signatures": true,
+      "strong_labels_sample": [
+        "الأحد الموافق 19 يوليو 2026",
+        "55 متر مربع",
+        "يوم عمل واحد",
+        "سند قبض رسمي موقع",
+        "الضمان:",
+        "10 سنوات",
+        "إلغاء العقد:",
+        "التأخير:",
+        "فض النزاعات:",
+        "نسخ العقد:",
+        "ركن التطور لأنظمة العزل الحديث ذ.م.م"
+      ],
+      "css_color_vars": [
+        [
+          "--blue-dark",
+          "#0B2545"
+        ],
+        [
+          "--blue-mid",
+          "#134074"
+        ],
+        [
+          "--blue-accent",
+          "#1A6DAF"
+        ],
+        [
+          "--blue-light",
+          "#2196D3"
+        ],
+        [
+          "--gold",
+          "#D4A017"
+        ],
+        [
+          "--gold-light",
+          "#F0C040"
+        ],
+        [
+          "--gray-dark",
+          "#2D3748"
+        ],
+        [
+          "--gray-mid",
+          "#718096"
+        ],
+        [
+          "--gray-light",
+          "#EDF2F7"
+        ],
+        [
+          "--white",
+          "#FFFFFF"
+        ],
+        [
+          "--success",
+          "#38A169"
+        ],
+        [
+          "--text-body",
+          "#2D3748"
+        ]
+      ]
+    },
+    {
+      "file": "contract-pool-khalil-hosni.html",
+      "original_name": "contract-pool-khalil-hosni.html",
+      "title": "عقد صيانة دورية للمسبح — ركن التطور لأحواض السباحة",
+      "lang": "ar",
+      "type": "contract",
+      "size": 34983,
+      "images_count": 1,
+      "images": [
+        "https://sns-interior.com/khtm-swimming.png"
+      ],
+      "seals_signs_logos": [
+        "https://sns-interior.com/khtm-swimming.png"
+      ],
+      "fonts": [
+        "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Cairo:wght@300;400;500;600;700;900&family=Amiri:wght@400;700&display=swap"
+      ],
+      "external_css": [
+        "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Cairo:wght@300;400;500;600;700;900&family=Amiri:wght@400;700&display=swap",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      ],
+      "label_pairs": [],
+      "company_bits": {
+        "db-num": [
+          "RET-POOL-2026-0625"
+        ]
+      },
+      "table_headers": [],
+      "has_items_table": false,
+      "has_signatures": true,
+      "strong_labels_sample": [
+        "خليل عباس سالم الحوسني",
+        "الخميس الموافق 25 يونيو 2026",
+        "ركن التطور لأحواض السباحة ذ.م.م",
+        "السيد / خليل عباس سالم الحوسني",
+        "500 درهم",
+        "مدة العقد:",
+        "التأخر في الدفع:",
+        "الأعمال الإضافية:",
+        "القوة القاهرة:",
+        "فض النزاعات:",
+        "نسخ العقد:"
+      ],
+      "css_color_vars": [
+        [
+          "--deep",
+          "#040E1A"
+        ],
+        [
+          "--ocean",
+          "#062340"
+        ],
+        [
+          "--marine",
+          "#0A3D6B"
+        ],
+        [
+          "--lagoon",
+          "#0E6B9A"
+        ],
+        [
+          "--aqua",
+          "#0FA3C8"
+        ],
+        [
+          "--crystal",
+          "#4EC9E0"
+        ],
+        [
+          "--foam",
+          "#AEE8F4"
+        ],
+        [
+          "--gold-dk",
+          "#8B6200"
+        ],
+        [
+          "--gold",
+          "#C89000"
+        ],
+        [
+          "--gold-m",
+          "#E8B020"
+        ],
+        [
+          "--gold-lt",
+          "#F5D060"
+        ],
+        [
+          "--gold-xl",
+          "#FFF0A8"
+        ],
+        [
+          "--ink",
+          "#080F1A"
+        ],
+        [
+          "--slate",
+          "#1E3050"
+        ],
+        [
+          "--steel",
+          "#3A5A7A"
+        ],
+        [
+          "--mist",
+          "#6A8AA8"
+        ],
+        [
+          "--silver",
+          "#B8CCE0"
+        ],
+        [
+          "--pearl",
+          "#EDF4FA"
+        ],
+        [
+          "--white",
+          "#FFFFFF"
+        ],
+        [
+          "--border",
+          "rgba(14,107,154,0.15)"
+        ]
+      ]
+    },
+    {
+      "file": "contract-pool-hassan-hashmi.html",
+      "original_name": "contract-pool-hassan-hashmi.html",
+      "title": "عقد صيانة دورية للمسبح — ركن التطور لأحواض السباحة",
+      "lang": "ar",
+      "type": "contract",
+      "size": 35036,
+      "images_count": 1,
+      "images": [
+        "https://sns-interior.com/khtm-swimming.png"
+      ],
+      "seals_signs_logos": [
+        "https://sns-interior.com/khtm-swimming.png"
+      ],
+      "fonts": [
+        "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Cairo:wght@300;400;500;600;700;900&family=Amiri:wght@400;700&display=swap"
+      ],
+      "external_css": [
+        "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=Cairo:wght@300;400;500;600;700;900&family=Amiri:wght@400;700&display=swap",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      ],
+      "label_pairs": [],
+      "company_bits": {
+        "db-num": [
+          "RET-POOL-2026-0707"
+        ]
+      },
+      "table_headers": [],
+      "has_items_table": false,
+      "has_signatures": true,
+      "strong_labels_sample": [
+        "حسن الهاشمي",
+        "الثلاثاء الموافق 7 يوليو 2026",
+        "ركن التطور لأحواض السباحة ذ.م.م",
+        "السيد / حسن الهاشمي",
+        "500 درهم",
+        "نطاق الخدمة:",
+        "الدفع المسبق:",
+        "الأعمال الإضافية:",
+        "القوة القاهرة:",
+        "فض النزاعات:",
+        "نسخ العقد:"
+      ],
+      "css_color_vars": [
+        [
+          "--deep",
+          "#040E1A"
+        ],
+        [
+          "--ocean",
+          "#062340"
+        ],
+        [
+          "--marine",
+          "#0A3D6B"
+        ],
+        [
+          "--lagoon",
+          "#0E6B9A"
+        ],
+        [
+          "--aqua",
+          "#0FA3C8"
+        ],
+        [
+          "--crystal",
+          "#4EC9E0"
+        ],
+        [
+          "--foam",
+          "#AEE8F4"
+        ],
+        [
+          "--gold-dk",
+          "#8B6200"
+        ],
+        [
+          "--gold",
+          "#C89000"
+        ],
+        [
+          "--gold-m",
+          "#E8B020"
+        ],
+        [
+          "--gold-lt",
+          "#F5D060"
+        ],
+        [
+          "--gold-xl",
+          "#FFF0A8"
+        ],
+        [
+          "--ink",
+          "#080F1A"
+        ],
+        [
+          "--slate",
+          "#1E3050"
+        ],
+        [
+          "--steel",
+          "#3A5A7A"
+        ],
+        [
+          "--mist",
+          "#6A8AA8"
+        ],
+        [
+          "--silver",
+          "#B8CCE0"
+        ],
+        [
+          "--pearl",
+          "#EDF4FA"
+        ],
+        [
+          "--white",
+          "#FFFFFF"
+        ],
+        [
+          "--border",
+          "rgba(14,107,154,0.15)"
+        ]
+      ]
+    },
+    {
+      "file": "rukn-coolroof-quote.html",
+      "original_name": "rukn-coolroof-quote.html",
+      "title": "عرض سعر - Roof Protection | ركن التطور - أبوظبي",
+      "lang": "ar",
+      "type": "quotation",
+      "size": 36375,
+      "images_count": 0,
+      "images": [],
+      "seals_signs_logos": [],
+      "fonts": [
+        "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap"
+      ],
+      "external_css": [
+        "https://fonts.googleapis.com",
+        "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      ],
+      "label_pairs": [],
+      "company_bits": {},
+      "table_headers": [
+        "الخدمة",
+        "نسبة العزل الحراري",
+        "سعر المتر",
+        "الإجمالي (120 م²)"
+      ],
+      "has_items_table": true,
+      "has_signatures": true,
+      "strong_labels_sample": [
+        "تحضير السطح",
+        "معالجة الأركان الحادة",
+        "تعبئة التشققات",
+        "طبقة Primer أساسية",
+        "تركيب شبك النسيج Tietex T325",
+        "تطبيق طبقات العزل (500 مايكرون/طبقة)",
+        "ركن التطور لأنظمة العزل الحديث ذ.م.م"
+      ],
+      "css_color_vars": [
+        [
+          "--blue-dark",
+          "#0B2545"
+        ],
+        [
+          "--blue-mid",
+          "#134074"
+        ],
+        [
+          "--blue-accent",
+          "#1A6DAF"
+        ],
+        [
+          "--blue-light",
+          "#2196D3"
+        ],
+        [
+          "--gold",
+          "#D4A017"
+        ],
+        [
+          "--gold-light",
+          "#F0C040"
+        ],
+        [
+          "--gray-dark",
+          "#2D3748"
+        ],
+        [
+          "--gray-mid",
+          "#718096"
+        ],
+        [
+          "--gray-light",
+          "#EDF2F7"
+        ],
+        [
+          "--white",
+          "#FFFFFF"
+        ],
+        [
+          "--success",
+          "#38A169"
+        ],
+        [
+          "--text-body",
+          "#2D3748"
+        ]
+      ]
+    },
+    {
+      "file": "quote-jamal-alnaimi.html",
+      "original_name": "quote-jamal-alnaimi.html",
+      "title": "عرض سعر - عزل سطح جراج Cool Roof | ركن التطور - عجمان",
+      "lang": "ar",
+      "type": "quotation",
+      "size": 37369,
+      "images_count": 0,
+      "images": [],
+      "seals_signs_logos": [],
+      "fonts": [
+        "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap"
+      ],
+      "external_css": [
+        "https://fonts.googleapis.com",
+        "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      ],
+      "label_pairs": [],
+      "company_bits": {},
+      "table_headers": [
+        "عدد الطبقات",
+        "نسبة العزل الحراري",
+        "سعر المتر",
+        "الإجمالي (55 م²)"
+      ],
+      "has_items_table": true,
+      "has_signatures": false,
+      "strong_labels_sample": [
+        "معالجة الزوايا والشقوق",
+        "طبقة أساس (Primer)",
+        "تدعيم بشبكة الألياف",
+        "طبقتان نهائيتان عاكستان"
+      ],
+      "css_color_vars": [
+        [
+          "--blue-dark",
+          "#0B2545"
+        ],
+        [
+          "--blue-mid",
+          "#134074"
+        ],
+        [
+          "--blue-accent",
+          "#1A6DAF"
+        ],
+        [
+          "--blue-light",
+          "#2196D3"
+        ],
+        [
+          "--gold",
+          "#D4A017"
+        ],
+        [
+          "--gold-light",
+          "#F0C040"
+        ],
+        [
+          "--gray-dark",
+          "#2D3748"
+        ],
+        [
+          "--gray-mid",
+          "#718096"
+        ],
+        [
+          "--gray-light",
+          "#EDF2F7"
+        ],
+        [
+          "--white",
+          "#FFFFFF"
+        ],
+        [
+          "--success",
+          "#38A169"
+        ],
+        [
+          "--text-body",
+          "#2D3748"
+        ]
+      ]
+    },
+    {
+      "file": "quotation-coolroof-auh-ar.html",
+      "original_name": "┘Г┘И╪к┘К╪┤┘Ж ╪╣╪▓┘Д.html",
+      "title": "عرض سعر - عزل Cool Roof | ركن التطور - أبوظبي",
+      "lang": "ar",
+      "type": "quotation",
+      "size": 38084,
+      "images_count": 0,
+      "images": [],
+      "seals_signs_logos": [],
+      "fonts": [
+        "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap"
+      ],
+      "external_css": [
+        "https://fonts.googleapis.com",
+        "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      ],
+      "label_pairs": [],
+      "company_bits": {},
+      "table_headers": [
+        "عدد الطبقات",
+        "نسبة العزل الحراري",
+        "سعر المتر",
+        "الإجمالي (120 م²)",
+        "عدد الطبقات",
+        "نسبة العزل الحراري",
+        "سعر المتر",
+        "الإجمالي (120 م²)"
+      ],
+      "has_items_table": true,
+      "has_signatures": false,
+      "strong_labels_sample": [
+        "معالجة الزوايا والشقوق",
+        "طبقة أساس (Primer)",
+        "تدعيم بشبكة الألياف",
+        "طبقتان نهائيتان عاكستان",
+        "ركن التطور للمقاولات والخدمات الفنية"
+      ],
+      "css_color_vars": [
+        [
+          "--blue-dark",
+          "#0B2545"
+        ],
+        [
+          "--blue-mid",
+          "#134074"
+        ],
+        [
+          "--blue-accent",
+          "#1A6DAF"
+        ],
+        [
+          "--blue-light",
+          "#2196D3"
+        ],
+        [
+          "--gold",
+          "#D4A017"
+        ],
+        [
+          "--gold-light",
+          "#F0C040"
+        ],
+        [
+          "--gray-dark",
+          "#2D3748"
+        ],
+        [
+          "--gray-mid",
+          "#718096"
+        ],
+        [
+          "--gray-light",
+          "#EDF2F7"
+        ],
+        [
+          "--white",
+          "#FFFFFF"
+        ],
+        [
+          "--success",
+          "#38A169"
+        ],
+        [
+          "--text-body",
+          "#2D3748"
+        ]
+      ]
+    },
+    {
+      "file": "re743.html",
+      "original_name": "re743.html",
+      "title": "Technical Inspection Report — Rukn El-Tatawer | Pradeepkumar | Reem Island",
+      "lang": "en",
+      "type": "report",
+      "size": 45856,
+      "images_count": 0,
+      "images": [],
+      "seals_signs_logos": [],
+      "fonts": [
+        "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=DM+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap"
+      ],
+      "external_css": [
+        "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;0,800;1,600&family=DM+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono:wght@400;600&display=swap",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      ],
+      "label_pairs": [],
+      "company_bits": {
+        "co-name": [
+          "Rukn El-Tatawer for Water Leak Detection, Treatment & Building Maintenance LLC"
+        ]
+      },
+      "table_headers": [
+        "Criterion",
+        "Solution 1 (Traditional)",
+        "Solution 2 (Injection) ⭐"
+      ],
+      "has_items_table": true,
+      "has_signatures": true,
+      "strong_labels_sample": [
+        "Mr. Pradeepkumar",
+        "17, 07, 2026",
+        "3 bathrooms",
+        "Solution 2 (Injection System)",
+        "Bathrooms — Priority Treatment:",
+        "Wall Moisture Treatment:",
+        "Drainage Inspection & Clearance:",
+        "Post-Treatment Verification:",
+        "active and ongoing structural risk",
+        "damage to the apartment below",
+        "legal and financial responsibility",
+        "not begin here",
+        "this concealment is only temporary"
+      ],
+      "css_color_vars": [
+        [
+          "--ink",
+          "#0A1520"
+        ],
+        [
+          "--ink-mid",
+          "#1A2E45"
+        ],
+        [
+          "--ink-l",
+          "#2A4A6E"
+        ],
+        [
+          "--teal",
+          "#0A5C6E"
+        ],
+        [
+          "--teal-m",
+          "#0D7B8A"
+        ],
+        [
+          "--teal-l",
+          "#12A3B4"
+        ],
+        [
+          "--teal-xl",
+          "#7DD8E4"
+        ],
+        [
+          "--gold",
+          "#9A6B00"
+        ],
+        [
+          "--gold-m",
+          "#C8890A"
+        ],
+        [
+          "--gold-l",
+          "#E8A820"
+        ],
+        [
+          "--gold-xl",
+          "#FFD060"
+        ],
+        [
+          "--red",
+          "#8B1A1A"
+        ],
+        [
+          "--red-l",
+          "#C0392B"
+        ],
+        [
+          "--amber",
+          "#7A4500"
+        ],
+        [
+          "--amber-l",
+          "#D4700A"
+        ],
+        [
+          "--green",
+          "#0A5C2A"
+        ],
+        [
+          "--green-l",
+          "#1A8A45"
+        ],
+        [
+          "--bg",
+          "#F2F6FA"
+        ],
+        [
+          "--bg-alt",
+          "#E8EFF7"
+        ],
+        [
+          "--white",
+          "#FFFFFF"
+        ]
+      ]
+    },
+    {
+      "file": "qu-2026-0714.html",
+      "original_name": "qu-2026-0714.html",
+      "title": "عرض سعر - عزل فيبر مرن ( المطاطي ) | ركن التطور للعوازل وكشف التسربات ذ.م.م",
+      "lang": "ar",
+      "type": "quotation",
+      "size": 43654,
+      "images_count": 0,
+      "images": [],
+      "seals_signs_logos": [],
+      "fonts": [
+        "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap"
+      ],
+      "external_css": [
+        "https://fonts.googleapis.com",
+        "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      ],
+      "label_pairs": [],
+      "company_bits": {},
+      "table_headers": [
+        "عدد الطبقات",
+        "نسبة العزل الحراري",
+        "سعر المتر",
+        "الإجمالي (720 م²)",
+        "عدد الطبقات",
+        "نسبة العزل الحراري",
+        "سعر المتر",
+        "الإجمالي (720 م²)"
+      ],
+      "has_items_table": true,
+      "has_signatures": false,
+      "strong_labels_sample": [
+        "معالجة الزوايا والشقوق",
+        "طبقة أساس (Primer)",
+        "تدعيم بشبكة الألياف",
+        "طبقتان نهائيتان عاكستان",
+        "ركن التطور للعوازل وكشف التسربات ذ.م.م"
+      ],
+      "css_color_vars": [
+        [
+          "--blue-dark",
+          "#0B2545"
+        ],
+        [
+          "--blue-mid",
+          "#134074"
+        ],
+        [
+          "--blue-accent",
+          "#1A6DAF"
+        ],
+        [
+          "--blue-light",
+          "#2196D3"
+        ],
+        [
+          "--gold",
+          "#D4A017"
+        ],
+        [
+          "--gold-light",
+          "#F0C040"
+        ],
+        [
+          "--gray-dark",
+          "#2D3748"
+        ],
+        [
+          "--gray-mid",
+          "#718096"
+        ],
+        [
+          "--gray-light",
+          "#EDF2F7"
+        ],
+        [
+          "--white",
+          "#FFFFFF"
+        ],
+        [
+          "--success",
+          "#38A169"
+        ],
+        [
+          "--text-body",
+          "#2D3748"
+        ]
+      ]
+    },
+    {
+      "file": "ret-leak-2026-0714.html",
+      "original_name": "ret-leak-2026-0714.html",
+      "title": "تقرير كشف تسربات المياه | ركن التطور للعوازل وكشف التسربات ذ.م.م",
+      "lang": "ar",
+      "type": "report",
+      "size": 42593,
+      "images_count": 0,
+      "images": [],
+      "seals_signs_logos": [],
+      "fonts": [
+        "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap"
+      ],
+      "external_css": [
+        "https://fonts.googleapis.com",
+        "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      ],
+      "label_pairs": [],
+      "company_bits": {},
+      "table_headers": [],
+      "has_items_table": false,
+      "has_signatures": true,
+      "strong_labels_sample": [
+        "أولوية قصوى:",
+        "أولوية قصوى:",
+        "مهم:",
+        "مهم:",
+        "مهم:",
+        "توصية:",
+        "ركن التطور للعوازل وكشف التسربات",
+        "لوحة الكهرباء",
+        "ركن التطور لأنظمة العزل الحديث ذ.م.م"
+      ],
+      "css_color_vars": [
+        [
+          "--blue-dark",
+          "#0B2545"
+        ],
+        [
+          "--blue-mid",
+          "#134074"
+        ],
+        [
+          "--blue-accent",
+          "#1A6DAF"
+        ],
+        [
+          "--blue-light",
+          "#2196D3"
+        ],
+        [
+          "--gold",
+          "#D4A017"
+        ],
+        [
+          "--gold-light",
+          "#F0C040"
+        ],
+        [
+          "--gray-dark",
+          "#2D3748"
+        ],
+        [
+          "--gray-mid",
+          "#718096"
+        ],
+        [
+          "--gray-light",
+          "#EDF2F7"
+        ],
+        [
+          "--white",
+          "#FFFFFF"
+        ],
+        [
+          "--success",
+          "#38A169"
+        ],
+        [
+          "--danger",
+          "#C0392B"
+        ],
+        [
+          "--danger-light",
+          "#E74C3C"
+        ],
+        [
+          "--amber",
+          "#D4700A"
+        ],
+        [
+          "--amber-light",
+          "#F39C12"
+        ],
+        [
+          "--green",
+          "#0A5C2A"
+        ],
+        [
+          "--green-light",
+          "#27AE60"
+        ],
+        [
+          "--text-body",
+          "#2D3748"
+        ],
+        [
+          "--border",
+          "rgba(11,37,69,0.08)"
+        ]
+      ]
+    },
+    {
+      "file": "contract-pool-afnan-hassan.html",
+      "original_name": "contract-pool-afnan-hassan.html",
+      "title": "عقد توريد وتوصيل غطاء مسبح — أفنان حسن | ركن التطور",
+      "lang": "ar",
+      "type": "contract",
+      "size": 45699,
+      "images_count": 8,
+      "images": [
+        "https://www.rukn-eltatawer.com/s2.jpeg",
+        "https://www.rukn-eltatawer.com/s1.jpeg",
+        "https://www.rukn-eltatawer.com/s2.jpeg",
+        "https://www.rukn-eltatawer.com/s5.jpeg",
+        "https://www.rukn-eltatawer.com/s7.webp",
+        "https://www.rukn-eltatawer.com/s3.webp",
+        "https://www.rukn-eltatawer.com/s4.jpg",
+        "https://www.rukn-eltatawer.com/khtm-swimming.png"
+      ],
+      "seals_signs_logos": [
+        "https://www.rukn-eltatawer.com/s2.jpeg",
+        "https://www.rukn-eltatawer.com/s1.jpeg",
+        "https://www.rukn-eltatawer.com/s2.jpeg",
+        "https://www.rukn-eltatawer.com/s5.jpeg",
+        "https://www.rukn-eltatawer.com/s7.webp",
+        "https://www.rukn-eltatawer.com/s3.webp",
+        "https://www.rukn-eltatawer.com/s4.jpg",
+        "https://www.rukn-eltatawer.com/khtm-swimming.png"
+      ],
+      "fonts": [
+        "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap"
+      ],
+      "external_css": [
+        "https://fonts.googleapis.com",
+        "https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      ],
+      "label_pairs": [],
+      "company_bits": {},
+      "table_headers": [],
+      "has_items_table": false,
+      "has_signatures": true,
+      "strong_labels_sample": [
+        "الاثنين الموافق 21 يوليو 2026",
+        "موعد التوصيل:",
+        "وجهة التسليم:",
+        "طريقة التغليف:",
+        "الوزن الإجمالي للطرد:",
+        "رسوم التوصيل:",
+        "35 – 37 كجم",
+        "كرتون واحد",
+        "4.70 × 12 متر",
+        "24 – 48 ساعة",
+        "تنبيه هام — التوصيل فقط بدون تركيب:",
+        "ضمان المنتج:",
+        "حالات التأخير:",
+        "إلغاء العقد:",
+        "فضّ النزاعات:",
+        "نسخ العقد:",
+        "المنتجات المورّدة:"
+      ],
+      "css_color_vars": [
+        [
+          "--blue-dark",
+          "#0B2545"
+        ],
+        [
+          "--blue-mid",
+          "#134074"
+        ],
+        [
+          "--blue-accent",
+          "#1A6DAF"
+        ],
+        [
+          "--blue-light",
+          "#2196D3"
+        ],
+        [
+          "--teal",
+          "#0E7490"
+        ],
+        [
+          "--teal-light",
+          "#22D3EE"
+        ],
+        [
+          "--gold",
+          "#D4A017"
+        ],
+        [
+          "--gold-light",
+          "#F0C040"
+        ],
+        [
+          "--gray-dark",
+          "#2D3748"
+        ],
+        [
+          "--gray-mid",
+          "#718096"
+        ],
+        [
+          "--gray-light",
+          "#EDF2F7"
+        ],
+        [
+          "--white",
+          "#FFFFFF"
+        ],
+        [
+          "--success",
+          "#38A169"
+        ],
+        [
+          "--text-body",
+          "#2D3748"
+        ],
+        [
+          "--water-bg",
+          "#E0F2FE"
+        ]
+      ]
+    },
+    {
+      "file": "RET-LEAK-2026-0714-EN.html",
+      "original_name": "RET-LEAK-2026-0714-EN.html",
+      "title": "Water Leak Detection Report | Rukn Eltatawer Insulation & Leak Detection L.L.C",
+      "lang": "en",
+      "type": "report",
+      "size": 53014,
+      "images_count": 0,
+      "images": [],
+      "seals_signs_logos": [],
+      "fonts": [
+        "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap"
+      ],
+      "external_css": [
+        "https://fonts.googleapis.com",
+        "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      ],
+      "label_pairs": [],
+      "company_bits": {},
+      "table_headers": [],
+      "has_items_table": false,
+      "has_signatures": true,
+      "strong_labels_sample": [
+        "Top Priority:",
+        "Top Priority:",
+        "Important:",
+        "Important:",
+        "Important:",
+        "Advisory:",
+        "electrical distribution board"
+      ],
+      "css_color_vars": [
+        [
+          "--blue-dark",
+          "#0B2545"
+        ],
+        [
+          "--blue-mid",
+          "#134074"
+        ],
+        [
+          "--blue-accent",
+          "#1A6DAF"
+        ],
+        [
+          "--blue-light",
+          "#2196D3"
+        ],
+        [
+          "--gold",
+          "#D4A017"
+        ],
+        [
+          "--gold-light",
+          "#F0C040"
+        ],
+        [
+          "--gray-dark",
+          "#2D3748"
+        ],
+        [
+          "--gray-mid",
+          "#718096"
+        ],
+        [
+          "--gray-light",
+          "#EDF2F7"
+        ],
+        [
+          "--white",
+          "#FFFFFF"
+        ],
+        [
+          "--success",
+          "#38A169"
+        ],
+        [
+          "--danger",
+          "#C0392B"
+        ],
+        [
+          "--danger-light",
+          "#E74C3C"
+        ],
+        [
+          "--amber",
+          "#D4700A"
+        ],
+        [
+          "--amber-light",
+          "#F39C12"
+        ],
+        [
+          "--green",
+          "#0A5C2A"
+        ],
+        [
+          "--green-light",
+          "#27AE60"
+        ],
+        [
+          "--text-body",
+          "#2D3748"
+        ],
+        [
+          "--border",
+          "rgba(11,37,69,0.08)"
+        ]
+      ]
+    },
+    {
+      "file": "inspection-report-form.html",
+      "original_name": "inspection-report-form.html",
+      "title": "تقرير فحص مبنى قبل الشراء | ركن التطور للخدمات الهندسية المتكاملة",
+      "lang": "ar",
+      "type": "report",
+      "size": 53933,
+      "images_count": 0,
+      "images": [],
+      "seals_signs_logos": [],
+      "fonts": [
+        "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap"
+      ],
+      "external_css": [
+        "https://fonts.googleapis.com",
+        "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      ],
+      "label_pairs": [],
+      "company_bits": {},
+      "table_headers": [],
+      "has_items_table": false,
+      "has_signatures": true,
+      "strong_labels_sample": [
+        "أولوية قصوى:",
+        "مهم:",
+        "مهم:",
+        "توصية:",
+        "ركن التطور للخدمات الهندسية المتكاملة",
+        "مناسب للشراء",
+        "ركن التطور للخدمات الهندسية المتكاملة",
+        "RET-INS-2026-[XXXX]"
+      ],
+      "css_color_vars": [
+        [
+          "--blue-dark",
+          "#0B2545"
+        ],
+        [
+          "--blue-mid",
+          "#134074"
+        ],
+        [
+          "--blue-accent",
+          "#1A6DAF"
+        ],
+        [
+          "--blue-light",
+          "#2196D3"
+        ],
+        [
+          "--gold",
+          "#D4A017"
+        ],
+        [
+          "--gold-light",
+          "#F0C040"
+        ],
+        [
+          "--gray-dark",
+          "#2D3748"
+        ],
+        [
+          "--gray-mid",
+          "#718096"
+        ],
+        [
+          "--gray-light",
+          "#EDF2F7"
+        ],
+        [
+          "--white",
+          "#FFFFFF"
+        ],
+        [
+          "--success",
+          "#38A169"
+        ],
+        [
+          "--danger",
+          "#C0392B"
+        ],
+        [
+          "--danger-light",
+          "#E74C3C"
+        ],
+        [
+          "--amber",
+          "#D4700A"
+        ],
+        [
+          "--amber-light",
+          "#F39C12"
+        ],
+        [
+          "--green",
+          "#0A5C2A"
+        ],
+        [
+          "--green-light",
+          "#27AE60"
+        ],
+        [
+          "--text-body",
+          "#2D3748"
+        ],
+        [
+          "--border",
+          "rgba(11,37,69,0.08)"
+        ]
+      ]
+    },
+    {
+      "file": "cool-roof-catalog-rukn.html",
+      "original_name": "cool-roof-catalog-rukn.html",
+      "title": "كتالوج كول رووف 2026 | ركن التطور",
+      "lang": "ar",
+      "type": "catalog",
+      "size": 63233,
+      "images_count": 0,
+      "images": [],
+      "seals_signs_logos": [],
+      "fonts": [
+        "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800;900&family=Playfair+Display:wght@700;900&display=swap"
+      ],
+      "external_css": [
+        "https://fonts.googleapis.com",
+        "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800;900&family=Playfair+Display:wght@700;900&display=swap",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      ],
+      "label_pairs": [],
+      "company_bits": {},
+      "table_headers": [],
+      "has_items_table": false,
+      "has_signatures": true,
+      "strong_labels_sample": [
+        "ملاحظة مهمة:",
+        "خصم 15%"
+      ],
+      "css_color_vars": [
+        [
+          "--ink",
+          "#040C18"
+        ],
+        [
+          "--navy",
+          "#071A35"
+        ],
+        [
+          "--navy-mid",
+          "#0C2D5C"
+        ],
+        [
+          "--blue",
+          "#1557A8"
+        ],
+        [
+          "--sky",
+          "#2AADEC"
+        ],
+        [
+          "--ice",
+          "#E8F6FF"
+        ],
+        [
+          "--gold",
+          "#C9940A"
+        ],
+        [
+          "--gold-light",
+          "#F0C842"
+        ],
+        [
+          "--snow",
+          "#FFFFFF"
+        ],
+        [
+          "--fog",
+          "#F2F7FC"
+        ],
+        [
+          "--mist",
+          "#D6E7F5"
+        ],
+        [
+          "--text",
+          "#1A2B40"
+        ],
+        [
+          "--sub",
+          "#4A6080"
+        ]
+      ]
+    },
+    {
+      "file": "quote-06028-1.html",
+      "original_name": "quote-06028-1.html",
+      "title": "عرض سعر - عزل Cool Roof | ركن التطور - دبي",
+      "lang": "ar",
+      "type": "quotation",
+      "size": 245021,
+      "images_count": 0,
+      "images": [],
+      "seals_signs_logos": [],
+      "fonts": [
+        "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap"
+      ],
+      "external_css": [
+        "https://fonts.googleapis.com",
+        "https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap",
+        "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+      ],
+      "label_pairs": [],
+      "company_bits": {},
+      "table_headers": [
+        "عدد الطبقات",
+        "الضمان",
+        "سعر المتر",
+        "السعر الأصلي",
+        "بعد الخصم 🔥",
+        "عدد الطبقات",
+        "الضمان",
+        "سعر المتر",
+        "السعر الأصلي",
+        "بعد الخصم 🔥"
+      ],
+      "has_items_table": true,
+      "has_signatures": false,
+      "strong_labels_sample": [
+        "معالجة الزوايا والشقوق",
+        "طبقة أساس (Primer)",
+        "تدعيم بشبكة الألياف",
+        "طبقتان نهائيتان عاكستان",
+        "ركن التطور لأنظمة العزل الحديث ذ.م.م"
+      ],
+      "css_color_vars": [
+        [
+          "--blue-dark",
+          "#0B2545"
+        ],
+        [
+          "--blue-mid",
+          "#134074"
+        ],
+        [
+          "--blue-accent",
+          "#1A6DAF"
+        ],
+        [
+          "--blue-light",
+          "#2196D3"
+        ],
+        [
+          "--gold",
+          "#D4A017"
+        ],
+        [
+          "--gold-light",
+          "#F0C040"
+        ],
+        [
+          "--gray-dark",
+          "#2D3748"
+        ],
+        [
+          "--gray-mid",
+          "#718096"
+        ],
+        [
+          "--gray-light",
+          "#EDF2F7"
+        ],
+        [
+          "--white",
+          "#FFFFFF"
+        ],
+        [
+          "--success",
+          "#38A169"
+        ],
+        [
+          "--text-body",
+          "#2D3748"
+        ]
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1792 @@
+<?php
+/**
+ * KDMS Dynamic Template — design preserved 100% from official HTML.
+ * Vars: $doc, $company, $customer, $items, $media
+ */
+$lang = $doc['language'] ?? 'ar';
+$dir = ($lang === 'ar') ? 'rtl' : 'ltr';
+$companyName = ($lang === 'ar')
+    ? ($company['name_ar'] ?? '')
+    : ($company['name_en'] ?? $company['name_ar'] ?? '');
+$companyNameAlt = ($lang === 'ar')
+    ? ($company['name_en'] ?? '')
+    : ($company['name_ar'] ?? '');
+$customerName = ($lang === 'ar')
+    ? ($customer['name_ar'] ?? '')
+    : ($customer['name_en'] ?? $customer['name_ar'] ?? '');
+$customerAddress = ($lang === 'ar')
+    ? ($customer['address_ar'] ?? '')
+    : ($customer['address_en'] ?? $customer['address_ar'] ?? '');
+$projectAddress = $doc['project_address'] ?: $customerAddress;
+$issueDate = format_date($doc['issue_date'] ?? null, $lang);
+$logo = !empty($company['logo']) ? upload_url($company['logo']) : '';
+$seal = !empty($company['seal']) ? upload_url($company['seal']) : '';
+$signature = !empty($company['signature']) ? upload_url($company['signature']) : '';
+$currency = $doc['currency'] ?? ($company['currency'] ?? 'AED');
+$currencyLabel = ($lang === 'ar')
+    ? ($company['currency_label_ar'] ?? $currency)
+    : ($company['currency_label_en'] ?? $currency);
+$amountWords = ($lang === 'ar')
+    ? ($doc['amount_words_ar'] ?? '')
+    : ($doc['amount_words_en'] ?? $doc['amount_words_ar'] ?? '');
+$cityCountry = trim(($company['city'] ?? '') . ' — ' . ($company['country'] ?? ''), ' —');
+$offices = [];
+if (!empty($company['offices_json'])) {
+    $decoded = json_decode($company['offices_json'], true);
+    if (is_array($decoded)) { $offices = $decoded; }
+}
+$custom = [];
+if (!empty($doc['custom_fields'])) {
+    $custom = is_array($doc['custom_fields'])
+        ? $doc['custom_fields']
+        : (json_decode($doc['custom_fields'], true) ?: []);
+}
+$mediaUrls = [];
+foreach (($media ?? []) as $m) {
+    if (!empty($m['file_path'])) {
+        $mediaUrls[] = upload_url($m['file_path']);
+    }
+}
+$totalFmt = number_format((float)($doc['total'] ?? 0), 2);
+$totalFmtInt = number_format((float)($doc['total'] ?? 0), 0);
+?>
+<!DOCTYPE html>
+<html lang="<?= e($lang) ?>" dir="<?= e($dir) ?>">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title><?= e($doc['title'] ?? '') ?> | <?= e($companyName) ?></title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Tajawal:wght@300;400;500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+  :root {
+    --blue-dark: #0B2545;
+    --blue-mid: #134074;
+    --blue-accent: #1A6DAF;
+    --blue-light: #2196D3;
+    --gold: #D4A017;
+    --gold-light: #F0C040;
+    --gray-dark: #2D3748;
+    --gray-mid: #718096;
+    --gray-light: #EDF2F7;
+    --white: #FFFFFF;
+    --success: #38A169;
+    --danger: #C0392B;
+    --danger-light: #E74C3C;
+    --amber: #D4700A;
+    --amber-light: #F39C12;
+    --green: #0A5C2A;
+    --green-light: #27AE60;
+    --text-body: #2D3748;
+    --border: rgba(11,37,69,0.08);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Cairo', 'Tajawal', sans-serif;
+    background: #F0F4F8;
+    color: var(--text-body);
+    overflow-x: hidden;
+  }
+
+  /* ===== PRINT BUTTON ===== */
+  .no-print {
+    max-width: 960px;
+    margin: 0 auto 18px;
+    padding: 18px 20px 0;
+  }
+  .btn-pdf {
+    display: inline-flex; align-items: center; gap: 9px;
+    padding: 11px 26px; border-radius: 9px; cursor: pointer; border: none;
+    font-family: 'Cairo', sans-serif; font-size: 14px; font-weight: 700;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    color: var(--blue-dark); box-shadow: 0 4px 18px rgba(212,160,23,.35);
+    transition: all .25s;
+  }
+  .btn-pdf:hover { transform: translateY(-2px); box-shadow: 0 8px 28px rgba(212,160,23,.45); }
+
+  /* ===== HERO ===== */
+  .hero {
+    background: linear-gradient(135deg, var(--blue-dark) 0%, var(--blue-mid) 50%, #0D3260 100%);
+    position: relative;
+    overflow: hidden;
+    padding: 0;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M0 0h40v40H0V0zm40 40h40v40H40V40z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    pointer-events: none;
+  }
+  .orb1 { width: 320px; height: 320px; top: -100px; left: -80px; background: radial-gradient(circle, rgba(255,200,0,0.12) 0%, transparent 65%); }
+  .orb2 { width: 220px; height: 220px; bottom: -60px; right: 60px; background: radial-gradient(circle, rgba(26,109,175,0.18) 0%, transparent 65%); }
+
+  .hero-top-bar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 18px 40px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    position: relative;
+    z-index: 10;
+  }
+
+  .logo-area {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .logo-icon {
+    width: 52px;
+    height: 52px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: var(--blue-dark);
+    box-shadow: 0 4px 20px rgba(212,160,23,0.4);
+    flex-shrink: 0;
+  }
+
+  .logo-text h1 {
+    font-size: 16px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.2;
+  }
+
+  .logo-text span {
+    font-size: 10px;
+    color: var(--gold-light);
+    font-weight: 400;
+    letter-spacing: 0.5px;
+  }
+
+  .hero-badge {
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    backdrop-filter: blur(10px);
+    padding: 8px 18px;
+    border-radius: 50px;
+    font-size: 12px;
+    color: #fff;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .hero-badge i { color: var(--gold-light); }
+
+  .hero-content {
+    padding: 50px 40px 90px;
+    position: relative;
+    z-index: 10;
+    max-width: 900px;
+    margin: 0 auto;
+    text-align: center;
+  }
+
+  .report-label {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(212,160,23,0.2);
+    border: 1px solid rgba(212,160,23,0.4);
+    color: var(--gold-light);
+    padding: 8px 20px;
+    border-radius: 50px;
+    font-size: 13px;
+    font-weight: 600;
+    margin-bottom: 24px;
+    animation: fadeInDown 0.6s ease both;
+  }
+
+  .hero-title {
+    font-size: clamp(24px, 4.5vw, 42px);
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.4;
+    margin-bottom: 16px;
+    animation: fadeInUp 0.7s ease 0.1s both;
+  }
+
+  .hero-title .highlight {
+    background: linear-gradient(90deg, var(--gold), var(--gold-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .hero-subtitle {
+    font-size: 15px;
+    color: rgba(255,255,255,0.75);
+    line-height: 1.8;
+    max-width: 620px;
+    margin: 0 auto 30px;
+    animation: fadeInUp 0.7s ease 0.2s both;
+  }
+
+  .report-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+    animation: fadeInUp 0.7s ease 0.3s both;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: rgba(255,255,255,0.7);
+    background: rgba(255,255,255,0.08);
+    padding: 7px 16px;
+    border-radius: 50px;
+    border: 1px solid rgba(255,255,255,0.12);
+  }
+
+  .meta-item i { color: var(--gold-light); font-size: 12px; }
+
+  .hero-stats {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    flex-wrap: wrap;
+    animation: fadeInUp 0.7s ease 0.4s both;
+  }
+
+  .stat-item { text-align: center; }
+
+  .stat-num {
+    font-size: 30px;
+    font-weight: 900;
+    color: var(--gold-light);
+    line-height: 1;
+  }
+
+  .stat-label {
+    font-size: 12px;
+    color: rgba(255,255,255,0.6);
+    margin-top: 4px;
+  }
+
+  .hero-waves {
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 100%;
+  }
+
+  @keyframes fadeInDown {
+    from { opacity:0; transform:translateY(-20px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+  @keyframes fadeInUp {
+    from { opacity:0; transform:translateY(20px); }
+    to { opacity:1; transform:translateY(0); }
+  }
+
+  /* ===== STRIPE ===== */
+  .stripe {
+    height: 4px;
+    background: linear-gradient(90deg, var(--blue-dark) 0%, var(--blue-accent) 30%, var(--blue-light) 55%, var(--gold) 75%, var(--blue-mid) 100%);
+  }
+
+  /* ===== SECTIONS ===== */
+  .main-section { padding: 60px 20px; }
+  .container { max-width: 960px; margin: 0 auto; }
+
+  /* ===== CARDS (shared) ===== */
+  .base-card {
+    background: #fff;
+    border-radius: 20px;
+    padding: 32px;
+    box-shadow: 0 4px 30px rgba(11,37,69,0.08);
+    border: 1px solid rgba(11,37,69,0.06);
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .base-card.fade-in {
+    opacity: 0;
+    transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .base-card.fade-in.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .base-card::before {
+    content: '';
+    position: absolute;
+    top: 0; right: 0;
+    width: 5px;
+    height: 100%;
+    background: linear-gradient(180deg, var(--blue-accent), var(--blue-light));
+    border-radius: 0 20px 20px 0;
+  }
+
+  .base-card.accent-gold::before { background: linear-gradient(180deg, var(--gold), var(--gold-light)); }
+  .base-card.accent-danger::before { background: linear-gradient(180deg, var(--danger), var(--danger-light)); }
+  .base-card.accent-green::before { background: linear-gradient(180deg, var(--green), var(--green-light)); }
+  .base-card.accent-amber::before { background: linear-gradient(180deg, var(--amber), var(--amber-light)); }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    margin-bottom: 24px;
+  }
+
+  .card-icon {
+    width: 48px;
+    height: 48px;
+    background: linear-gradient(135deg, var(--blue-dark), var(--blue-accent));
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .card-icon.gold { background: linear-gradient(135deg, var(--gold), var(--gold-light)); color: var(--blue-dark); }
+  .card-icon.danger { background: linear-gradient(135deg, var(--danger), var(--danger-light)); }
+  .card-icon.green { background: linear-gradient(135deg, var(--green), var(--green-light)); }
+  .card-icon.amber { background: linear-gradient(135deg, var(--amber), var(--amber-light)); }
+
+  .card-header h2 {
+    font-size: 20px;
+    font-weight: 800;
+    color: var(--blue-dark);
+  }
+
+  .card-header p { font-size: 13px; color: var(--gray-mid); margin-top: 2px; }
+
+  .sec-num-badge {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue-accent), var(--blue-light));
+    color: #fff;
+    font-size: 12px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  /* ===== INFO GRID ===== */
+  .info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 14px;
+  }
+
+  .info-item {
+    background: var(--gray-light);
+    border-radius: 12px;
+    padding: 14px 16px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .info-item i {
+    color: var(--blue-accent);
+    margin-top: 2px;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .info-item .label {
+    font-size: 11px;
+    color: var(--gray-mid);
+    font-weight: 500;
+    margin-bottom: 3px;
+  }
+
+  .info-item .value {
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--blue-dark);
+  }
+
+  /* ===== SCOPE GRID ===== */
+  .scope-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 14px;
+  }
+
+  .scope-item {
+    background: linear-gradient(135deg, rgba(11,37,69,0.04), rgba(26,109,175,0.03));
+    border: 1px solid rgba(11,37,69,0.08);
+    border-right: 4px solid var(--blue-accent);
+    border-radius: 12px 0 0 12px;
+    padding: 16px 18px;
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    transition: all 0.3s ease;
+  }
+
+  .scope-item:hover {
+    background: linear-gradient(135deg, rgba(26,109,175,0.08), rgba(33,150,211,0.05));
+    transform: translateX(-3px);
+  }
+
+  .scope-item i {
+    width: 34px;
+    height: 34px;
+    background: linear-gradient(135deg, var(--blue-dark), var(--blue-accent));
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 15px;
+    flex-shrink: 0;
+  }
+
+  .scope-item .scope-title {
+    font-size: 14px;
+    font-weight: 800;
+    color: var(--blue-dark);
+    margin-bottom: 3px;
+  }
+
+  .scope-item .scope-desc {
+    font-size: 12px;
+    color: var(--gray-mid);
+    line-height: 1.5;
+  }
+
+  /* ===== DARK PRODUCT CARD ===== */
+  .dark-card {
+    background: linear-gradient(135deg, var(--blue-dark) 0%, #0F3060 100%);
+    border-radius: 20px;
+    padding: 32px;
+    margin-bottom: 28px;
+    position: relative;
+    overflow: hidden;
+    color: white;
+  }
+
+  .dark-card::after {
+    content: '';
+    position: absolute;
+    bottom: -40px;
+    left: -40px;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.03);
+    pointer-events: none;
+  }
+
+  .dark-card .dark-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    margin-bottom: 26px;
+  }
+
+  .dark-card .dark-icon {
+    width: 56px;
+    height: 56px;
+    background: linear-gradient(135deg, var(--gold), var(--gold-light));
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: var(--blue-dark);
+    flex-shrink: 0;
+    box-shadow: 0 4px 16px rgba(212,160,23,0.4);
+  }
+
+  .dark-card .dark-title {
+    font-size: 21px;
+    font-weight: 900;
+    color: #fff;
+    line-height: 1.2;
+  }
+
+  .dark-card .dark-sub {
+    font-size: 13px;
+    color: rgba(255,255,255,0.65);
+    margin-top: 4px;
+  }
+
+  /* ===== INSPECTION CATEGORIES GRID ===== */
+  .inspect-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-bottom: 26px;
+  }
+
+  .inspect-box {
+    background: rgba(255,255,255,0.07);
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    padding: 18px 14px;
+    text-align: center;
+    transition: all 0.3s ease;
+  }
+
+  .inspect-box:hover {
+    background: rgba(255,255,255,0.13);
+    transform: translateY(-3px);
+  }
+
+  .inspect-box i {
+    font-size: 26px;
+    margin-bottom: 10px;
+    display: block;
+    color: var(--gold-light);
+  }
+
+  .inspect-box .ib-title {
+    font-size: 13px;
+    font-weight: 800;
+    color: #fff;
+    margin-bottom: 5px;
+    line-height: 1.3;
+  }
+
+  .inspect-box .ib-sub {
+    font-size: 11px;
+    color: rgba(255,255,255,0.55);
+    line-height: 1.4;
+  }
+
+  /* ===== FINDINGS LIST ===== */
+  .section-label {
+    font-size: 13px;
+    font-weight: 700;
+    color: var(--gray-mid);
+    letter-spacing: 0.4px;
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .section-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--gray-light);
+  }
+
+  .findings-list { list-style: none; }
+
+  .fi {
+    display: flex;
+    gap: 14px;
+    padding: 15px 18px;
+    margin-bottom: 10px;
+    border-radius: 12px;
+    border: 1px solid rgba(11,37,69,0.07);
+    background: linear-gradient(135deg, rgba(11,37,69,0.03), rgba(26,109,175,0.02));
+    transition: all 0.2s;
+  }
+
+  .fi:hover { border-color: rgba(26,109,175,0.2); box-shadow: 0 3px 12px rgba(11,37,69,0.07); }
+  .fi:last-child { margin-bottom: 0; }
+
+  .fi-num {
+    width: 30px;
+    height: 30px;
+    flex-shrink: 0;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue-dark), var(--blue-accent));
+    color: #fff;
+    font-size: 13px;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 2px;
+  }
+
+  .fi-title { font-size: 14px; font-weight: 800; color: var(--blue-dark); margin-bottom: 5px; }
+  .fi-desc { font-size: 13px; color: var(--gray-dark); line-height: 1.7; }
+
+  .fi-tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    margin-top: 8px;
+    padding: 3px 12px;
+    border-radius: 50px;
+    font-size: 11px;
+    font-weight: 700;
+  }
+
+  .tag-high { background: rgba(192,57,43,0.1); color: var(--danger-light); border: 1px solid rgba(192,57,43,0.2); }
+  .tag-med  { background: rgba(212,112,10,0.1); color: var(--amber); border: 1px solid rgba(212,112,10,0.2); }
+  .tag-ok   { background: rgba(39,174,96,0.1); color: var(--green-light); border: 1px solid rgba(39,174,96,0.2); }
+
+  /* ===== CONDITION CARDS ===== */
+  .cond-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+  }
+
+  .cond-card { border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.07); border: 1px solid var(--border); }
+
+  .cc-head {
+    padding: 11px 16px;
+    font-size: 12px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .cc-blue .cc-head   { background: linear-gradient(135deg, var(--blue-dark), var(--blue-accent)); color: #fff; }
+  .cc-green .cc-head  { background: linear-gradient(135deg, var(--green), var(--green-light)); color: #fff; }
+  .cc-amber .cc-head  { background: linear-gradient(135deg, var(--amber), var(--amber-light)); color: #fff; }
+  .cc-danger .cc-head { background: linear-gradient(135deg, var(--danger), var(--danger-light)); color: #fff; }
+
+  .cc-body { padding: 14px 16px; background: #fff; font-size: 13px; color: var(--text-body); line-height: 1.7; }
+
+  /* ===== OVERALL RATING ===== */
+  .rating-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 14px;
+    margin-top: 20px;
+  }
+
+  .rating-item {
+    background: var(--gray-light);
+    border-radius: 14px;
+    padding: 20px 14px;
+    text-align: center;
+    border: 2px solid transparent;
+    transition: all 0.3s;
+  }
+
+  .rating-item.good { border-color: rgba(39,174,96,0.3); background: rgba(39,174,96,0.06); }
+  .rating-item.medium { border-color: rgba(212,160,23,0.3); background: rgba(212,160,23,0.06); }
+  .rating-item.bad { border-color: rgba(192,57,43,0.3); background: rgba(192,57,43,0.06); }
+
+  .rating-label { font-size: 12px; color: var(--gray-mid); margin-bottom: 8px; font-weight: 600; }
+  .rating-stars { font-size: 18px; margin-bottom: 6px; line-height: 1; }
+  .rating-text { font-size: 13px; font-weight: 800; }
+  .rating-item.good .rating-text { color: var(--green-light); }
+  .rating-item.medium .rating-text { color: var(--amber); }
+  .rating-item.bad .rating-text { color: var(--danger-light); }
+
+  /* ===== PHOTOS SECTION ===== */
+  .photos-note {
+    background: linear-gradient(135deg, rgba(11,37,69,0.04), rgba(26,109,175,0.03));
+    border: 1px solid rgba(11,37,69,0.1);
+    border-right: 4px solid var(--blue-accent);
+    border-radius: 12px 0 0 12px;
+    padding: 18px 20px;
+    font-size: 13.5px;
+    line-height: 1.9;
+    color: var(--text-body);
+  }
+
+  .photos-placeholder {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 14px;
+    margin-top: 18px;
+  }
+
+  .photo-box {
+    background: var(--gray-light);
+    border-radius: 12px;
+    aspect-ratio: 4/3;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    border: 2px dashed rgba(11,37,69,0.15);
+    gap: 8px;
+    transition: all 0.2s;
+  }
+
+  .photo-box:hover { border-color: var(--blue-accent); background: rgba(26,109,175,0.04); }
+  .photo-box i { font-size: 28px; color: rgba(11,37,69,0.25); }
+  .photo-box span { font-size: 11px; color: var(--gray-mid); font-weight: 600; text-align: center; }
+
+  /* ===== RISK GRID ===== */
+  .risk-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 14px;
+  }
+
+  .risk-card { border-radius: 12px; overflow: hidden; border: 1px solid var(--border); }
+  .rc-head { padding: 10px 16px; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 7px; }
+  .rc-present .rc-head { background: linear-gradient(135deg, var(--amber), var(--amber-light)); color: #fff; }
+  .rc-future  .rc-head { background: linear-gradient(135deg, var(--danger), var(--danger-light)); color: #fff; }
+  .rc-body { padding: 14px 16px; background: #fff; font-size: 13px; color: var(--text-body); line-height: 1.7; list-style: none; }
+  .rc-body li { display: flex; gap: 8px; align-items: flex-start; padding: 4px 0; border-bottom: 1px dashed rgba(11,37,69,0.06); }
+  .rc-body li:last-child { border-bottom: none; }
+  .rc-body li i { font-size: 10px; margin-top: 6px; flex-shrink: 0; }
+  .rc-present .rc-body li i { color: var(--amber); }
+  .rc-future  .rc-body li i { color: var(--danger-light); }
+
+  /* ===== RECOMMENDATIONS ===== */
+  .rec-box {
+    background: linear-gradient(135deg, var(--blue-accent), var(--blue-mid));
+    border-radius: 16px;
+    padding: 26px 30px;
+    color: #fff;
+    box-shadow: 0 8px 28px rgba(26,109,175,0.3), inset 0 1px 0 rgba(255,255,255,0.1);
+    margin-bottom: 20px;
+  }
+
+  .rec-title {
+    font-size: 18px;
+    font-weight: 900;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .rec-list { list-style: none; }
+  .rec-item {
+    display: flex;
+    gap: 12px;
+    padding: 10px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    font-size: 13.5px;
+    color: rgba(255,255,255,0.9);
+    align-items: flex-start;
+  }
+
+  .rec-item:last-child { border-bottom: none; }
+  .rec-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--gold-light); flex-shrink: 0; margin-top: 7px; }
+
+  /* ===== VERDICT CARD ===== */
+  .verdict-card {
+    border-radius: 20px;
+    overflow: hidden;
+    margin-bottom: 28px;
+    box-shadow: 0 8px 40px rgba(11,37,69,0.15);
+  }
+
+  .verdict-header {
+    padding: 22px 30px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .verdict-suitable .verdict-header   { background: linear-gradient(135deg, var(--green), var(--green-light)); }
+  .verdict-caution .verdict-header    { background: linear-gradient(135deg, var(--amber), var(--amber-light)); }
+  .verdict-unsuitable .verdict-header { background: linear-gradient(135deg, var(--danger), var(--danger-light)); }
+
+  .verdict-icon {
+    width: 56px;
+    height: 56px;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 26px;
+    color: #fff;
+    flex-shrink: 0;
+  }
+
+  .verdict-label { font-size: 12px; color: rgba(255,255,255,0.75); font-weight: 600; margin-bottom: 4px; }
+  .verdict-text { font-size: 22px; font-weight: 900; color: #fff; }
+
+  .verdict-body {
+    padding: 24px 30px;
+    background: #fff;
+    font-size: 14px;
+    line-height: 1.9;
+    color: var(--text-body);
+  }
+
+  /* ===== SIGNATURE SECTION ===== */
+  .sig-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-top: 28px;
+  }
+
+  .sig-box {
+    background: var(--gray-light);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .sig-lbl { font-size: 10px; font-weight: 700; letter-spacing: 1px; color: var(--blue-accent); margin-bottom: 4px; }
+  .sig-name { font-size: 14px; font-weight: 800; color: var(--blue-dark); margin-bottom: 20px; }
+  .sig-line { border-top: 1.5px solid var(--blue-mid); padding-top: 8px; font-size: 11px; color: var(--gray-mid); }
+
+  /* ===== CONTACT CTA ===== */
+  .cta-section {
+    background: #fff;
+    border-radius: 20px;
+    padding: 40px 32px;
+    text-align: center;
+    box-shadow: 0 4px 30px rgba(11,37,69,0.08);
+    margin-bottom: 28px;
+    border: 1px solid rgba(11,37,69,0.06);
+  }
+
+  .cta-section h2 { font-size: 24px; font-weight: 900; color: var(--blue-dark); margin-bottom: 10px; }
+  .cta-section p { font-size: 14px; color: var(--gray-mid); margin-bottom: 28px; max-width: 500px; margin-inline: auto; }
+
+  .cta-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 28px;
+    border-radius: 12px;
+    font-family: 'Cairo', sans-serif;
+    font-size: 14px;
+    font-weight: 800;
+    cursor: pointer;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+  }
+
+  .btn-wa {
+    background: linear-gradient(135deg, #25D366, #1DAA54);
+    color: white;
+    box-shadow: 0 6px 24px rgba(37,211,102,0.35);
+  }
+
+  .btn-wa:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(37,211,102,0.45); }
+
+  .btn-call {
+    background: transparent;
+    color: var(--blue-accent);
+    border-color: var(--blue-accent);
+  }
+
+  .btn-call:hover { background: var(--blue-accent); color: white; transform: translateY(-3px); }
+
+  .trust-row {
+    display: flex;
+    justify-content: center;
+    gap: 24px;
+    margin-top: 24px;
+    flex-wrap: wrap;
+  }
+
+  .trust-item {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 13px;
+    color: var(--gray-mid);
+  }
+
+  .trust-item i { color: var(--success); font-size: 14px; }
+
+  /* ===== FOOTER ===== */
+  .footer {
+    background: var(--blue-dark);
+    color: rgba(255,255,255,0.6);
+    text-align: center;
+    padding: 24px 20px;
+    font-size: 12px;
+    line-height: 1.8;
+  }
+
+  .footer strong { color: var(--gold-light); }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 640px) {
+    .hero-top-bar { padding: 14px 18px; }
+    .hero-content { padding: 36px 18px 80px; }
+    .hero-stats { gap: 20px; }
+    .stat-num { font-size: 24px; }
+    .inspect-grid { grid-template-columns: 1fr 1fr; }
+    .cond-grid { grid-template-columns: 1fr; }
+    .risk-grid { grid-template-columns: 1fr; }
+    .sig-row { grid-template-columns: 1fr; }
+    .photos-placeholder { grid-template-columns: 1fr 1fr; }
+    .base-card { padding: 22px 18px; }
+    .hero-badge span { display: none; }
+  }
+
+  @media (max-width: 400px) {
+    .inspect-grid { grid-template-columns: 1fr; }
+    .photos-placeholder { grid-template-columns: 1fr; }
+    .rating-grid { grid-template-columns: 1fr 1fr; }
+  }
+
+  /* ===== PRINT ===== */
+  @media print {
+    body { background: #fff; }
+    .no-print { display: none; }
+    * { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+  }
+</style>
+
+<?php if (empty($doc['show_seal'])): ?><style>.seal, img.seal, .stamp-wrap img, .stamp-box img{display:none!important;}</style><?php endif; ?>
+<?php if (empty($doc['show_signature'])): ?><style>img.sign, .sign{display:none!important;}</style><?php endif; ?>
+<style>
+@media print{
+  .kdms-toolbar,.no-print,.print-bar{display:none!important;}
+  @page{size:A4 portrait;margin:10mm;}
+  thead{display:table-header-group;}
+  tr,img,.sig-row,.sig-box,.stamp-box,.info-grid,.amount-hero{break-inside:avoid;page-break-inside:avoid;}
+  *{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;}
+}
+</style>
+</head>
+<body>
+
+<!-- PRINT BUTTON -->
+<div class="no-print">
+  <button class="btn-pdf" onclick="window.print()">
+    <i class="fas fa-file-pdf"></i> طباعة / تحميل PDF
+  </button>
+</div>
+
+<!-- ===== HERO ===== -->
+<section class="hero">
+  <div class="hero-orb orb1"></div>
+  <div class="hero-orb orb2"></div>
+
+  <div class="hero-top-bar">
+    <div class="logo-area">
+      <div class="logo-icon"><i class="fas fa-building-shield"></i></div>
+      <div class="logo-text">
+        <h1>ركن التطور للخدمات الهندسية المتكاملة</h1>
+        <span>RUKN ELTATAWER · Integrated Engineering Services</span>
+      </div>
+    </div>
+    <div class="hero-badge">
+      <i class="fas fa-award"></i>
+      <span>معتمدون رسمياً · الإمارات العربية المتحدة</span>
+    </div>
+  </div>
+
+  <div class="hero-content">
+    <div class="report-label">
+      <i class="fas fa-clipboard-check"></i>
+      تقرير فحص فني رسمي · ما قبل الشراء
+    </div>
+
+    <h1 class="hero-title">
+      تقرير <span class="highlight">فحص مبنى شامل</span><br>
+      قبل اتخاذ قرار الشراء
+    </h1>
+
+    <p class="hero-subtitle">
+      فحص هندسي دقيق ومتكامل للعقار يشمل الهيكل الإنشائي، السباكة، الكهرباء، التكييف،
+      العزل، والتشطيبات — مع تقرير مفصّل وتوصيات فنية واضحة.
+    </p>
+
+    <div class="report-meta">
+      <div class="meta-item"><i class="fas fa-hashtag"></i> RET-INS-2026-[رقم التقرير]</div>
+      <div class="meta-item"><i class="fas fa-calendar-alt"></i> تاريخ الفحص: [التاريخ]</div>
+      <div class="meta-item"><i class="fas fa-user-tie"></i> المفتش: [اسم المهندس]</div>
+    </div>
+
+    <div class="hero-stats">
+      <div class="stat-item">
+        <div class="stat-num">9</div>
+        <div class="stat-label">محاور فحص رئيسية</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">500+</div>
+        <div class="stat-label">تقرير فحص منجز</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">100%</div>
+        <div class="stat-label">فحص بالأجهزة المتخصصة</div>
+      </div>
+      <div class="stat-item">
+        <div class="stat-num">24h</div>
+        <div class="stat-label">تسليم التقرير خلال</div>
+      </div>
+    </div>
+  </div>
+
+  <svg class="hero-waves" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 70" preserveAspectRatio="none">
+    <path fill="#F0F4F8" d="M0,40 C360,80 1080,0 1440,40 L1440,70 L0,70 Z"/>
+  </svg>
+</section>
+
+<div class="stripe"></div>
+
+<!-- ===== MAIN CONTENT ===== -->
+<section class="main-section">
+<div class="container">
+
+  <!-- 1. PROPERTY & CLIENT INFO -->
+  <div class="base-card fade-in">
+    <div class="card-header">
+      <div class="card-icon"><i class="fas fa-user-tie"></i></div>
+      <div>
+        <h2>بيانات العميل والعقار</h2>
+        <p>معلومات المشتري المحتمل والعقار المراد فحصه</p>
+      </div>
+      <div class="sec-num-badge" style="margin-right: auto;">1</div>
+    </div>
+    <div class="info-grid">
+      <div class="info-item">
+        <i class="fas fa-user"></i>
+        <div>
+          <div class="label">اسم العميل</div>
+          <div class="value">[اسم العميل]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-phone"></i>
+        <div>
+          <div class="label">رقم التواصل</div>
+          <div class="value">[رقم الهاتف]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-location-dot"></i>
+        <div>
+          <div class="label">موقع العقار</div>
+          <div class="value">[عنوان العقار]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-home"></i>
+        <div>
+          <div class="label">نوع العقار</div>
+          <div class="value">[فيلا / شقة / مبنى تجاري]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-ruler-combined"></i>
+        <div>
+          <div class="label">المساحة الإجمالية</div>
+          <div class="value">[المساحة بالمتر المربع]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-calendar-check"></i>
+        <div>
+          <div class="label">تاريخ الفحص</div>
+          <div class="value">[التاريخ]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-hard-hat"></i>
+        <div>
+          <div class="label">المهندس المنفذ</div>
+          <div class="value">[اسم المهندس المسؤول]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-building"></i>
+        <div>
+          <div class="label">عمر المبنى التقريبي</div>
+          <div class="value">[عدد السنوات]</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. SCOPE OF INSPECTION -->
+  <div class="dark-card fade-in">
+    <div class="dark-header">
+      <div class="dark-icon"><i class="fas fa-clipboard-list"></i></div>
+      <div>
+        <div class="dark-title">نطاق الفحص ومحاوره الرئيسية</div>
+        <div class="dark-sub">ما يشمله التقرير بالتفصيل — فحص شامل ودقيق لكل عنصر في المبنى</div>
+      </div>
+    </div>
+
+    <div class="inspect-grid">
+      <div class="inspect-box">
+        <i class="fas fa-building"></i>
+        <div class="ib-title">الهيكل والإنشاءات</div>
+        <div class="ib-sub">الجدران · الأسقف · الأعمدة · التشققات</div>
+      </div>
+      <div class="inspect-box">
+        <i class="fas fa-faucet-drip"></i>
+        <div class="ib-title">السباكة وكشف التسريبات</div>
+        <div class="ib-sub">المواسير · التصريف · التسربات الخفية</div>
+      </div>
+      <div class="inspect-box">
+        <i class="fas fa-bolt"></i>
+        <div class="ib-title">الكهرباء والتوصيلات</div>
+        <div class="ib-sub">الأحمال · التوصيلات · اللوحات الكهربائية</div>
+      </div>
+      <div class="inspect-box">
+        <i class="fas fa-snowflake"></i>
+        <div class="ib-title">التكييف والتهوية</div>
+        <div class="ib-sub">الوحدات · المواسير · كفاءة التبريد</div>
+      </div>
+      <div class="inspect-box">
+        <i class="fas fa-layer-group"></i>
+        <div class="ib-title">العزل والأسطح</div>
+        <div class="ib-sub">العزل المائي والحراري · حالة السطح</div>
+      </div>
+      <div class="inspect-box">
+        <i class="fas fa-paint-roller"></i>
+        <div class="ib-title">التشطيبات وجودة المواد</div>
+        <div class="ib-sub">الدهانات · الأرضيات · البلاط · الجبس</div>
+      </div>
+      <div class="inspect-box">
+        <i class="fas fa-camera"></i>
+        <div class="ib-title">توثيق الملاحظات</div>
+        <div class="ib-sub">صور للمشكلات والعيوب المكتشفة</div>
+      </div>
+      <div class="inspect-box">
+        <i class="fas fa-star-half-stroke"></i>
+        <div class="ib-title">التقييم العام للعقار</div>
+        <div class="ib-sub">تقييم شامل لحالة كل عنصر</div>
+      </div>
+      <div class="inspect-box">
+        <i class="fas fa-lightbulb"></i>
+        <div class="ib-title">التوصيات الفنية</div>
+        <div class="ib-sub">هل العقار مناسب للشراء؟</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. STRUCTURAL & CIVIL -->
+  <div class="base-card fade-in">
+    <div class="card-header">
+      <div class="card-icon"><i class="fas fa-building"></i></div>
+      <div>
+        <h2>أولاً: فحص الهيكل والإنشاءات</h2>
+        <p>الجدران — الأسقف — الأعمدة — التشققات والهبوط</p>
+      </div>
+      <div class="sec-num-badge" style="margin-right: auto;">2</div>
+    </div>
+
+    <div class="cond-grid" style="margin-bottom: 22px;">
+      <div class="cond-card cc-blue">
+        <div class="cc-head"><i class="fas fa-square"></i> الجدران الحاملة</div>
+        <div class="cc-body">[وصف الحالة: مثال — لا توجد تشققات هيكلية ظاهرة. الجدران متماسكة وبحالة جيدة عموماً مع وجود تشققات سطحية بسيطة في بعض المناطق.]</div>
+      </div>
+      <div class="cond-card cc-amber">
+        <div class="cc-head"><i class="fas fa-border-top-left"></i> الأسقف</div>
+        <div class="cc-body">[وصف الحالة: مثال — يوجد بعض التشققات في سقف الصالة الرئيسية بحاجة إلى معالجة. لا توجد دلائل على هبوط هيكلي.]</div>
+      </div>
+      <div class="cond-card cc-green">
+        <div class="cc-head"><i class="fas fa-house-crack"></i> الأعمدة والأساسات</div>
+        <div class="cc-body">[وصف الحالة: مثال — الأعمدة الظاهرة بحالة جيدة. لا توجد مؤشرات على هبوط في الأساسات.]</div>
+      </div>
+    </div>
+
+    <div class="section-label">الملاحظات التفصيلية</div>
+    <ul class="findings-list">
+      <li class="fi">
+        <div class="fi-num">1</div>
+        <div>
+          <div class="fi-title">تشققات سطحية في جدران الغرف</div>
+          <div class="fi-desc">رُصدت تشققات سطحية في طبقة البياض بغرفة النوم الرئيسية والممر — غير هيكلية ولا تؤثر على سلامة المبنى، وتُعالج بالبياض والدهان.</div>
+          <span class="fi-tag tag-ok"><i class="fas fa-circle-check"></i> منخفضة الخطورة</span>
+        </div>
+      </li>
+      <li class="fi">
+        <div class="fi-num">2</div>
+        <div>
+          <div class="fi-title">[عنوان الملاحظة الثانية]</div>
+          <div class="fi-desc">[وصف تفصيلي للملاحظة وتأثيرها الهندسي]</div>
+          <span class="fi-tag tag-med"><i class="fas fa-circle-exclamation"></i> متوسطة الخطورة</span>
+        </div>
+      </li>
+      <li class="fi">
+        <div class="fi-num">3</div>
+        <div>
+          <div class="fi-title">[عنوان الملاحظة الثالثة]</div>
+          <div class="fi-desc">[وصف تفصيلي للملاحظة]</div>
+          <span class="fi-tag tag-high"><i class="fas fa-circle-exclamation"></i> عالية الخطورة</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 4. PLUMBING -->
+  <div class="base-card accent-gold fade-in">
+    <div class="card-header">
+      <div class="card-icon gold"><i class="fas fa-faucet-drip"></i></div>
+      <div>
+        <h2>ثانياً: فحص السباكة وكشف التسريبات</h2>
+        <p>شبكة المياه — الصرف الصحي — التسريبات الخفية</p>
+      </div>
+      <div class="sec-num-badge" style="margin-right: auto;">3</div>
+    </div>
+
+    <div class="cond-grid" style="margin-bottom: 22px;">
+      <div class="cond-card cc-green">
+        <div class="cc-head"><i class="fas fa-pipe-circle-check"></i> شبكة المياه الباردة</div>
+        <div class="cc-body">[وصف الحالة وضغط المياه ومواد التمديدات]</div>
+      </div>
+      <div class="cond-card cc-amber">
+        <div class="cc-head"><i class="fas fa-temperature-high"></i> شبكة المياه الساخنة</div>
+        <div class="cc-body">[وصف حالة مواسير المياه الساخنة والسخّانات]</div>
+      </div>
+      <div class="cond-card cc-blue">
+        <div class="cc-head"><i class="fas fa-toilet"></i> شبكة الصرف الصحي</div>
+        <div class="cc-body">[وصف حالة الصرف وفاعليته]</div>
+      </div>
+    </div>
+
+    <div class="section-label">نتائج كشف التسريبات بالأجهزة</div>
+    <ul class="findings-list">
+      <li class="fi">
+        <div class="fi-num">1</div>
+        <div>
+          <div class="fi-title">تسرب في منطقة الحمام الرئيسي</div>
+          <div class="fi-desc">[وصف تفصيلي للتسرب — موقعه وسببه ومدى خطورته ومقترح العلاج]</div>
+          <span class="fi-tag tag-high"><i class="fas fa-droplet"></i> يستوجب معالجة فورية</span>
+        </div>
+      </li>
+      <li class="fi">
+        <div class="fi-num">2</div>
+        <div>
+          <div class="fi-title">رطوبة في جدار المطبخ الخلفي</div>
+          <div class="fi-desc">[وصف الرطوبة ومصدرها المحتمل]</div>
+          <span class="fi-tag tag-med"><i class="fas fa-droplets"></i> متوسطة الخطورة</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 5. ELECTRICAL -->
+  <div class="base-card accent-danger fade-in">
+    <div class="card-header">
+      <div class="card-icon danger"><i class="fas fa-bolt"></i></div>
+      <div>
+        <h2>ثالثاً: فحص الكهرباء والتوصيلات</h2>
+        <p>اللوحة الرئيسية — الأحمال — السلامة الكهربائية</p>
+      </div>
+      <div class="sec-num-badge" style="margin-right: auto;">4</div>
+    </div>
+
+    <div class="info-grid" style="margin-bottom: 20px;">
+      <div class="info-item">
+        <i class="fas fa-table-cells"></i>
+        <div>
+          <div class="label">اللوحة الكهربائية الرئيسية</div>
+          <div class="value">[نوعها وحالتها]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-plug-circle-check"></i>
+        <div>
+          <div class="label">الحمل الكهربائي الكلي</div>
+          <div class="value">[بالأمبير / الكيلوواط]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-shield-halved"></i>
+        <div>
+          <div class="label">قواطع الحماية (MCB/RCCB)</div>
+          <div class="value">[موجودة / غير كاملة / بحاجة لتحديث]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-plug"></i>
+        <div>
+          <div class="label">حالة المقابس والمفاتيح</div>
+          <div class="value">[جيدة / تحتاج استبدال جزئي]</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">الملاحظات الكهربائية</div>
+    <ul class="findings-list">
+      <li class="fi">
+        <div class="fi-num">1</div>
+        <div>
+          <div class="fi-title">[ملاحظة كهربائية 1]</div>
+          <div class="fi-desc">[تفاصيل الملاحظة وتأثيرها على السلامة]</div>
+          <span class="fi-tag tag-high"><i class="fas fa-triangle-exclamation"></i> خطر — يستوجب المعالجة</span>
+        </div>
+      </li>
+      <li class="fi">
+        <div class="fi-num">2</div>
+        <div>
+          <div class="fi-title">[ملاحظة كهربائية 2]</div>
+          <div class="fi-desc">[تفاصيل الملاحظة]</div>
+          <span class="fi-tag tag-med"><i class="fas fa-circle-exclamation"></i> متوسطة الخطورة</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 6. AC & VENTILATION -->
+  <div class="base-card fade-in">
+    <div class="card-header">
+      <div class="card-icon"><i class="fas fa-snowflake"></i></div>
+      <div>
+        <h2>رابعاً: فحص التكييف والتهوية</h2>
+        <p>وحدات التكييف — مواسير الصرف — الفلاتر — كفاءة التبريد</p>
+      </div>
+      <div class="sec-num-badge" style="margin-right: auto;">5</div>
+    </div>
+
+    <div class="info-grid" style="margin-bottom: 20px;">
+      <div class="info-item">
+        <i class="fas fa-wind"></i>
+        <div>
+          <div class="label">نوع نظام التكييف</div>
+          <div class="value">[سبليت / مركزي / دكت]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-temperature-low"></i>
+        <div>
+          <div class="label">عدد الوحدات</div>
+          <div class="value">[عدد الوحدات وطاقتها]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-calendar"></i>
+        <div>
+          <div class="label">عمر الوحدات</div>
+          <div class="value">[سنوات الاستخدام التقريبية]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-star"></i>
+        <div>
+          <div class="label">كفاءة التبريد العامة</div>
+          <div class="value">[ممتاز / جيد / يحتاج صيانة]</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">نتائج الفحص</div>
+    <ul class="findings-list">
+      <li class="fi">
+        <div class="fi-num">1</div>
+        <div>
+          <div class="fi-title">حالة وحدات التكييف</div>
+          <div class="fi-desc">[وصف حالة الوحدات ومدى احتياجها لصيانة أو استبدال]</div>
+          <span class="fi-tag tag-ok"><i class="fas fa-circle-check"></i> حالة جيدة</span>
+        </div>
+      </li>
+      <li class="fi">
+        <div class="fi-num">2</div>
+        <div>
+          <div class="fi-title">تسرب في مواسير تصريف التكييف</div>
+          <div class="fi-desc">[وصف موقع التسرب والضرر الناجم عنه]</div>
+          <span class="fi-tag tag-med"><i class="fas fa-circle-exclamation"></i> يحتاج معالجة</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 7. INSULATION & ROOF -->
+  <div class="base-card accent-amber fade-in">
+    <div class="card-header">
+      <div class="card-icon amber"><i class="fas fa-layer-group"></i></div>
+      <div>
+        <h2>خامساً: فحص العزل والأسطح</h2>
+        <p>العزل المائي والحراري — حالة السطح — بحوض السطح</p>
+      </div>
+      <div class="sec-num-badge" style="margin-right: auto;">6</div>
+    </div>
+
+    <div class="cond-grid" style="margin-bottom: 20px;">
+      <div class="cond-card cc-amber">
+        <div class="cc-head"><i class="fas fa-droplet-slash"></i> العزل المائي</div>
+        <div class="cc-body">[وصف حالة العزل المائي للسطح — هل يوجد تشققات أو بؤر تسرب]</div>
+      </div>
+      <div class="cond-card cc-blue">
+        <div class="cc-head"><i class="fas fa-sun"></i> العزل الحراري</div>
+        <div class="cc-body">[وصف حالة العزل الحراري ومدى كفاءته في خفض درجات الحرارة]</div>
+      </div>
+      <div class="cond-card cc-green">
+        <div class="cc-head"><i class="fas fa-house"></i> حالة السطح العام</div>
+        <div class="cc-body">[الحالة العامة للسطح وبحوض الصرف والطبقة التشطيبية]</div>
+      </div>
+    </div>
+
+    <div class="section-label">التفاصيل والملاحظات</div>
+    <ul class="findings-list">
+      <li class="fi">
+        <div class="fi-num">1</div>
+        <div>
+          <div class="fi-title">وجود تشققات في طبقة العزل القديمة</div>
+          <div class="fi-desc">[وصف التشققات وحجمها وتأثيرها المحتمل على المبنى والحل المقترح]</div>
+          <span class="fi-tag tag-med"><i class="fas fa-circle-exclamation"></i> يُوصى بالمعالجة قبل الصيف</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 8. FINISHES -->
+  <div class="base-card accent-green fade-in">
+    <div class="card-header">
+      <div class="card-icon green"><i class="fas fa-paint-roller"></i></div>
+      <div>
+        <h2>سادساً: فحص التشطيبات وجودة المواد</h2>
+        <p>الأرضيات — البلاط — الدهانات — الجبس — الألمونيوم</p>
+      </div>
+      <div class="sec-num-badge" style="margin-right: auto;">7</div>
+    </div>
+
+    <div class="info-grid" style="margin-bottom: 20px;">
+      <div class="info-item">
+        <i class="fas fa-border-all"></i>
+        <div>
+          <div class="label">نوع الأرضيات</div>
+          <div class="value">[رخام / بورسلان / باركيه — حالتها]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-paintbrush"></i>
+        <div>
+          <div class="label">حالة الدهانات</div>
+          <div class="value">[جيدة / تحتاج إعادة دهان / متشققة]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-window-maximize"></i>
+        <div>
+          <div class="label">الألمونيوم والزجاج</div>
+          <div class="value">[حالة النوافذ والأبواب الخارجية]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-door-closed"></i>
+        <div>
+          <div class="label">الأبواب الداخلية</div>
+          <div class="value">[نوعها وحالتها وجودة التركيب]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-kitchen-set"></i>
+        <div>
+          <div class="label">المطبخ (دواليب وطبليات)</div>
+          <div class="value">[جودة المواد وحالة التركيب]</div>
+        </div>
+      </div>
+      <div class="info-item">
+        <i class="fas fa-bath"></i>
+        <div>
+          <div class="label">الحمامات والمطابخ</div>
+          <div class="value">[حالة الأدوات الصحية والمواد]</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-label">الملاحظات التفصيلية</div>
+    <ul class="findings-list">
+      <li class="fi">
+        <div class="fi-num">1</div>
+        <div>
+          <div class="fi-title">[ملاحظة التشطيبات 1]</div>
+          <div class="fi-desc">[وصف تفصيلي]</div>
+          <span class="fi-tag tag-ok"><i class="fas fa-circle-check"></i> حالة مقبولة</span>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- 9. PHOTOS -->
+  <div class="base-card fade-in">
+    <div class="card-header">
+      <div class="card-icon"><i class="fas fa-camera"></i></div>
+      <div>
+        <h2>توثيق الملاحظات بالصور</h2>
+        <p>صور للمشكلات والعيوب المرصودة خلال الفحص الميداني</p>
+      </div>
+      <div class="sec-num-badge" style="margin-right: auto;">8</div>
+    </div>
+
+    <div class="photos-note">
+      الصور أدناه توثيق فعلي للملاحظات والعيوب التي رصدها الفريق الهندسي خلال زيارة الفحص الميداني.
+      كل صورة مرفق معها وصف موجز للمشكلة وموقعها في العقار.
+    </div>
+
+    <div class="photos-placeholder">
+      <div class="photo-box">
+        <i class="fas fa-image"></i>
+        <span>صورة 1<br>[وصف المشكلة والموقع]</span>
+      </div>
+      <div class="photo-box">
+        <i class="fas fa-image"></i>
+        <span>صورة 2<br>[وصف المشكلة والموقع]</span>
+      </div>
+      <div class="photo-box">
+        <i class="fas fa-image"></i>
+        <span>صورة 3<br>[وصف المشكلة والموقع]</span>
+      </div>
+      <div class="photo-box">
+        <i class="fas fa-image"></i>
+        <span>صورة 4<br>[وصف المشكلة والموقع]</span>
+      </div>
+      <div class="photo-box">
+        <i class="fas fa-image"></i>
+        <span>صورة 5<br>[وصف المشكلة والموقع]</span>
+      </div>
+      <div class="photo-box">
+        <i class="fas fa-image"></i>
+        <span>صورة 6<br>[وصف المشكلة والموقع]</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- 10. OVERALL RATING -->
+  <div class="base-card fade-in">
+    <div class="card-header">
+      <div class="card-icon gold"><i class="fas fa-star-half-stroke"></i></div>
+      <div>
+        <h2>التقييم العام للعقار</h2>
+        <p>نظرة شاملة على حالة كل محور من محاور الفحص</p>
+      </div>
+      <div class="sec-num-badge" style="margin-right: auto;">9</div>
+    </div>
+
+    <div class="rating-grid">
+      <div class="rating-item good">
+        <div class="rating-label">الهيكل الإنشائي</div>
+        <div class="rating-stars">⭐⭐⭐⭐☆</div>
+        <div class="rating-text">جيد جداً</div>
+      </div>
+      <div class="rating-item medium">
+        <div class="rating-label">السباكة والتسريبات</div>
+        <div class="rating-stars">⭐⭐⭐☆☆</div>
+        <div class="rating-text">يحتاج معالجة</div>
+      </div>
+      <div class="rating-item medium">
+        <div class="rating-label">الكهرباء والتوصيلات</div>
+        <div class="rating-stars">⭐⭐⭐☆☆</div>
+        <div class="rating-text">مقبول مع ملاحظات</div>
+      </div>
+      <div class="rating-item good">
+        <div class="rating-label">التكييف والتهوية</div>
+        <div class="rating-stars">⭐⭐⭐⭐☆</div>
+        <div class="rating-text">جيد</div>
+      </div>
+      <div class="rating-item bad">
+        <div class="rating-label">العزل والأسطح</div>
+        <div class="rating-stars">⭐⭐☆☆☆</div>
+        <div class="rating-text">يحتاج تدخل</div>
+      </div>
+      <div class="rating-item good">
+        <div class="rating-label">التشطيبات والمواد</div>
+        <div class="rating-stars">⭐⭐⭐⭐☆</div>
+        <div class="rating-text">جيد جداً</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 11. RISKS -->
+  <div class="base-card accent-danger fade-in">
+    <div class="card-header">
+      <div class="card-icon danger"><i class="fas fa-shield-halved"></i></div>
+      <div>
+        <h2>المخاطر الحالية والمستقبلية</h2>
+        <p>تقييم الأضرار القائمة وما قد ينتج عنها إذا تُركت دون معالجة</p>
+      </div>
+      <div class="sec-num-badge" style="margin-right: auto;">10</div>
+    </div>
+
+    <div class="risk-grid">
+      <div class="risk-card rc-present">
+        <div class="rc-head"><i class="fas fa-eye"></i> الأضرار والمشكلات الحالية</div>
+        <ul class="rc-body">
+          <li><i class="fas fa-diamond"></i> [مشكلة حالية 1]</li>
+          <li><i class="fas fa-diamond"></i> [مشكلة حالية 2]</li>
+          <li><i class="fas fa-diamond"></i> [مشكلة حالية 3]</li>
+          <li><i class="fas fa-diamond"></i> [مشكلة حالية 4]</li>
+          <li><i class="fas fa-diamond"></i> [مشكلة حالية 5]</li>
+        </ul>
+      </div>
+      <div class="risk-card rc-future">
+        <div class="rc-head"><i class="fas fa-triangle-exclamation"></i> المخاطر المستقبلية إن تُركت</div>
+        <ul class="rc-body">
+          <li><i class="fas fa-diamond"></i> تدهور هيكلي تدريجي في حالة استمرار التسربات</li>
+          <li><i class="fas fa-diamond"></i> نمو العفن والفطريات مع مخاطر صحية على الساكنين</li>
+          <li><i class="fas fa-diamond"></i> ارتفاع تكاليف الإصلاح كلما تأخر التدخل</li>
+          <li><i class="fas fa-diamond"></i> انخفاض قيمة العقار السوقية</li>
+          <li><i class="fas fa-diamond"></i> [خطر مستقبلي إضافي مخصص للعقار]</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- 12. TECHNICAL RECOMMENDATIONS -->
+  <div class="base-card fade-in">
+    <div class="card-header">
+      <div class="card-icon green"><i class="fas fa-lightbulb"></i></div>
+      <div>
+        <h2>التوصيات الفنية</h2>
+        <p>إجراءات العلاج المقترحة مرتبة حسب الأولوية</p>
+      </div>
+      <div class="sec-num-badge" style="margin-right: auto;">11</div>
+    </div>
+
+    <div class="rec-box">
+      <div class="rec-title">
+        <i class="fas fa-list-check"></i>
+        الإجراءات الموصى بها قبل إتمام الشراء أو فور الاستلام
+      </div>
+      <ul class="rec-list">
+        <li class="rec-item">
+          <div class="rec-dot"></div>
+          <span><strong>أولوية قصوى:</strong> معالجة التسريبات في الحمام الرئيسي بعزل مائي متخصص قبل أي تشطيب.</span>
+        </li>
+        <li class="rec-item">
+          <div class="rec-dot"></div>
+          <span><strong>مهم:</strong> مراجعة اللوحة الكهربائية وإضافة قواطع الحماية الناقصة بواسطة كهربائي معتمد.</span>
+        </li>
+        <li class="rec-item">
+          <div class="rec-dot"></div>
+          <span><strong>مهم:</strong> إصلاح وإعادة عزل السطح حرارياً ومائياً قبل موسم الصيف.</span>
+        </li>
+        <li class="rec-item">
+          <div class="rec-dot"></div>
+          <span>[توصية فنية إضافية 4]</span>
+        </li>
+        <li class="rec-item">
+          <div class="rec-dot"></div>
+          <span>[توصية فنية إضافية 5]</span>
+        </li>
+        <li class="rec-item">
+          <div class="rec-dot"></div>
+          <span><strong>توصية:</strong> صيانة وحدات التكييف وتنظيف الفلاتر والفحص الدوري السنوي.</span>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <!-- 13. FINAL VERDICT -->
+  <div class="verdict-card fade-in">
+    <!-- Change class to: verdict-suitable / verdict-caution / verdict-unsuitable -->
+    <div class="verdict-caution">
+      <div class="verdict-header">
+        <div class="verdict-icon"><i class="fas fa-circle-exclamation"></i></div>
+        <div>
+          <div class="verdict-label">الرأي الهندسي النهائي</div>
+          <!-- Options: مناسب للشراء / مناسب مع ملاحظات / غير مناسب للشراء حالياً -->
+          <div class="verdict-text">مناسب للشراء مع ملاحظات هامة</div>
+        </div>
+      </div>
+      <div class="verdict-body">
+        <p>
+          بناءً على الفحص الميداني الشامل الذي أجراه فريق <strong>ركن التطور للخدمات الهندسية المتكاملة</strong>،
+          وبعد تقييم جميع محاور العقار، يرى الفريق الهندسي أن العقار <strong>مناسب للشراء</strong> مع
+          ضرورة مراعاة الملاحظات المذكورة في هذا التقرير.
+        </p>
+        <br>
+        <p>
+          تستوجب بعض المشكلات المرصودة — لا سيما [أبرز مشكلة] — معالجةً فورية قبل السكن أو
+          التفاوض على خفض السعر بما يغطي تكاليف الإصلاح المقدّرة. الهيكل الإنشائي للمبنى
+          سليم بشكل عام وغير مهدد، والمشكلات قابلة للحل بتكاليف معقولة.
+        </p>
+        <br>
+        <p style="color: var(--gray-mid); font-size: 13px;">
+          يُنصح بالتواصل مع فريقنا للحصول على عرض أسعار علاج المشكلات المرصودة قبل إتمام الشراء.
+        </p>
+
+        
+<?php if (!empty($doc['terms'])): ?>
+<div class="kdms-terms" style="margin:14px 0;padding:12px 14px;border:1px solid rgba(0,112,204,.12);border-radius:10px;font-size:12.5px;line-height:1.8;break-inside:avoid;">
+  <?= nl2br(e($doc['terms'])) ?>
+</div>
+<?php endif; ?>
+<?php if (!empty($doc['conditions'])): ?>
+<div class="kdms-conditions" style="margin:14px 0;padding:12px 14px;border:1px solid rgba(0,112,204,.12);border-radius:10px;font-size:12.5px;line-height:1.8;break-inside:avoid;">
+  <?= $doc['conditions'] /* intentionally allows controlled HTML tables from admin */ ?>
+</div>
+<?php endif; ?>
+<div class="sig-row">
+          <div class="sig-box">
+            <div class="sig-lbl">المهندس المنفذ</div>
+            <div class="sig-name">[اسم المهندس]</div>
+            <div class="sig-line">توقيع المهندس المسؤول</div>
+          </div>
+          <div class="sig-box">
+            <div class="sig-lbl">اعتماد الشركة</div>
+            <div class="sig-name">ركن التطور للخدمات الهندسية المتكاملة</div>
+            <div class="sig-line">الختم الرسمي للشركة</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 14. CTA -->
+  <div class="cta-section fade-in">
+    <h2>تواصل معنا لمعالجة المشكلات المرصودة</h2>
+    <p>فريقنا الهندسي جاهز لتقديم عروض أسعار لحل جميع الملاحظات الواردة في التقرير</p>
+
+    <div class="cta-buttons">
+      <a href="https://wa.me/971XXXXXXXX" class="btn btn-wa">
+        <i class="fab fa-whatsapp"></i>
+        تواصل عبر واتساب
+      </a>
+      <a href="tel:+971XXXXXXXX" class="btn btn-call">
+        <i class="fas fa-phone"></i>
+        اتصل بنا مباشرة
+      </a>
+    </div>
+
+    <div class="trust-row">
+      <div class="trust-item"><i class="fas fa-circle-check"></i> فريق هندسي معتمد</div>
+      <div class="trust-item"><i class="fas fa-circle-check"></i> أجهزة كشف متخصصة</div>
+      <div class="trust-item"><i class="fas fa-circle-check"></i> تقرير خلال 24 ساعة</div>
+      <div class="trust-item"><i class="fas fa-circle-check"></i> 500+ تقرير منجز</div>
+    </div>
+  </div>
+
+</div>
+</section>
+
+<!-- ===== FOOTER ===== -->
+<footer class="footer">
+  <strong>ركن التطور للخدمات الهندسية المتكاملة</strong><br>
+  الإمارات العربية المتحدة · خدمات هندسية متكاملة · فحص مباني · كشف تسربات · عزل<br>
+  رقم التقرير: <strong>RET-INS-2026-[XXXX]</strong> · تاريخ الإصدار: [التاريخ]
+</footer>
+
+<script>
+  // Fade-in on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.08 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
