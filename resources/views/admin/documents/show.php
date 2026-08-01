@@ -15,5 +15,6 @@
   </div>
 </div>
 <div class="panel" style="padding:0;overflow:hidden">
-  <iframe src="/admin/documents/<?= (int)$doc['id'] ?>/preview" style="width:100%;min-height:80vh;border:0;background:#0A1628"></iframe>
+  <iframe class="doc-iframe" src="/admin/documents/<?= (int)$doc['id'] ?>/preview" style="width:100%;min-height:80vh;border:0;background:#0A1628" title="<?= e($doc['document_number']) ?>"></iframe>
 </div>
+<p class="help" style="padding:0 4px">على الموبايل يتم تصغير المستند ليناسب الشاشة مع الحفاظ على نفس التصميم الأصلي. الطباعة/PDF تبقى بحجم A4 الكامل.</p>

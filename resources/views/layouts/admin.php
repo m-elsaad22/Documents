@@ -17,8 +17,12 @@ function nav_active(string $path): string {
 <link rel="stylesheet" href="<?= e(asset('css/admin.css')) ?>">
 </head>
 <body>
+<div class="mobile-bar no-print">
+  <div class="brand-mini"><span>KD</span> KDMS</div>
+  <button type="button" class="menu-toggle" id="menuToggle" aria-label="القائمة"><i class="fas fa-bars"></i> القائمة</button>
+</div>
 <div class="app">
-  <aside class="sidebar">
+  <aside class="sidebar" id="sidebar">
     <div class="brand">
       <div class="brand-mark">KD</div>
       <div>
